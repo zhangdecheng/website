@@ -305,7 +305,7 @@ test("annotated hero removes the old eyebrow and secondary controls", async () =
   assert.match(css, /\.button\s*{[\s\S]*font-size:\s*14px/);
 });
 
-test("annotated hero media uses three layered brand story cards with HK badge", async () => {
+test("annotated hero media uses three layered brand story cards with hidden stats and badge", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const hero = html.match(/<section class="hero" id="top">[\s\S]*?<\/section>/)?.[0] ?? "";
   const cardMatches = hero.match(/class="hero-card/g) ?? [];
@@ -315,13 +315,14 @@ test("annotated hero media uses three layered brand story cards with HK badge", 
   for (const src of ["assets/17bcea7b-424b-4593-9f31-697e7cbecd7d.jpeg", "assets/service-performance.jpg", "assets/fe872db7-ca7c-4423-9f5c-9dc109e60619.jpeg"]) {
     assert.match(hero, new RegExp(`src="${src}"`));
   }
-  assert.match(hero, /class="hk-badge"/);
-  assert.match(hero, /HK/);
-  assert.match(hero, /EAST · WEST/);
   assert.match(css, /hero-card-layer-1/);
   assert.match(css, /hero-card-layer-2/);
   assert.match(css, /hero-card-layer-3/);
   assert.doesNotMatch(hero, /class="hero-live-interface"/);
+  assert.match(hero, /class="hk-badge"/);
+  assert.match(hero, /hero-stats/);
+  assert.match(css, /\.hero-stats\s*{\s*display:\s*none/);
+  assert.match(css, /\.hk-badge\s*{\s*display:\s*none/);
   assert.doesNotMatch(hero, /src="assets\/service-influencer\.jpg"/);
   assert.doesNotMatch(hero, /src="assets\/creator-recruitment\.jpg"/);
 });

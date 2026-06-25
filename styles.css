@@ -413,127 +413,71 @@ h1 {
 }
 
 .hero-stats {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-top: 48px;
-  padding-top: 32px;
-  border-top: 1px solid var(--line-dark);
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.stat-value {
-  color: var(--gold);
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-}
-
-.stat-label {
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.stat-divider {
-  width: 1px;
-  height: 32px;
-  background: linear-gradient(180deg, transparent, var(--line-dark), transparent);
+  display: none;
 }
 
 .hk-badge {
-  position: absolute;
-  top: 80px;
-  left: var(--gutter);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  border: 1px solid var(--gold);
-  background: var(--dusk-black);
-  box-shadow: 0 4px 20px var(--gold-glow);
-}
-
-.hk-badge-main {
-  color: var(--gold);
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-}
-
-.hk-badge-sub {
-  margin-top: 2px;
-  color: var(--muted);
-  font-size: 8px;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  display: none;
 }
 
 .hero-media {
   position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: end;
+  gap: clamp(12px, 2vw, 24px);
   min-width: 0;
   margin: 0;
-  padding: 96px var(--gutter) 86px 0;
-  overflow: visible;
+  padding: 60px var(--gutter) 80px 0;
+  overflow: hidden;
   isolation: isolate;
 }
 
 .hero-card {
-  position: absolute;
+  position: relative;
   border-radius: 2px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
   overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .hero-card img {
   width: 100%;
   height: 100%;
+  min-height: 380px;
+  max-height: 520px;
   object-fit: cover;
   filter: saturate(0.85) contrast(1.04) brightness(0.75);
   transition: filter 0.6s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+.hero-card:hover {
+  transform: translateY(-8px);
+}
+
 .hero-card:hover img {
   filter: saturate(0.95) contrast(1.06) brightness(0.82);
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
 .hero-card-layer-1 {
-  width: 280px;
-  height: 420px;
-  z-index: 1;
-  right: 320px;
-  bottom: 120px;
+  transform: translateY(20px);
+}
+
+.hero-card-layer-1:hover {
+  transform: translateY(12px);
 }
 
 .hero-card-layer-2 {
-  width: 320px;
-  height: 480px;
-  z-index: 2;
-  right: 140px;
-  bottom: 80px;
+  transform: translateY(0);
 }
 
 .hero-card-layer-3 {
-  width: 300px;
-  height: 450px;
-  z-index: 3;
-  right: var(--gutter);
-  bottom: 140px;
+  transform: translateY(30px);
+}
+
+.hero-card-layer-3:hover {
+  transform: translateY(22px);
 }
 
 .hero-media {
@@ -1841,12 +1785,13 @@ textarea:user-invalid {
   }
 
   .hero-media {
-    height: 520px;
+    height: auto;
     padding: 46px var(--gutter) 54px;
   }
 
-  .hero-card {
-    height: 390px;
+  .hero-card img {
+    min-height: 320px;
+    max-height: 420px;
   }
 
   .bridge-card-grid {

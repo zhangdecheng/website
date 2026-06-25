@@ -173,7 +173,7 @@ test("homepage about module uses exact mission and advantage copy with image", a
   const about = section(html, "about");
   const text = normalized(about);
 
-  assert.match(about, /<img[\s\S]*assets\/hong-kong-harbour\.jpg[\s\S]*alt="Hong Kong Victoria Harbour - the strategic East-West gateway to global markets"/);
+  assert.match(about, /<img[\s\S]*assets\/about-hk-cross-border-bridge\.png[\s\S]*alt="Hong Kong Victoria Harbour - the strategic East-West gateway to global markets"/);
   for (const expected of [
     "[Our Mission]",
     "Making Cultural Boundaries Invisible.",
@@ -315,6 +315,9 @@ test("annotated hero media uses three layered brand story cards with hidden stat
   for (const src of ["assets/17bcea7b-424b-4593-9f31-697e7cbecd7d.jpeg", "assets/service-performance.jpg", "assets/fe872db7-ca7c-4423-9f5c-9dc109e60619.jpeg"]) {
     assert.match(hero, new RegExp(`src="${src}"`));
   }
+  assert.match(hero, /fetchpriority="high"/);
+  assert.match(hero, /width="\d+"/);
+  assert.match(hero, /height="\d+"/);
   assert.match(css, /hero-card-layer-1/);
   assert.match(css, /hero-card-layer-2/);
   assert.match(css, /hero-card-layer-3/);
@@ -342,6 +345,22 @@ test("styles include reduced-motion behavior and visible focus treatment", async
 
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /:focus-visible/);
+});
+
+test("v1.0.1 performance optimizations include width/height and lazy loading", async () => {
+  const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+
+  const heroImgCount = (html.match(/loading="eager"/g) ?? []).length;
+  const lazyImgCount = (html.match(/loading="lazy"/g) ?? []).length;
+  const decodingCount = (html.match(/decoding="async"/g) ?? []).length;
+  const widthAttrCount = (html.match(/width="\d+"/g) ?? []).length;
+
+  assert.equal(heroImgCount, 3, "Hero images should use eager loading");
+  assert.ok(lazyImgCount >= 10, "Below-fold images should use lazy loading");
+  assert.ok(decodingCount >= 10, "Below-fold images should use async decoding");
+  assert.ok(widthAttrCount >= 20, "All images should have width attribute");
+
+  assert.match(html, /fetchpriority="high"/);
 });
 
 test("whiteboard 3 bridge section uses centered Who We Are double cards", async () => {

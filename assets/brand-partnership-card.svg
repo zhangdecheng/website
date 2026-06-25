@@ -1,0 +1,245 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" width="600" height="900">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0908"/>
+      <stop offset="50%" style="stop-color:#120f0e"/>
+      <stop offset="100%" style="stop-color:#0a0908"/>
+    </linearGradient>
+    
+    <linearGradient id="tableGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1614"/>
+      <stop offset="50%" style="stop-color:#151211"/>
+      <stop offset="100%" style="stop-color:#1a1614"/>
+    </linearGradient>
+    
+    <linearGradient id="paperGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f2ed"/>
+      <stop offset="50%" style="stop-color:#e8e4de"/>
+      <stop offset="100%" style="stop-color:#ddd9d4"/>
+    </linearGradient>
+    
+    <linearGradient id="paperShade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:0.15"/>
+      <stop offset="50%" style="stop-color:#000000;stop-opacity:0.05"/>
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.12"/>
+    </linearGradient>
+    
+    <linearGradient id="neonRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e65c47;stop-opacity:0.2"/>
+      <stop offset="50%" style="stop-color:#e65c47;stop-opacity:0.7"/>
+      <stop offset="100%" style="stop-color:#e65c47;stop-opacity:0.2"/>
+    </linearGradient>
+    
+    <linearGradient id="neonGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#d4a855;stop-opacity:0.15"/>
+      <stop offset="50%" style="stop-color:#d4a855;stop-opacity:0.5"/>
+      <stop offset="100%" style="stop-color:#d4a855;stop-opacity:0.15"/>
+    </linearGradient>
+    
+    <linearGradient id="handGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a574"/>
+      <stop offset="50%" style="stop-color:#c4956a"/>
+      <stop offset="100%" style="stop-color:#b0855a"/>
+    </linearGradient>
+    
+    <linearGradient id="handGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0b896"/>
+      <stop offset="50%" style="stop-color:#d0a886"/>
+      <stop offset="100%" style="stop-color:#c09876"/>
+    </linearGradient>
+    
+    <radialGradient id="spotlight" cx="50%" cy="30%" r="50%">
+      <stop offset="0%" style="stop-color:#e65c47;stop-opacity:0.08"/>
+      <stop offset="100%" style="stop-color:#e65c47;stop-opacity:0"/>
+    </radialGradient>
+    
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="paperTexture" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/>
+      <feDiffuseLighting in="noise" lighting-color="#ffffff" surfaceScale="1">
+        <feDistantLight azimuth="45" elevation="60"/>
+      </feDiffuseLighting>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="600" height="900" fill="url(#bgGrad)"/>
+  
+  <!-- Ambient spotlight -->
+  <rect width="600" height="900" fill="url(#spotlight)"/>
+  
+  <!-- City bokeh in background -->
+  <circle cx="100" cy="120" r="3" fill="#e65c47" opacity="0.4"/>
+  <circle cx="180" cy="80" r="2" fill="#ffffff" opacity="0.3"/>
+  <circle cx="500" cy="150" r="4" fill="#d4a855" opacity="0.35"/>
+  <circle cx="450" cy="60" r="2.5" fill="#e65c47" opacity="0.3"/>
+  <circle cx="520" cy="100" r="2" fill="#ffffff" opacity="0.25"/>
+  <circle cx="80" cy="180" r="2.5" fill="#d4a855" opacity="0.3"/>
+  <circle cx="300" cy="50" r="3" fill="#e65c47" opacity="0.25"/>
+  
+  <!-- City skyline silhouette (very faint) -->
+  <path d="M0,320 L0,400 L600,400 L600,300 L560,300 L560,240 L520,240 L520,280 L480,280 L480,220 L440,220 L440,270 L400,270 L400,200 L360,200 L360,250 L320,250 L320,180 L280,180 L280,240 L240,240 L240,200 L200,200 L200,260 L160,260 L160,220 L120,220 L120,280 L80,280 L80,230 L40,230 L40,290 L0,290 Z" 
+        fill="#080706" opacity="0.6"/>
+  
+  <!-- Table surface (perspective) -->
+  <path d="M0,400 Q300,380 600,400 L620,900 L-20,900 Z" fill="url(#tableGrad)"/>
+  
+  <!-- Table wood grain texture lines -->
+  <line x1="0" y1="480" x2="600" y2="480" stroke="#25201d" stroke-width="1" opacity="0.3"/>
+  <line x1="0" y1="560" x2="600" y2="560" stroke="#25201d" stroke-width="1" opacity="0.25"/>
+  <line x1="0" y1="640" x2="600" y2="640" stroke="#25201d" stroke-width="1" opacity="0.3"/>
+  <line x1="0" y1="720" x2="600" y2="720" stroke="#25201d" stroke-width="1" opacity="0.25"/>
+  <line x1="0" y1="800" x2="600" y2="800" stroke="#25201d" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Contract document stack (perspective) -->
+  <g transform="rotate(-3, 300, 550)">
+    <!-- Bottom shadow document -->
+    <rect x="165" y="475" width="270" height="190" rx="4" fill="#0a0908" opacity="0.3" transform="skewX(-2)"/>
+    
+    <!-- Middle document -->
+    <rect x="158" y="468" width="270" height="190" rx="4" fill="#c8c4bf" opacity="0.5" transform="skewX(-2)"/>
+    
+    <!-- Main contract document -->
+    <rect x="150" y="460" width="270" height="190" rx="4" fill="url(#paperGrad)" transform="skewX(-2)"/>
+    
+    <!-- Paper texture overlay -->
+    <rect x="150" y="460" width="270" height="190" rx="4" fill="url(#paperShade)" opacity="0.5" transform="skewX(-2)"/>
+    
+    <!-- Document fold line -->
+    <line x1="150" y1="555" x2="420" y2="555" stroke="#b8b4af" stroke-width="0.5" opacity="0.6" transform="skewX(-2)"/>
+    
+    <!-- Document text lines -->
+    <rect x="180" y="490" width="150" height="6" rx="1" fill="#3a3533" opacity="0.6" transform="skewX(-2)"/>
+    <rect x="180" y="505" width="200" height="5" rx="1" fill="#3a3533" opacity="0.5" transform="skewX(-2)"/>
+    <rect x="180" y="520" width="180" height="5" rx="1" fill="#3a3533" opacity="0.5" transform="skewX(-2)"/>
+    <rect x="180" y="535" width="160" height="5" rx="1" fill="#3a3533" opacity="0.5" transform="skewX(-2)"/>
+    
+    <rect x="180" y="575" width="120" height="5" rx="1" fill="#3a3533" opacity="0.5" transform="skewX(-2)"/>
+    <rect x="180" y="590" width="180" height="5" rx="1" fill="#3a3533" opacity="0.5" transform="skewX(-2)"/>
+    <rect x="180" y="605" width="140" height="5" rx="1" fill="#3a3533" opacity="0.5" transform="skewX(-2)"/>
+    <rect x="180" y="620" width="160" height="5" rx="1" fill="#3a3533" opacity="0.5" transform="skewX(-2)"/>
+    
+    <!-- Gold stamp -->
+    <circle cx="350" cy="600" r="22" fill="none" stroke="#d4a855" stroke-width="2" opacity="0.8" transform="skewX(-2)"/>
+    <circle cx="350" cy="600" r="16" fill="none" stroke="#d4a855" stroke-width="1" opacity="0.6" transform="skewX(-2)"/>
+    <text x="350" y="605" text-anchor="middle" fill="#d4a855" font-size="8" font-weight="bold" opacity="0.9" transform="skewX(-2)">OFFICIAL</text>
+    
+    <!-- Signature line -->
+    <line x1="180" y1="640" x2="320" y2="640" stroke="#2a2523" stroke-width="1" transform="skewX(-2)"/>
+    <text x="180" y="655" fill="#5a5553" font-size="9" opacity="0.7" transform="skewX(-2)">Authorized Signature</text>
+    
+    <!-- Document glow -->
+    <rect x="150" y="460" width="270" height="190" rx="4" fill="none" stroke="url(#neonGold)" stroke-width="1" filter="url(#glow)" opacity="0.4" transform="skewX(-2)"/>
+  </g>
+  
+  <!-- Hand 1: Giving the contract (from top left) -->
+  <g transform="translate(80, 380)">
+    <!-- Wrist -->
+    <ellipse cx="50" cy="120" rx="35" ry="45" fill="url(#handGrad1)"/>
+    
+    <!-- Hand shape -->
+    <path d="M30,80 Q20,60 35,45 Q50,30 70,40 Q85,50 80,70 L95,85 Q110,100 105,120 L85,140 Q75,150 55,145 Q35,140 30,120 Z" 
+          fill="url(#handGrad1)"/>
+    
+    <!-- Fingers -->
+    <ellipse cx="75" cy="75" rx="10" ry="22" fill="url(#handGrad1)" transform="rotate(-20, 75, 75)"/>
+    <ellipse cx="90" cy="90" rx="9" ry="20" fill="url(#handGrad1)" transform="rotate(-10, 90, 90)"/>
+    <ellipse cx="100" cy="105" rx="8" ry="18" fill="url(#handGrad1)"/>
+    
+    <!-- Thumb -->
+    <ellipse cx="40" cy="95" rx="12" ry="18" fill="url(#handGrad1)" transform="rotate(30, 40, 95)"/>
+    
+    <!-- Hand highlights -->
+    <ellipse cx="65" cy="60" rx="8" ry="12" fill="#e8c8a8" opacity="0.3"/>
+    <ellipse cx="85" cy="80" rx="4" ry="8" fill="#e8c8a8" opacity="0.25"/>
+  </g>
+  
+  <!-- Hand 2: Receiving the contract (from bottom right) -->
+  <g transform="translate(380, 520)">
+    <!-- Wrist -->
+    <ellipse cx="120" cy="100" rx="40" ry="50" fill="url(#handGrad2)"/>
+    
+    <!-- Hand shape -->
+    <path d="M140,60 Q155,45 175,50 Q195,55 190,75 L200,90 Q210,105 205,125 L185,145 Q165,155 145,150 Q125,145 120,125 Z" 
+          fill="url(#handGrad2)"/>
+    
+    <!-- Fingers reaching -->
+    <ellipse cx="165" cy="55" rx="10" ry="24" fill="url(#handGrad2)" transform="rotate(15, 165, 55)"/>
+    <ellipse cx="180" cy="70" rx="9" ry="22" fill="url(#handGrad2)" transform="rotate(25, 180, 70)"/>
+    <ellipse cx="190" cy="85" rx="8" ry="20" fill="url(#handGrad2)" transform="rotate(35, 190, 85)"/>
+    
+    <!-- Thumb -->
+    <ellipse cx="130" cy="90" rx="14" ry="20" fill="url(#handGrad2)" transform="rotate(-25, 130, 90)"/>
+    
+    <!-- Hand highlights -->
+    <ellipse cx="155" cy="50" rx="6" ry="10" fill="#f0d8c0" opacity="0.35"/>
+    <ellipse cx="175" cy="65" rx="4" ry="8" fill="#f0d8c0" opacity="0.3"/>
+  </g>
+  
+  <!-- Luxury fountain pen -->
+  <g transform="translate(420, 420) rotate(45)">
+    <!-- Pen body -->
+    <rect x="0" y="-6" width="100" height="12" rx="6" fill="#1a1614"/>
+    <rect x="2" y="-4" width="96" height="8" rx="4" fill="#2a2523"/>
+    
+    <!-- Gold accents -->
+    <rect x="70" y="-6" width="8" height="12" rx="2" fill="#d4a855" opacity="0.8"/>
+    <rect x="85" y="-5" width="6" height="10" rx="2" fill="#d4a855" opacity="0.6"/>
+    
+    <!-- Pen tip -->
+    <path d="M-10,0 L0,-5 L0,5 Z" fill="#c0c0c0"/>
+    <rect x="-15" y="-2" width="8" height="4" fill="#a0a0a0"/>
+  </g>
+  
+  <!-- Smartphone showing creator stats -->
+  <g transform="translate(100, 680)">
+    <!-- Phone body -->
+    <rect x="0" y="0" width="70" height="140" rx="10" fill="#1a1614" stroke="#2a2523" stroke-width="2"/>
+    
+    <!-- Screen -->
+    <rect x="5" y="15" width="60" height="115" rx="6" fill="#0a0908"/>
+    
+    <!-- Screen content -->
+    <rect x="10" y="25" width="50" height="8" rx="2" fill="#2a2523"/>
+    <rect x="10" y="42" width="40" height="18" rx="3" fill="#e65c47" opacity="0.7"/>
+    <rect x="10" y="68" width="50" height="6" rx="1" fill="#3a3533"/>
+    <rect x="10" y="80" width="42" height="6" rx="1" fill="#3a3533"/>
+    <rect x="10" y="92" width="48" height="6" rx="1" fill="#3a3533"/>
+    <rect x="10" y="104" width="38" height="6" rx="1" fill="#3a3533"/>
+    <rect x="10" y="116" width="45" height="6" rx="1" fill="#d4a855" opacity="0.5"/>
+    
+    <!-- Phone glow -->
+    <rect x="0" y="0" width="70" height="140" rx="10" fill="none" stroke="url(#neonRed)" stroke-width="1" filter="url(#glow)" opacity="0.3"/>
+  </g>
+  
+  <!-- Connection glow between hands -->
+  <ellipse cx="300" cy="550" rx="60" ry="40" fill="#e65c47" opacity="0.06" filter="url(#softGlow)"/>
+  
+  <!-- Floating particles -->
+  <circle cx="120" cy="780" r="2" fill="#e65c47" opacity="0.5"/>
+  <circle cx="480" cy="500" r="1.5" fill="#d4a855" opacity="0.6"/>
+  <circle cx="520" cy="750" r="2" fill="#ffffff" opacity="0.3"/>
+  <circle cx="80" cy="550" r="1.5" fill="#d4a855" opacity="0.4"/>
+  <circle cx="500" cy="620" r="2" fill="#e65c47" opacity="0.4"/>
+  
+  <!-- Corner accent lines -->
+  <line x1="30" y1="410" x2="80" y2="410" stroke="#e65c47" stroke-width="2" opacity="0.3"/>
+  <line x1="30" y1="410" x2="30" y2="450" stroke="#e65c47" stroke-width="2" opacity="0.3"/>
+  <line x1="570" y1="850" x2="520" y2="850" stroke="#d4a855" stroke-width="2" opacity="0.25"/>
+  <line x1="570" y1="850" x2="570" y2="810" stroke="#d4a855" stroke-width="2" opacity="0.25"/>
+</svg>

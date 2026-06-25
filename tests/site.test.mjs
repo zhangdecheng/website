@@ -149,7 +149,7 @@ test("homepage talent module uses exact creator copy and form labels", async () 
   const talent = section(html, "talent");
   const text = normalized(talent);
 
-  assert.match(talent, /<img[\s\S]*assets\/talent-global-creator-network\.png[\s\S]*alt="Global creator team producing social content for brand partnerships"/);
+  assert.match(talent, /<img[\s\S]*assets\/about-hk-cross-border-bridge\.png[\s\S]*alt="Global creator network bridging East and West through cultural content collaboration"/);
   assert.match(talent, /Turn Your Influence into a Global Legacy\./);
   assertIncludesText(text, "FLOURISH CULTURE connects the world’s most talented creators with market-defining global brands. Let's build your digital empire together.");
   assert.match(talent, /Why Creators Partner With Us:/);
@@ -173,7 +173,7 @@ test("homepage about module uses exact mission and advantage copy with image", a
   const about = section(html, "about");
   const text = normalized(about);
 
-  assert.match(about, /<img[\s\S]*assets\/about-hk-cross-border-bridge\.png[\s\S]*alt="Hong Kong skyline with cross-border connection routes and global commerce signals"/);
+  assert.match(about, /<img[\s\S]*assets\/hong-kong-harbour\.jpg[\s\S]*alt="Hong Kong Victoria Harbour - the strategic East-West gateway to global markets"/);
   for (const expected of [
     "[Our Mission]",
     "Making Cultural Boundaries Invisible.",
@@ -191,7 +191,7 @@ test("homepage contact module uses exact inquiry copy, fields, options and image
   const contact = section(html, "contact");
   const text = normalized(contact);
 
-  assert.match(contact, /<img[\s\S]*assets\/hong-kong-harbour\.jpg[\s\S]*alt="Hong Kong skyline as a global growth launch point"/);
+  assert.match(contact, /<img[\s\S]*assets\/talent-global-creator-network\.png[\s\S]*alt="Visualization of global creator network connections spanning international markets"/);
   for (const expected of [
     "Ready to Scale Your Global Footprint?",
     "Drop us a line. Our team of cross-border marketing strategists will map out your route to global dominance.",
@@ -269,21 +269,21 @@ test("styles enlarge desktop navigation and preserve contact CTA emphasis", asyn
 test("styles preserve social-first polish without changing locked content", async () => {
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
 
-  assert.match(css, /--card-surface:\s*#0b0b0b/);
-  assert.match(css, /--card-line-dark:\s*rgba\(255,\s*255,\s*255,\s*0\.13\)/);
-  assert.match(css, /\.platform-chip\s*{[\s\S]*width:\s*clamp\(38px,\s*3\.4vw,\s*48px\)/);
+  assert.match(css, /--card-surface:\s*#131210/);
+  assert.match(css, /--card-line-dark:\s*rgba\(250,\s*249,\s*247,\s*0\.08\)/);
+  assert.match(css, /\.platform-chip\s*{[\s\S]*width:\s*clamp\(36px,\s*3\.2vw,\s*46px\)/);
   assert.match(css, /\.platform-chip:is\(:hover,\s*:focus-visible\)\s*{[\s\S]*background:\s*var\(--coral\)/);
-  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(280px,\s*0\.7fr\) minmax\(0,\s*1\.3fr\)/);
-  assert.match(css, /\.service-media img\s*{[\s\S]*min-height:\s*clamp\(320px,\s*31vw,\s*390px\)/);
-  assert.match(css, /\.service-detail \+ \.service-detail\s*{[\s\S]*border-top-color:\s*rgba\(255,\s*255,\s*255,\s*0\.1\)/);
-  assert.match(css, /\.talent\s*{[\s\S]*grid-template-columns:\s*minmax\(0,\s*0\.92fr\) minmax\(0,\s*1\.08fr\)/);
-  assert.match(css, /\.talent-media img\s*{[\s\S]*object-position:\s*50% center/);
-  assert.match(css, /\.talent-media img\s*{[\s\S]*filter:\s*saturate\(0\.84\) contrast\(1\.08\) brightness\(0\.94\)/);
+  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(280px,\s*0\.65fr\) minmax\(0,\s*1\.35fr\)/);
+  assert.match(css, /\.service-media img\s*{[\s\S]*min-height:\s*clamp\(340px,\s*33vw,\s*420px\)/);
+  assert.match(css, /\.service-detail \+ \.service-detail\s*{[\s\S]*border-top-color:\s*var\(--line-dark\)/);
+  assert.match(css, /\.talent\s*{[\s\S]*grid-template-columns:\s*minmax\(0,\s*0\.88fr\) minmax\(0,\s*1\.12fr\)/);
+  assert.match(css, /\.talent-media img\s*{[\s\S]*object-position:\s*50% 30%/);
+  assert.match(css, /\.talent-media img\s*{[\s\S]*filter:\s*saturate\(0\.95\) contrast\(1\.04\) brightness\(0\.96\)/);
   assert.match(css, /\.creator-benefits li\s*{[\s\S]*display:\s*grid/);
-  assert.match(css, /\.about\s*{[\s\S]*column-gap:\s*clamp\(34px,\s*4\.8vw,\s*86px\)/);
-  assert.match(css, /\.about-media\s*{[\s\S]*min-height:\s*clamp\(560px,\s*46vw,\s*640px\)/);
+  assert.match(css, /\.about\s*{[\s\S]*column-gap:\s*clamp\(36px,\s*5vw,\s*92px\)/);
+  assert.match(css, /\.about-media\s*{[\s\S]*min-height:\s*clamp\(580px,\s*48vw,\s*660px\)/);
   assert.match(css, /\.about-media img\s*{[\s\S]*object-position:\s*54% center/);
-  assert.match(css, /\.about-media img\s*{[\s\S]*filter:\s*saturate\(0\.68\) contrast\(1\.14\) brightness\(0\.72\)/);
+  assert.match(css, /\.about-media img\s*{[\s\S]*filter:\s*saturate\(0\.9\) contrast\(1\.04\) brightness\(0\.88\)/);
   assert.match(css, /\.contact-copy img\s*{[\s\S]*aspect-ratio:\s*16 \/ 10/);
   assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*\.service-media img,[\s\S]*\.about-media\s*{[\s\S]*min-height:\s*260px/);
 });
@@ -299,38 +299,37 @@ test("annotated hero removes the old eyebrow and secondary controls", async () =
     /Based in Hong Kong,\s+FLOURISH CULTURE bridges the world's most innovative\s+brands with global audiences through data-driven influencer marketing and\s+viral creative strategies\./,
   );
   assert.doesNotMatch(hero, /class="eyebrow"|Global influencer marketing from Hong Kong|Explore our services|text-link|ri-arrow-down-line/);
-  assert.match(css, /h1\s*{[\s\S]*font-size:\s*clamp\(64px,\s*6\.4vw,\s*104px\)/);
-  assert.match(css, /\.hero-intro\s*{[\s\S]*font-size:\s*clamp\(17px,\s*1\.35vw,\s*21px\)/);
+  assert.match(css, /h1\s*{[\s\S]*font-size:\s*clamp\(60px,\s*6vw,\s*96px\)/);
+  assert.match(css, /\.hero-intro\s*{[\s\S]*font-size:\s*clamp\(17px,\s*1\.35vw,\s*20px\)/);
   assert.match(css, /\.button\s*{[\s\S]*min-height:\s*52px/);
-  assert.match(css, /\.button\s*{[\s\S]*font-size:\s*15px/);
+  assert.match(css, /\.button\s*{[\s\S]*font-size:\s*14px/);
 });
 
-test("annotated hero media uses two image cards plus an accessible live commerce card", async () => {
+test("annotated hero media uses three cohesive brand story cards", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const hero = html.match(/<section class="hero" id="top">[\s\S]*?<\/section>/)?.[0] ?? "";
   const cardMatches = hero.match(/class="hero-card/g) ?? [];
-  const liveCard = hero.match(/<div class="hero-card hero-card-live[\s\S]*?<figcaption>Live commerce experience<\/figcaption>\s*<\/div>/)?.[0] ?? "";
 
   assert.equal(cardMatches.length, 3);
-  for (const src of ["assets/service-influencer.jpg", "assets/service-performance.jpg"]) {
+  for (const src of ["assets/17bcea7b-424b-4593-9f31-697e7cbecd7d.jpeg", "assets/service-performance.jpg", "assets/fe872db7-ca7c-4423-9f5c-9dc109e60619.jpeg"]) {
     assert.match(hero, new RegExp(`src="${src}"`));
   }
-  assert.ok(liveCard, "third hero card should be a structured live commerce interface");
-  for (const text of ["LIVE", "24.8K watching", "Creator picks", "Instant checkout", "Add to cart", "Conversion lift"]) {
-    assert.match(liveCard, new RegExp(text));
-  }
-  assert.doesNotMatch(liveCard, /<img\b|TikTok|src="https?:\/\//i);
-  assert.doesNotMatch(hero, /src="assets\/hero-creator-collage\.jpg"/);
+  assert.match(hero, /Brand Partnership Hub/);
+  assert.match(hero, /Global talent network/);
+  assert.match(hero, /Data-driven growth/);
+  assert.doesNotMatch(hero, /Live commerce experience/);
+  assert.doesNotMatch(hero, /class="hero-live-interface"/);
+  assert.doesNotMatch(hero, /src="assets\/service-influencer\.jpg"/);
   assert.doesNotMatch(hero, /src="assets\/creator-recruitment\.jpg"/);
 });
 
-test("review editable mirrors the production header and live hero card", async () => {
+test("review editable mirrors the production header and hero card structure", async () => {
   const html = await readFile(new URL("../review-editable.html", import.meta.url), "utf8");
   const header = html.match(/<header class="site-header"[\s\S]*?<\/header>/)?.[0] ?? "";
   const hero = html.match(/<section class="hero" id="top">[\s\S]*?<\/section>/)?.[0] ?? "";
 
   assert.match(header, /class="wordmark wordmark-lockup"/);
-  assert.match(hero, /class="hero-live-interface"/);
+  assert.match(hero, /fe872db7-ca7c-4423-9f5c-9dc109e60619\.jpeg/);
   assert.doesNotMatch(`${header}\n${hero}`, /flourish-logo-reference\.png|src="assets\/creator-recruitment\.jpg"/);
 });
 
@@ -351,11 +350,11 @@ test("whiteboard 3 bridge section uses centered Who We Are double cards", async 
   assert.equal(bridge.match(/class="bridge-card reveal"/g)?.length, 2);
   assert.match(bridge, /From HK to the World/);
   assert.match(bridge, /The East-to-West Cross-Border Experts/);
-  assert.match(bridge, /assets\/bridge-connect-world\.svg/);
-  assert.match(bridge, /assets\/bridge-broadcast-world\.svg/);
+  assert.match(bridge, /assets\/hong-kong-harbour\.jpg/);
+  assert.match(bridge, /assets\/service-localization\.jpg/);
   assert.doesNotMatch(bridge, /From Hong Kong<br \/>to the World|class="eyebrow eyebrow-dark"/);
   assert.match(css, /\.bridge-heading\s*{[\s\S]*text-align:\s*center/);
-  assert.match(css, /\.bridge-heading h2\s*{[\s\S]*font-size:\s*clamp\(38px,\s*4\.2vw,\s*58px\)/);
+  assert.match(css, /\.bridge-heading h2\s*{[\s\S]*font-size:\s*clamp\(26px,\s*3vw,\s*42px\)/);
   assert.match(css, /\.bridge-card-grid\s*{[\s\S]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/);
   assert.match(css, /\.bridge-card\s*{[\s\S]*background:/);
   assert.match(css, /@media \(min-width: 1101px\)/);
@@ -376,9 +375,9 @@ test("whiteboard 3 logo rail autoscrolls seven approved logos accessibly", async
   }
   assert.equal(logoStrip.match(/<img /g)?.length, 14);
   assert.match(css, /@keyframes logo-scroll/);
-  assert.match(css, /\.hero::after\s*{[\s\S]*height:\s*42px/);
-  assert.match(css, /\.logo-strip\s*{[\s\S]*padding:\s*clamp\(72px,\s*7\.6vw,\s*108px\) 0 clamp\(46px,\s*4\.5vw,\s*62px\)/);
-  assert.match(css, /\.logo-strip h2\s*{[\s\S]*font-size:\s*clamp\(28px,\s*3\.25vw,\s*46px\)/);
+  assert.match(css, /\.hero::before\s*{[\s\S]*radial-gradient\(ellipse at 20% 30%/);
+  assert.match(css, /\.logo-strip\s*{[\s\S]*padding:\s*clamp\(80px,\s*8\.5vw,\s*120px\) 0 clamp\(56px,\s*5\.5vw,\s*78px\)/);
+  assert.match(css, /\.logo-strip h2\s*{[\s\S]*font-size:\s*clamp\(26px,\s*3vw,\s*42px\)/);
   assert.match(css, /\.brand-logo-track\s*{[\s\S]*animation:\s*logo-scroll/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)[\s\S]*\.brand-logo-track\s*{[\s\S]*animation:\s*none/);
   assert.match(css, /\.brand-logo-viewport\s*{[\s\S]*overflow:\s*hidden/);

@@ -101,7 +101,15 @@ if (reducedMotion || !("IntersectionObserver" in window)) {
         observer.unobserve(entry.target);
       }
     },
-    { rootMargin: "0px 0px -10% 0px", threshold: 0.08 },
+    { rootMargin: "0px 0px 20% 0px", threshold: 0.02 },
   );
-  reveals.forEach((element) => observer.observe(element));
+  reveals.forEach((element) => {
+    const rect = element.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      element.classList.add("is-visible");
+      observer.unobserve(element);
+    } else {
+      observer.observe(element);
+    }
+  });
 }

@@ -1,6 +1,6 @@
 {
   "name": "flourish-culture-website",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,6 +11,6 @@
   "dependencies": {
     "@fontsource-variable/archivo": "^5.2.8",
     "@fontsource-variable/space-grotesk": "^5.2.10",
-    "remixicon": "^4.9.1"
+    "remixicon": "^4.2.0"
   }
 }

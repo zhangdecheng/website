@@ -269,10 +269,10 @@ test("styles enlarge desktop navigation and preserve contact CTA emphasis", asyn
 test("styles preserve social-first polish without changing locked content", async () => {
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
 
-  assert.match(css, /--card-surface:\s*#131210/);
-  assert.match(css, /--card-line-dark:\s*rgba\(250,\s*249,\s*247,\s*0\.08\)/);
+  assert.match(css, /--card-surface:\s*#1e1b19/);
+  assert.match(css, /--card-line-dark:\s*rgba\(245,\s*240,\s*235,\s*0\.06\)/);
   assert.match(css, /\.platform-chip\s*{[\s\S]*width:\s*clamp\(36px,\s*3\.2vw,\s*46px\)/);
-  assert.match(css, /\.platform-chip:is\(:hover,\s*:focus-visible\)\s*{[\s\S]*background:\s*var\(--coral\)/);
+  assert.match(css, /\.platform-chip:is\(:hover,\s*:focus-visible\)\s*{[\s\S]*background:\s*var\(--gold\)/);
   assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(280px,\s*0\.65fr\) minmax\(0,\s*1\.35fr\)/);
   assert.match(css, /\.service-media img\s*{[\s\S]*min-height:\s*clamp\(340px,\s*33vw,\s*420px\)/);
   assert.match(css, /\.service-detail \+ \.service-detail\s*{[\s\S]*border-top-color:\s*var\(--line-dark\)/);
@@ -299,25 +299,28 @@ test("annotated hero removes the old eyebrow and secondary controls", async () =
     /Based in Hong Kong,\s+FLOURISH CULTURE bridges the world's most innovative\s+brands with global audiences through data-driven influencer marketing and\s+viral creative strategies\./,
   );
   assert.doesNotMatch(hero, /class="eyebrow"|Global influencer marketing from Hong Kong|Explore our services|text-link|ri-arrow-down-line/);
-  assert.match(css, /h1\s*{[\s\S]*font-size:\s*clamp\(60px,\s*6vw,\s*96px\)/);
+  assert.match(css, /h1\s*{[\s\S]*font-size:\s*clamp\(56px,\s*5\.5vw,\s*88px\)/);
   assert.match(css, /\.hero-intro\s*{[\s\S]*font-size:\s*clamp\(17px,\s*1\.35vw,\s*20px\)/);
   assert.match(css, /\.button\s*{[\s\S]*min-height:\s*52px/);
   assert.match(css, /\.button\s*{[\s\S]*font-size:\s*14px/);
 });
 
-test("annotated hero media uses three cohesive brand story cards", async () => {
+test("annotated hero media uses three layered brand story cards with HK badge", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const hero = html.match(/<section class="hero" id="top">[\s\S]*?<\/section>/)?.[0] ?? "";
   const cardMatches = hero.match(/class="hero-card/g) ?? [];
+  const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
 
   assert.equal(cardMatches.length, 3);
   for (const src of ["assets/17bcea7b-424b-4593-9f31-697e7cbecd7d.jpeg", "assets/service-performance.jpg", "assets/fe872db7-ca7c-4423-9f5c-9dc109e60619.jpeg"]) {
     assert.match(hero, new RegExp(`src="${src}"`));
   }
-  assert.match(hero, /Brand Partnership Hub/);
-  assert.match(hero, /Global talent network/);
-  assert.match(hero, /Data-driven growth/);
-  assert.doesNotMatch(hero, /Live commerce experience/);
+  assert.match(hero, /class="hk-badge"/);
+  assert.match(hero, /HK/);
+  assert.match(hero, /EAST · WEST/);
+  assert.match(css, /hero-card-layer-1/);
+  assert.match(css, /hero-card-layer-2/);
+  assert.match(css, /hero-card-layer-3/);
   assert.doesNotMatch(hero, /class="hero-live-interface"/);
   assert.doesNotMatch(hero, /src="assets\/service-influencer\.jpg"/);
   assert.doesNotMatch(hero, /src="assets\/creator-recruitment\.jpg"/);

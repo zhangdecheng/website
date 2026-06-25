@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" role="img" aria-labelledby="title desc">
+  <title id="title">Global connection network</title>
+  <desc id="desc">Abstract red and gold connection arcs linking Hong Kong to worldwide nodes on a dark background.</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="48%" r="68%">
+      <stop offset="0" stop-color="#24100f"/>
+      <stop offset="0.48" stop-color="#0d0d0d"/>
+      <stop offset="1" stop-color="#050505"/>
+    </radialGradient>
+    <linearGradient id="arc" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff4d43"/>
+      <stop offset="0.56" stop-color="#f4c866"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.7"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="960" height="560" fill="url(#bg)"/>
+  <g opacity="0.18" stroke="#fff" stroke-width="1">
+    <path d="M60 352C216 220 370 178 520 228S756 330 910 210" fill="none"/>
+    <path d="M70 438C262 314 382 300 526 342s218 22 368-82" fill="none"/>
+    <path d="M138 138c170 112 314 126 444 42s226-70 306 4" fill="none"/>
+  </g>
+  <g fill="none" stroke="url(#arc)" stroke-linecap="round" filter="url(#glow)">
+    <path d="M212 330C318 194 462 144 604 178c88 21 151 76 206 142" stroke-width="7"/>
+    <path d="M212 330C326 360 472 384 628 342c84-23 142-65 201-128" stroke-width="5" opacity="0.72"/>
+    <path d="M212 330C312 264 424 278 536 308s218 24 324-58" stroke-width="4" opacity="0.82"/>
+  </g>
+  <g fill="#ff4d43" filter="url(#glow)">
+    <circle cx="212" cy="330" r="17"/>
+    <circle cx="604" cy="178" r="11"/>
+    <circle cx="810" cy="320" r="13"/>
+    <circle cx="628" cy="342" r="10"/>
+    <circle cx="860" cy="250" r="9"/>
+  </g>
+  <g fill="#f4c866">
+    <circle cx="212" cy="330" r="5"/>
+    <circle cx="604" cy="178" r="4"/>
+    <circle cx="810" cy="320" r="4"/>
+  </g>
+  <g opacity="0.38" stroke="#ff4d43" stroke-width="2">
+    <circle cx="212" cy="330" r="74" fill="none"/>
+    <circle cx="810" cy="320" r="62" fill="none"/>
+  </g>
+</svg>

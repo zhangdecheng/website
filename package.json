@@ -1,0 +1,15 @@
+{
+  "name": "flourish-culture-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "build": "node scripts/build-release.mjs",
+    "serve": "python3 -m http.server 4173"
+  },
+  "dependencies": {
+    "@fontsource-variable/archivo": "^5.2.8",
+    "@fontsource-variable/space-grotesk": "^5.2.10",
+    "remixicon": "^4.9.1"
+  }
+}

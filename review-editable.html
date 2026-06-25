@@ -1,0 +1,578 @@
+<!doctype html>
+<!--
+  EDITABLE REVIEW COPY
+
+  This file is a safe human-editing copy of index.html.
+  Edit this file when you want to try text, spacing, section order, or structure changes.
+  Once the direction is confirmed, ask Codex to sync the useful changes back into:
+    - index.html
+    - styles.css
+    - script.js, only if behavior changes are needed
+
+  Formal production source remains index.html.
+-->
+<html lang="en" data-review-copy="true">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050505" />
+    <title>FLOURISH CULTURE — Editable Review Copy</title>
+    <meta
+      name="description"
+      content="Editable review copy for the FLOURISH CULTURE static homepage."
+    />
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="assets/icons/remixicon.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .review-helper {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 1000;
+        max-width: min(320px, calc(100vw - 32px));
+        padding: 12px 14px;
+        border: 1px solid rgba(255, 78, 66, 0.55);
+        border-radius: 14px;
+        background: rgba(5, 5, 5, 0.86);
+        color: #fff;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+        font-family: var(--font-body);
+        font-size: 12px;
+        line-height: 1.45;
+        backdrop-filter: blur(12px);
+      }
+
+      .review-helper strong {
+        display: block;
+        margin-bottom: 4px;
+        color: #ff4e42;
+        font-family: var(--font-display);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .review-helper code {
+        color: #fff;
+      }
+
+      @media (max-width: 640px) {
+        .review-helper {
+          right: 10px;
+          bottom: 10px;
+          max-width: calc(100vw - 20px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="review-helper" aria-label="Editable review copy note">
+      <strong>Editable review copy</strong>
+      Edit this page for manual corrections. Keep confirmed changes here, then ask Codex to sync them back to <code>index.html</code>.
+    </aside>
+
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <!-- REVIEW SECTION: Navigation
+      Main controls:
+      - Wordmark text lives in .wordmark-lockup.
+      - Menu labels and anchor targets live in .site-nav.
+      - Top-right red CTA is .nav-cta.
+      Keep anchor targets as #services, #talent, #about, #contact unless the approved interface changes.
+    -->
+    <header class="site-header" data-header>
+      <a class="wordmark wordmark-lockup" href="#top" aria-label="FLOURISH CULTURE home">
+        <span class="wordmark-mark" aria-hidden="true">✦</span>
+        <span class="wordmark-copy">
+          <span class="wordmark-name">FLOURISH CULTURE</span>
+          <span class="wordmark-tagline">GLOBAL CREATOR GROWTH</span>
+        </span>
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-navigation"
+        data-menu-toggle
+      >
+        <span class="sr-only">Open menu</span>
+        <i class="ri-menu-line" aria-hidden="true"></i>
+      </button>
+
+      <nav class="site-nav" id="site-navigation" aria-label="Primary navigation" data-nav>
+        <a href="#services">Services</a>
+        <a href="#talent">Our Talent</a>
+        <a href="#about">About Us</a>
+        <a class="nav-contact-mobile" href="#contact">Contact Us</a>
+      </nav>
+
+      <a class="nav-cta" href="#contact">Contact Us</a>
+    </header>
+
+    <main id="main-content">
+      <!-- REVIEW SECTION: Hero
+        Main controls:
+        - Large headline is the h1.
+        - Primary CTA is .button-accent.
+        - Three creator-story cards live inside .hero-media as .hero-card items.
+        For spacing/scale, the matching CSS starts around .hero and .hero-copy in styles.css.
+      -->
+      <section class="hero" id="top">
+        <div class="hero-copy reveal">
+          <h1>Scaling Global Impact for Visionary Brands.</h1>
+          <p class="hero-intro">
+            Based in Hong Kong, FLOURISH CULTURE bridges the world's most innovative
+            brands with global audiences through data-driven influencer marketing and
+            viral creative strategies.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-accent" href="#contact">
+              Let’s Flourish Together
+            </a>
+          </div>
+        </div>
+
+        <figure class="hero-media reveal" aria-label="Three creator marketing story cards">
+          <div class="hero-card hero-card-diversity">
+            <img
+              src="assets/service-influencer.jpg"
+              alt="A diverse creator team collaborating in a studio"
+            />
+            <figcaption>Global talent network</figcaption>
+          </div>
+          <div class="hero-card hero-card-tech">
+            <img
+              src="assets/service-performance.jpg"
+              alt="A creator campaign strategist reviewing performance screens"
+            />
+            <figcaption>Tech-driven content studio</figcaption>
+          </div>
+          <div class="hero-card hero-card-live" aria-label="Live commerce interface preview">
+            <div class="hero-live-interface">
+              <span class="hero-live-badge">LIVE</span>
+              <span class="hero-live-viewers">24.8K watching</span>
+              <p class="hero-live-title">Creator picks</p>
+              <p class="hero-live-comment">“Does it ship globally?”</p>
+              <div class="hero-live-product" aria-label="Featured live shopping product">
+                <span class="hero-live-product-thumb" aria-hidden="true"></span>
+                <p>Launch bundle</p>
+                <strong>Instant checkout</strong>
+                <button type="button" tabindex="-1">Add to cart</button>
+              </div>
+              <p class="hero-live-metric">Conversion lift +38%</p>
+            </div>
+            <figcaption>Live commerce experience</figcaption>
+          </div>
+        </figure>
+      </section>
+
+      <!-- REVIEW SECTION: Logo Rail
+        Main controls:
+        - Label text is #trusted-heading.
+        - Each approved logo appears once with alt text inside .brand-logo-track.
+        - The second logo set is aria-hidden and only supports the seamless scroll.
+        - Motion and optical sizing are controlled by .brand-logo-viewport/.brand-logo-track in styles.css.
+      -->
+      <section class="logo-strip" aria-labelledby="trusted-heading">
+        <div class="section-shell">
+          <h2 id="trusted-heading">Trusted by Leading Global Brands &amp; Innovators</h2>
+          <div class="brand-logo-viewport">
+            <div class="brand-logo-track">
+              <img src="assets/brand-logos/temu.png" alt="Temu" />
+              <img src="assets/brand-logos/anker.png" alt="Anker Innovations" />
+              <img src="assets/brand-logos/dreame.png" alt="Dreame" />
+              <img src="assets/brand-logos/aliexpress.png" alt="AliExpress" />
+              <img src="assets/brand-logos/lovart.png" alt="Lovart" />
+              <img src="assets/brand-logos/aiper.png" alt="Aiper" />
+              <img src="assets/brand-logos/ksp.png" alt="KSP Performance" />
+              <img src="assets/brand-logos/temu.png" alt="" aria-hidden="true" />
+              <img src="assets/brand-logos/anker.png" alt="" aria-hidden="true" />
+              <img src="assets/brand-logos/dreame.png" alt="" aria-hidden="true" />
+              <img src="assets/brand-logos/aliexpress.png" alt="" aria-hidden="true" />
+              <img src="assets/brand-logos/lovart.png" alt="" aria-hidden="true" />
+              <img src="assets/brand-logos/aiper.png" alt="" aria-hidden="true" />
+              <img src="assets/brand-logos/ksp.png" alt="" aria-hidden="true" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REVIEW SECTION: Hong Kong Bridge
+        Main controls:
+        - Section headline is #bridge-heading.
+        - Two story cards are .bridge-card items inside .bridge-card-grid.
+        - The SVG images are local, text-free visual assets in assets/.
+        For restoring the approved Who We Are structure, adjust this section first.
+      -->
+      <section class="bridge" aria-labelledby="bridge-heading">
+        <div class="bridge-layout section-shell">
+          <div class="bridge-heading reveal">
+            <h2 id="bridge-heading">Who We Are</h2>
+          </div>
+          <div class="bridge-card-grid">
+            <article class="bridge-card reveal">
+              <img
+                src="assets/bridge-connect-world.svg"
+                alt="Abstract global connection network linking Hong Kong with worldwide markets"
+              />
+              <div class="bridge-card-copy">
+                <h3>From HK to the World</h3>
+                <p>
+                  Headquartered in Hong Kong, we leverage the city’s unique status as a global financial and cultural hub to seamless bridge markets, single-handedly connecting East Asian innovation with international audiences.
+                </p>
+              </div>
+            </article>
+            <article class="bridge-card reveal">
+              <img
+                src="assets/bridge-broadcast-world.svg"
+                alt="Abstract global broadcast waves carrying cross-border campaign momentum"
+              />
+              <div class="bridge-card-copy">
+                <h3>The East-to-West Cross-Border Experts</h3>
+                <p>
+                  We have deep roots in China's dynamic supply chains and brand ecosystems (including giants like Temu and pioneering labels like Innerbrightness). Combined with our 100% localized on-the-ground global execution, we translate domestic brilliance into cross-border viral success.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- REVIEW SECTION: Services
+        Main controls:
+        - Services are three .service-block cards inside .services-grid.
+        - Each block separates The Overview and What We Do content.
+        - Platform chips are local text, not external CDN icons.
+      -->
+      <section class="services" id="services" aria-labelledby="services-heading">
+        <div class="section-shell services-shell">
+          <h2 class="sr-only" id="services-heading">Services</h2>
+          <div class="services-grid">
+            <article class="service-block reveal">
+              <div class="service-media">
+                <img
+                  src="assets/service-influencer.jpg"
+                  alt="A diverse creator team collaborating in a red-lit studio"
+                />
+                <div class="platform-chips" aria-label="Supported social platforms">
+                  <span class="platform-chip" role="img" tabindex="0" aria-label="TikTok">
+                    <i class="ri-tiktok-fill" aria-hidden="true"></i>
+                  </span>
+                  <span class="platform-chip" role="img" tabindex="0" aria-label="YouTube">
+                    <i class="ri-youtube-fill" aria-hidden="true"></i>
+                  </span>
+                  <span class="platform-chip" role="img" tabindex="0" aria-label="Instagram">
+                    <i class="ri-instagram-fill" aria-hidden="true"></i>
+                  </span>
+                  <span class="platform-chip" role="img" tabindex="0" aria-label="Shorts">
+                    <i class="ri-play-circle-fill" aria-hidden="true"></i>
+                  </span>
+                  <span class="platform-chip" role="img" tabindex="0" aria-label="Reels">
+                    <i class="ri-clapperboard-fill" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="service-copy">
+                <span class="service-number">01</span>
+                <h3>Global Influencer Marketing</h3>
+                <div class="service-detail">
+                  <p class="service-kicker">The Overview</p>
+                  <p>
+                    We engineer full-funnel influencer campaigns across TikTok, YouTube,
+                    Instagram, Shorts, and Reels. From macro-influencers creating viral
+                    moments to hyper-targeted KOCs driving community trust, we manage the
+                    entire ecosystem for your brand.
+                  </p>
+                </div>
+                <div class="service-detail service-actions">
+                  <p class="service-kicker">What We Do</p>
+                  <ul>
+                    <li>End-to-End Campaign Management: Talent scouting, contract negotiation, compliance, and localized creative briefing.</li>
+                    <li>Cross-Border Optimization: Tailored scaling strategies built specifically for hyper-growth platforms (like Temu) and narrative-driven premium brands (like Innerbrightness).</li>
+                    <li>Culture-First Content Curation: Ensuring your brand message is authentically translated into the native internet culture of your target markets.</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <article class="service-block reveal">
+              <div class="service-media">
+                <img
+                  src="assets/service-performance.jpg"
+                  alt="A strategist reviewing creator campaign performance on digital screens"
+                />
+              </div>
+              <div class="service-copy">
+                <span class="service-number">02</span>
+                <h3>Performance-Driven Growth &amp; Paid Media</h3>
+                <div class="service-detail">
+                  <p class="service-kicker">The Overview</p>
+                  <p>
+                    Organic reach is just the beginning. We supercharge your influencer
+                    assets by combining creator content with hyper-targeted paid media to
+                    maximize your Return on Ad Spend (ROAS).
+                  </p>
+                </div>
+                <div class="service-detail service-actions">
+                  <p class="service-kicker">What We Do</p>
+                  <ul>
+                    <li>Creator Whitelisting &amp; Spark Ads: We gain secure access to creator profiles to run high-converting ad variants directly through their handles.</li>
+                    <li>E-commerce Direct Response: Performance marketing funnels designed to turn social media engagement into immediate app downloads, web traffic, and sales.</li>
+                    <li>Real-Time Data Analytics: Continuous optimization of custom audiences, lookalimes, and ad spend allocation based on live performance tracking.</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <article class="service-block reveal">
+              <div class="service-media">
+                <img
+                  src="assets/service-localization.jpg"
+                  alt="A multicultural production team filming creator content in a studio"
+                />
+              </div>
+              <div class="service-copy">
+                <span class="service-number">03</span>
+                <h3>Creative Strategy &amp; Localization</h3>
+                <div class="service-detail">
+                  <p class="service-kicker">The Overview</p>
+                  <p>
+                    To conquer global markets, you need to speak the local language of
+                    social media. We break down cultural barriers by reshaping your brand
+                    identity to resonate perfectly with Gen Z and Millennial consumers
+                    worldwide.
+                  </p>
+                </div>
+                <div class="service-detail service-actions">
+                  <p class="service-kicker">What We Do</p>
+                  <ul>
+                    <li>Localized Trend Jacking: Aligning your products with fast-moving global social media trends, sounds, and challenges.</li>
+                    <li>UGC (User Generated Content) Production: Generating an endless library of high-quality, authentic content assets for your brand's long-term marketing channels.</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- REVIEW SECTION: Creator Recruitment
+        Main controls:
+        - Red recruitment section starts at #talent.
+        - Creator image is .talent-media img.
+        - Form field names are used by script.js, so do not change name="" values unless behavior is updated too.
+      -->
+      <section class="talent" id="talent" aria-labelledby="talent-heading">
+        <div class="talent-media reveal">
+          <img
+            src="assets/talent-global-creator-network.png"
+            alt="Global creator team producing social content for brand partnerships"
+          />
+        </div>
+        <div class="talent-content reveal">
+          <h2 id="talent-heading">Turn Your Influence into a Global Legacy.</h2>
+          <p class="talent-intro">
+            FLOURISH CULTURE connects the world’s most talented creators with
+            market-defining global brands. Let's build your digital empire together.
+          </p>
+
+          <div class="creator-benefits" aria-labelledby="creator-benefits-heading">
+            <h3 id="creator-benefits-heading">Why Creators Partner With Us:</h3>
+            <ul>
+              <li>Direct Access to Iconic Brands: Get exclusive sponsorship opportunities with hyper-growth global giants like Temu and pioneering lifestyle brands like Innerbrightness.</li>
+              <li>Global Monetization: Our dedicated management team handles the business side—negotiating top-tier rates, securing long-term contracts, and ensuring timely payments.</li>
+              <li>Strategic Career Growth: We provide algorithmic insights, content audits, and cross-platform strategies to help you expand your audience globally.</li>
+            </ul>
+          </div>
+
+          <form class="creator-form" data-creator-form novalidate>
+            <h3>Join the Culture (Application Form)</h3>
+            <div class="field-grid">
+              <label>
+                <span>Full Name</span>
+                <input name="creator-name" type="text" autocomplete="name" required />
+              </label>
+              <label>
+                <span>Email Address</span>
+                <input name="creator-email" type="email" autocomplete="email" required />
+              </label>
+              <label>
+                <span>Primary Social Media Handle &amp; Link</span>
+                <input
+                  name="creator-social"
+                  type="url"
+                  inputmode="url"
+                  placeholder="https://"
+                  required
+                  data-url-field
+                />
+              </label>
+              <label>
+                <span>Main Audience Demographics (US, UK, Europe, etc.)</span>
+                <input name="creator-region" type="text" required />
+              </label>
+            </div>
+            <button class="button button-dark" type="submit">
+              Apply to Join the Roster
+              <i class="ri-arrow-right-line" aria-hidden="true"></i>
+            </button>
+            <p class="form-note">Your email app will open with a prefilled application.</p>
+          </form>
+        </div>
+      </section>
+
+      <!-- REVIEW SECTION: Mission/About
+        Main controls:
+        - About uses image plus mission and FLOURISH advantage copy.
+        - Section copy lives inside .about-content.
+        This is a good place for brand mission edits.
+      -->
+      <section class="about" id="about" aria-labelledby="about-heading">
+        <div class="about-media reveal">
+          <img
+            src="assets/about-hk-cross-border-bridge.png"
+            alt="Hong Kong skyline with cross-border connection routes and global commerce signals"
+          />
+        </div>
+        <div class="section-shell about-content reveal">
+          <div class="about-panel">
+            <p class="eyebrow">[Our Mission]</p>
+            <h2 id="about-heading">Making Cultural Boundaries Invisible.</h2>
+            <p>
+              At FLOURISH CULTURE, we believe that great brands shouldn't be limited by
+              geography. Our mission is to empower visionaries to transcend borders,
+              helping them not just market, but truly flourish in global digital soil.
+            </p>
+          </div>
+          <div class="about-panel about-advantage">
+            <p class="eyebrow">[The FLOURISH Advantage: Why HK &amp; Why Us?]</p>
+            <p>
+              Headquartered in Hong Kong, FLOURISH CULTURE occupies a unique position as
+              the ultimate bridge between East and West.
+            </p>
+            <p>
+              We possess an intrinsic, deep-rooted understanding of China’s world-class
+              supply chains, e-commerce innovations, and brand aspirations. Simultaneously,
+              we operate with a 100% localized, ground-level execution network across North
+              America, Europe, and beyond. This dual DNA allows us to eliminate cross-border
+              friction entirely, making us the most reliable global growth partner for
+              brands aiming for the world stage.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- REVIEW SECTION: Project Contact
+        Main controls:
+        - Contact headline/copy is in .contact-copy.
+        - Project form is .project-form.
+        - Form field names are used by script.js, so do not change name="" values unless behavior is updated too.
+      -->
+      <section class="contact" id="contact" aria-labelledby="contact-heading">
+        <div class="section-shell contact-layout">
+          <div class="contact-copy reveal">
+            <img
+              src="assets/hong-kong-harbour.jpg"
+              alt="Hong Kong skyline as a global growth launch point"
+            />
+            <h2 id="contact-heading">Ready to Scale Your Global Footprint?</h2>
+            <p>
+              Drop us a line. Our team of cross-border marketing strategists will map out
+              your route to global dominance.
+            </p>
+            <a href="mailto:flourishculture@outlook.com">flourishculture@outlook.com</a>
+          </div>
+
+          <form class="project-form reveal" data-project-form novalidate>
+            <h3>Project Inquiry Form</h3>
+            <div class="field-grid">
+              <label>
+                <span>I am a...</span>
+                <select name="project-identity" required>
+                  <option value="">Select your role</option>
+                  <option>Brand looking for growth</option>
+                  <option>Creator looking for representation</option>
+                </select>
+              </label>
+              <label>
+                <span>Name &amp; Job Title</span>
+                <input name="project-name" type="text" autocomplete="name" required />
+              </label>
+              <label>
+                <span>Company Name &amp; Website URL</span>
+                <input name="project-company" type="text" autocomplete="organization url" />
+              </label>
+              <label>
+                <span>Email Address</span>
+                <input name="project-email" type="email" autocomplete="email" required />
+              </label>
+              <label>
+                <span>Estimated Monthly Marketing Budget</span>
+                <select name="project-budget" required>
+                  <option value="">Select a budget range</option>
+                  <option>$10,000 - $30,000</option>
+                  <option>$30,000 - $100,000</option>
+                  <option>$100,000+</option>
+                </select>
+              </label>
+              <label class="field-wide">
+                <span>Tell us about your global goals...</span>
+                <textarea
+                  name="project-goal"
+                  rows="5"
+                  placeholder="Markets, platforms, audience and growth objective"
+                  required
+                ></textarea>
+              </label>
+            </div>
+            <button class="button button-dark" type="submit">
+              Book a Strategy Call
+              <i class="ri-arrow-right-line" aria-hidden="true"></i>
+            </button>
+            <p class="form-note">No server submission or tracking is used.</p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- REVIEW SECTION: Footer
+      Main controls:
+      - Footer wordmark and one-line description live in the first column.
+      - Footer links should mirror the main anchor structure.
+      - Email and location live in .footer-contact.
+    -->
+    <footer class="site-footer">
+      <div class="section-shell footer-grid">
+        <div>
+          <a class="wordmark wordmark-lockup wordmark-footer" href="#top" aria-label="FLOURISH CULTURE home">
+            <span class="wordmark-mark" aria-hidden="true">✦</span>
+            <span class="wordmark-copy">
+              <span class="wordmark-name">FLOURISH CULTURE</span>
+              <span class="wordmark-tagline">GLOBAL CREATOR GROWTH</span>
+            </span>
+          </a>
+          <p>Connecting innovative brands with global creators and audiences.</p>
+        </div>
+        <nav aria-label="Footer navigation">
+          <a href="#services">Services</a>
+          <a href="#talent">Our Talent</a>
+          <a href="#about">About Us</a>
+          <a href="#contact">Contact Us</a>
+        </nav>
+        <div class="footer-contact">
+          <span>Get in touch</span>
+          <a href="mailto:flourishculture@outlook.com">flourishculture@outlook.com</a>
+          <p>Hong Kong SAR</p>
+        </div>
+      </div>
+      <div class="section-shell footer-bottom">
+        <span>© 2026 FLOURISH CULTURE. All rights reserved.</span>
+        <a href="#top">Back to top <i class="ri-arrow-up-line" aria-hidden="true"></i></a>
+      </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

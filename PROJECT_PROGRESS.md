@@ -1,0 +1,169 @@
+# FLOURISH CULTURE Website — Project Progress
+
+Last updated: 2026-06-24
+
+## Goal
+
+Replace the temporary FLOURISH CULTURE landing page with a polished,
+responsive, interactive marketing website grounded in the approved Feishu
+requirements document.
+
+## Recovery Entry Point
+
+1. Read this file.
+2. Read `docs/design-brief.md` once it exists.
+3. Review the three files under `design-options/`.
+4. Confirm the selected visual direction before editing production HTML.
+5. Keep the existing deployment scripts and `/review/` routing compatible.
+
+## Current Phase
+
+Phase 6 — Local delivery complete.
+
+## Completed
+
+- Located the existing static site and deployment scripts.
+- Confirmed the site is currently a single temporary `index.html`.
+- Confirmed final interaction level: complete single-page frontend interaction.
+- Confirmed Chrome as the primary preview and QA browser.
+- Confirmed the official CLI source: `larksuite/cli`.
+- Confirmed target platform: macOS ARM64.
+- Downloaded and SHA-256 verified official Feishu/Lark CLI v1.0.56.
+- Confirmed existing user authentication has Wiki and Docx read scopes.
+- Read Feishu requirements document revision 207.
+- Downloaded and inspected four embedded visual references.
+- Captured and inspected the current Viral Nation homepage in Chrome.
+- Drafted `docs/design-brief.md`.
+- Design brief confirmed by the user on 2026-06-18.
+- Generated exactly three independent visual concepts:
+  - Option 1: Neon Culture Bridge.
+  - Option 2: Global Editorial Exchange.
+  - Option 3: Signal Mosaic.
+- Recorded concept rationale and recovery details in `design-options/README.md`.
+- User selected Option 1: Neon Culture Bridge.
+- Archived the previous white/green Chinese draft.
+- Saved `design-options/neon-culture-bridge.png` as the canonical visual truth.
+- Generated dedicated hero, service, creator, and Hong Kong cultural assets.
+- Rebuilt the homepage as an English black/coral responsive static site.
+- Added honest mailto form flows and automated behavior/content tests.
+- Replaced the placeholder deployment script with a non-destructive static-file
+  copy workflow that does not edit Nginx or `/review/`.
+- Passed Chrome responsive QA at 1920 × 1080, 1440 × 1024,
+  1024 × 1366, 390 × 844, and 360 × 800.
+- Passed menu, form validation, mailto, keyboard, focus, alt text, touch target,
+  overflow, console, and reduced-motion checks.
+- Added canonical section crops and the final side-by-side visual comparison.
+- Converted photographic production assets to quality-86 JPEG while retaining
+  the generated PNG masters under `design-options/source-assets/`.
+- Reworked the responsive layout using the Canonical section proportions.
+- Restored the Hong Kong bridge as a text-and-harbour-image split.
+- Reduced the 1440px desktop page height from approximately 7245px to 3538px.
+- Replaced the invalid equal-height comparison with equal-width, section-aligned
+  comparison boards under `qa/comparisons/sections/`.
+- Resolved all P0–P2 findings and recorded `final result: passed` in
+  `design-qa.md`.
+- Rebuilt `dist/` and the local release archive without publishing production.
+- Read Feishu annotation boards 1 and 2 with `lark-cli`, exported their
+  whiteboard previews/raw nodes under `feishu-annotations/`, and applied the
+  requested header, logo, hero copy, hero media, navigation, and type-size
+  refinements.
+- Added a local-only `review-editable.html` page for manual HTML review edits;
+  it is excluded from `dist/` and the release archive.
+- Re-ran static tests, build checks, Chrome responsive QA, and release archive
+  validation after the Feishu board 2 changes.
+
+## In Progress
+
+- None.
+
+## Pending
+
+- Optional future production publication, only when explicitly approved.
+
+## Locked Decisions
+
+- Existing project directory: `flourishculturekol-site`.
+- Frontend remains static and Nginx-compatible.
+- No new business backend.
+- Existing deployment scripts remain in place.
+- `/review/` compatibility must be preserved.
+- Credentials and tokens must never be stored in project files.
+- Selected direction: Option 1 — Neon Culture Bridge.
+- Creator application mailto target: `irisa@flourishculture.com`.
+- Project inquiry mailto target: `flourishculture@outlook.com`.
+- Production deployment was explicitly approved and completed on 2026-06-25;
+  future production changes still require explicit approval.
+
+## Files Expected
+
+- `index.html`
+- `styles.css`
+- `script.js`
+- `assets/`
+- `docs/design-brief.md`
+- `design-options/`
+- `design-qa.md`
+- `qa/`
+
+## Blockers
+
+- None currently. The live Influencer Marketing Factory benchmark remained
+  inaccessible through Cloudflare; no inaccessible visual details were used.
+
+## 2026-06-24 — Feishu Whiteboard 3 Local Implementation
+
+- Applied whiteboard 3 annotations locally only; no production deploy, Nginx, certificate, server, or `/review/` changes were made.
+- Reworked the approved brand logo area into a larger centered title plus a dark-adapted horizontal auto-scrolling logo rail using the same seven approved brand assets; reduced-motion mode falls back to a static wrapped layout.
+- Rebuilt the former Hong Kong bridge area as a `Who We Are` section with two dark red/black cards, local text-free SVG visuals, and responsive one-column stacking on smaller screens.
+- Synced the same visual structure into `review-editable.html` so manual HTML annotation can continue from the updated local preview copy.
+- Re-ran main-thread verification after the whiteboard 3 implementation: static tests, release build, Chrome responsive QA, and release archive validation all passed locally.
+
+## 2026-06-24 — Remaining Feishu Module Pass
+
+- Updated `index.html` and `review-editable.html` locally only; no production deploy, Nginx, certificate, server, `/review/`, API, database, cookie, analytics, or new-page changes were made.
+- Rebuilt Services as three stronger blocks with exact Feishu `The Overview` and `What We Do` copy, plus local text chips for TikTok, YouTube, Instagram, Shorts, and Reels.
+- Reworked Our Talent with the exact creator headline, subheadline, benefits, application form labels, image-plus-text layout, and `irisa@flourishculture.com` mailto target.
+- Reworked About Us with exact `[Our Mission]` and `[The FLOURISH Advantage: Why HK & Why Us?]` copy in an image-plus-text composition.
+- Reworked Contact Us with exact project inquiry headline, subheadline, fields, budget options, image-plus-text layout, and `flourishculture@outlook.com` mailto target.
+- Updated tests to enforce the Feishu copy, separate recipients, field labels/options, image requirements, and mirrored editable-review content.
+- Re-ran main-thread verification after the remaining-module pass: static tests, release build, Chrome responsive QA, and release archive validation passed locally; the browser QA script was updated for the new text-based creator demographics field.
+
+## 2026-06-24 — Whole-page Visual Polish Pass
+
+- Worked locally only as the implementation sub-agent; production deploy, Nginx, certificates, server config, `/review/`, APIs, databases, cookies, analytics, and new pages stayed untouched.
+- Kept Feishu truth copy, anchors, mailto recipients, form field names, button labels, and static submission logic unchanged.
+- Concentrated the polish in `styles.css`: card surface aliases, denser Services cards, more controlled media heights, clearer Overview/What We Do hierarchy, tighter Talent benefits/form rhythm, and shorter About/Contact imagery.
+- Added a CSS-focused regression test that locks the social-first polish constraints while leaving existing exact-copy tests intact.
+
+## 2026-06-24 — Creator and Bridge Asset Alignment Pass
+
+- Worked locally only as the implementation sub-agent; production deploy, Nginx, certificates, server config, `/review/`, APIs, cookies, analytics, form recipients, and Feishu copy stayed untouched.
+- Replaced the Services 01 text platform chips with accessible Remix Icon chips for TikTok, YouTube, Instagram, Shorts, and Reels; Shorts/Reels use generic video icons rather than fake official logos.
+- Swapped the Talent image to `assets/talent-global-creator-network.png` and tightened the grid/media positioning so the red recruitment module reads more centered and less empty on the right.
+- Swapped the About image to `assets/about-hk-cross-border-bridge.png` with alt text aligned to Hong Kong as an East-West and cross-border growth bridge.
+- Main-thread verification for the polish pass: `npm test` passed with 20/20 tests, `npm run build` passed, Chrome responsive QA passed at all tracked viewports, and 1440px desktop page height reduced from 7021px to 6288px without changing locked Feishu copy.
+
+## 2026-06-24 — UI Craft Spacing and Taste Polish Pass
+
+- Worked locally only in the static homepage CSS/tests/docs; production deploy, Nginx, certificates, server config, `/review/`, APIs, cookies, analytics, form recipients, Feishu copy, and page structure stayed untouched.
+- Applied the requested `ui-craft` detail pass by increasing the visual gutter between the About image and copy, reducing the oversized Logo/`Who We Are` display titles, and making the Hero-to-Logo and Logo-to-Bridge section boundaries more legible.
+- Applied the requested taste/anti-AI polish by cooling and darkening generated imagery, adding restrained editorial grain/scan overlays, and cropping the Hong Kong bridge visual so it reads more like a designed background asset than raw AI output.
+- Updated regression tests to lock the new spacing, headline scale, section divider, and image-treatment constraints.
+
+## 2026-06-25 — Production Homepage Release
+
+- Published `release/flourishculturekol-homepage.zip` to the production host `150.5.135.196` after explicit approval.
+- Pre-release gates passed locally: static tests, release build, zip integrity check, and archive content check excluding `review-editable.html`, `qa/`, `design-options/`, and `archive/`.
+- Production deploy used the static homepage script: uploaded the release zip and deployment script to `/tmp`, verified SHA256 on the server, backed up the existing web root, and copied the static files into `/var/www/flourishculturekol.com`.
+- Server backup created at `/var/backups/flourishculturekol.com/20260625-114135`.
+- Post-deploy issue found and fixed: homepage returned 403 because `cp -a "$STAGE/." "$WEB_ROOT/"` preserved the temporary extraction directory's restrictive mode on the web root. Restored web-readable static permissions on production and updated `deploy-cloud-assistant.sh` to set directory/file permissions after copying.
+- Post-release verification passed: public homepage returned HTTP 200 with the new 22,079-byte HTML, CSS and key image/icon assets returned HTTP 200, `/review/healthz` remained healthy, and `/review/` still redirected to `/review/login`.
+
+## 2026-06-25 — Production MIME Hotfix
+
+- Fixed the production symptom where the homepage rendered as a mostly black/empty page after release.
+- Root cause: `script.js` imported `site-core.mjs`, and production Nginx served `.mjs` as `application/octet-stream`. Browsers rejected the module import, so `script.js` never ran and `.reveal` sections stayed transparent.
+- Renamed the shared browser module to `site-core.js`, updated `script.js`, tests, build packaging, and the deployment script's required-file check.
+- Added a regression test to prevent the release path from reintroducing `.mjs` browser module imports.
+- Rebuilt and published the hotfix package to production. Server backup created at `/var/backups/flourishculturekol.com/20260625-135253`.
+- Verification after hotfix: `site-core.js` returns `application/javascript`, `script.js` imports `./site-core.js`, Chrome console has no errors, the first screen visibly renders the hero copy/images, all homepage image URLs return HTTP 200, `/review/healthz` remains healthy, and Nginx config still passes.

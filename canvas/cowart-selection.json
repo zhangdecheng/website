@@ -1,0 +1,40 @@
+{
+  "selectedShapes": [
+    {
+      "id": "shape:tnmW7GpXK-Go6XOuzYK9m",
+      "type": "geo",
+      "parentId": "page:page",
+      "x": 22.2366943359375,
+      "y": 470.35382080078125,
+      "rotation": 0,
+      "meta": {},
+      "isAiImageHolder": false,
+      "props": {
+        "w": 249.02355957031247,
+        "h": 60.62499999999999,
+        "geo": "rectangle",
+        "dash": "draw",
+        "growY": 0,
+        "url": "",
+        "scale": 1,
+        "color": "black",
+        "labelColor": "black",
+        "fill": "none",
+        "size": "m",
+        "font": "draw",
+        "align": "middle",
+        "verticalAlign": "middle",
+        "richText": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph"
+            }
+          ]
+        }
+      },
+      "asset": null
+    }
+  ],
+  "updatedAt": "2026-06-24T03:53:12.449Z"
+}

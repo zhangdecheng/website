@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" role="img" aria-labelledby="title desc">
+  <title id="title">Global broadcast momentum</title>
+  <desc id="desc">Abstract red broadcast waves spreading from East Asia across global markets on a dark background.</desc>
+  <defs>
+    <radialGradient id="bg" cx="46%" cy="52%" r="72%">
+      <stop offset="0" stop-color="#25110f"/>
+      <stop offset="0.5" stop-color="#0c0c0c"/>
+      <stop offset="1" stop-color="#050505"/>
+    </radialGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff4d43"/>
+      <stop offset="0.56" stop-color="#f4c866"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.58"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="9" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="960" height="560" fill="url(#bg)"/>
+  <g opacity="0.16" stroke="#fff" stroke-width="1" fill="none">
+    <circle cx="494" cy="280" r="104"/>
+    <circle cx="494" cy="280" r="172"/>
+    <circle cx="494" cy="280" r="240"/>
+    <circle cx="494" cy="280" r="308"/>
+  </g>
+  <g filter="url(#glow)">
+    <path d="M178 360c120-94 226-122 318-84s156 111 286 92" stroke="url(#beam)" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <path d="M206 232c90 60 178 78 268 45s170-48 276 12" stroke="url(#beam)" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.78"/>
+    <path d="M302 420c104-34 190-24 260 32s140 66 246 20" stroke="url(#beam)" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.68"/>
+  </g>
+  <g fill="#ff4d43" filter="url(#glow)">
+    <circle cx="494" cy="280" r="18"/>
+    <circle cx="178" cy="360" r="10"/>
+    <circle cx="782" cy="368" r="12"/>
+    <circle cx="750" cy="289" r="9"/>
+    <circle cx="808" cy="472" r="8"/>
+  </g>
+  <g opacity="0.9">
+    <path d="M494 220l36 120h-72z" fill="#ff4d43"/>
+    <path d="M494 244l19 66h-38z" fill="#f4c866"/>
+  </g>
+  <g opacity="0.28" fill="#fff">
+    <circle cx="310" cy="160" r="4"/>
+    <circle cx="372" cy="122" r="3"/>
+    <circle cx="714" cy="150" r="4"/>
+    <circle cx="832" cy="206" r="3"/>
+    <circle cx="676" cy="438" r="3"/>
+  </g>
+</svg>

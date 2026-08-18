@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
+import { createHash } from "node:crypto";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { promisify } from "node:util";
 import test from "node:test";
@@ -116,4 +117,54 @@ test("package scripts and ignore rules keep generated releases out of Git", asyn
   assert.equal(packageJson.scripts?.["test:release"], "node --test tests/release.test.mjs");
   assert.match(ignore, /# Generated release artifacts and staging directories\nrelease\//);
   assert.doesNotMatch(ignore, /^release\/\*\.zip$/m);
+});
+
+test("public release check is strict about canonical routing, APIs, headers, assets and review", async () => {
+  const check = await readFile(new URL("../check-https-cloud-assistant.sh", import.meta.url), "utf8");
+
+  for (const expected of [
+    "set -euo pipefail",
+    "https://www.flourishculturekol.com/",
+    "https://www.flourishculturekol.com/privacy.html",
+    "https://www.flourishculturekol.com/api/contact/health",
+    "https://www.flourishculturekol.com/api/contact/config",
+    "https://www.flourishculturekol.com/review/healthz",
+    "https://www.flourishculturekol.com/review/",
+    "https://www.flourishculturekol.com/review/?probe=1",
+    "Content-Security-Policy",
+    "X-Content-Type-Options",
+    "Referrer-Policy",
+    "Permissions-Policy",
+    "X-Frame-Options",
+    'configured === true && body.version === "1.2.0"',
+    "turnstileSiteKey",
+    "formSessionToken",
+    "403",
+    "/review/login",
+  ]) {
+    assert.match(check, new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+
+  assert.doesNotMatch(check, /curl[^\n]*\s-k(?:\s|$)|curl[^\n]*--insecure/);
+  assert.doesNotMatch(check, /(?:health|config|canonical|privacy|review)[^\n]*\|\| true/i);
+
+  await runFile(
+    process.execPath,
+    ["scripts/build-release.mjs"],
+    { cwd: new URL("../", import.meta.url), encoding: "utf8" },
+  );
+  for (const path of [
+    "index.html",
+    "privacy.html",
+    "styles.css",
+    "script.js",
+    "contact-form.js",
+    "site-core.js",
+    "assets/service-creative-localization-meetup.webp",
+    "assets/talent-creator-growth-studio.webp",
+  ]) {
+    const bytes = await readFile(new URL(`../dist/${path}`, import.meta.url));
+    const hash = createHash("sha256").update(bytes).digest("hex");
+    assert.match(check, new RegExp(hash), `${path} hash should be pinned in the public check`);
+  }
 });

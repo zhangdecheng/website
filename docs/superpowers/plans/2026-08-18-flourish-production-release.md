@@ -341,7 +341,7 @@ The empty values above describe the file schema, not a deployable file. In the p
 
 - [ ] **Step 3: Verify only names, permissions and non-empty status**
 
-Use a server-side check that prints key names and `set/unset` only, never values. Confirm exactly seven required values are set, the file is not group/world writable, and service user can read it while unrelated users cannot.
+Use a server-side check that prints key names and `set/unset` only, never values. Confirm exactly eight required values are set, the file is not group/world writable, and service user can read it while unrelated users cannot.
 
 - [ ] **Step 4: Record confirmed versus unconfirmed mail-domain facts**
 

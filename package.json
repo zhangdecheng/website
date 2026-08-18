@@ -8,7 +8,8 @@
     "build": "node scripts/build-release.mjs",
     "serve": "python3 -m http.server 4173",
     "start:contact": "node server/index.js",
-    "test:contact": "node --test tests/contact-*.test.mjs"
+    "test:contact": "node --test tests/contact-*.test.mjs",
+    "check:smtp": "node server/smtp-check.js"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.2.8",

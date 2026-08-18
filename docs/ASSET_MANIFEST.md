@@ -1,6 +1,6 @@
 # FLOURISH CULTURE Asset Manifest
 
-Last updated: 2026-06-25
+Last updated: 2026-08-18
 
 ## Production homepage assets
 
@@ -32,6 +32,57 @@ Only these approved brand logos should be used for the endorsement/logo rail.
 - `assets/creator-recruitment.jpg` — earlier creator recruitment reference
 - `assets/hero-creator-collage.jpg` — earlier hero collage reference
 - `assets/hong-kong-culture.jpg` — earlier Hong Kong culture reference
+- `assets/service-creative-localization-meetup.webp` — AI-generated generic Service 03 workshop scene
+- `assets/talent-creator-growth-studio.webp` — AI-generated generic Our Talent studio scene
+
+### AI-generated homepage imagery — 2026-08-18
+
+Both production images below were created with the built-in `image_gen` path and
+converted locally to 1536 × 1024 WebP derivatives with FFmpeg/libwebp at quality 86.
+They are generic illustrative scenes: neither image depicts or claims a real FLOURISH
+event, FLOURISH creator, client, partner, or other verified relationship.
+
+#### Creative Strategy & Localization
+
+- Production derivative: `assets/service-creative-localization-meetup.webp`
+- Non-production PNG master: `design-options/source-assets/service-creative-localization-meetup.png`
+- The accepted result was the second generation. The first candidate was rejected because it showed six people instead of the specified five.
+- Exact accepted prompt:
+
+```text
+Use case: photorealistic-natural
+Asset type: wide website service-card photograph for Creative Strategy & Localization
+Primary request: A candid cross-cultural creator meetup and content workshop in a contemporary Hong Kong creative showroom, showing local trend insight, script collaboration, product discovery, and offline immersion in one believable scene.
+Scene/backdrop: Dark charcoal industrial-creative interior with subtle Hong Kong architectural character, shelves holding generic unbranded product samples, one worktable with paper storyboards that contain no readable text.
+Subject: Five diverse adult creators from different cultural backgrounds collaborating naturally; one reviews a script with another person, one records a product sample with a mirrorless camera, and two discuss content around the table. Professional, energetic and authentic—not posed as a corporate team photo.
+Style/medium: Premium documentary editorial photography, realistic skin and hands, 35mm lens character, restrained fine grain, physically plausible equipment and perspective.
+Composition/framing: Landscape 3:2-style wide composition, important faces and camera equipment inside the central 70% so responsive 16:10 crops remain useful; layered depth, no collage, no text overlay.
+Lighting/mood: Low-key cinematic lighting with warm tungsten practicals and restrained coral-red accents against deep black and warm neutral surfaces; confident, collaborative, globally minded.
+Color palette: Existing FLOURISH site language—charcoal black, warm skin tones, muted coral red, small warm-gold highlights; no bright blue/purple tech gradient.
+Constraints: Generic illustrative service scene only; no implication that this is a real FLOURISH event; no readable labels, logos, branded products, sponsor marks, flags, captions or watermark.
+Avoid: malformed hands, extra fingers, fused equipment, impossible camera geometry, duplicate faces, plastic skin, fake UI text, stage event, conference badges, influencer selfie clichés, excessive neon, obvious AI glow.
+Targeted correction: Show exactly five adults in the entire frame—no sixth person, partial extra person, background person, reflection, poster portrait, or human-like figure.
+```
+
+#### Our Talent
+
+- Production derivative: `assets/talent-creator-growth-studio.webp`
+- Non-production PNG master: `design-options/source-assets/talent-creator-growth-studio.png`
+- Exact accepted prompt:
+
+```text
+Use case: photorealistic-natural
+Asset type: wide website recruitment photograph for the Our Talent section
+Primary request: A confident multicultural creator producing polished content in a professional studio, with high-end production gear and subtle data-backed growth cues integrated into one natural scene.
+Scene/backdrop: Sophisticated dark content studio with a cinema or mirrorless camera, large softbox, practical light, smartphone rig and laptop; a background monitor shows only abstract non-readable charts and retention-curve shapes, never legible numbers or a real interface.
+Subject: One charismatic adult lead creator with a diverse or mixed-cultural appearance actively presenting to camera, visibly enjoying the work while remaining focused and professional; one small crew presence may appear softly out of focus for depth, not as a second focal subject.
+Style/medium: Premium cinematic editorial photography, realistic skin texture, hands, cables and equipment, subtle fine grain, credible studio physics, not a commercial stock-photo pose.
+Composition/framing: Landscape 3:2-style wide scene designed for a tall responsive crop; lead creator and key camera stay within the central 65%, with useful negative space and one integrated visual story rather than panels or collage.
+Lighting/mood: Dark, aspirational and warm; soft key light on the creator, restrained coral-red practical accents and small warm-gold highlights; a high-achievement moment without trophies or fake awards.
+Color palette: Charcoal black, natural skin, muted coral red, warm neutral and small gold accents matching the existing FLOURISH website; no bright cyan/purple technology glow.
+Constraints: Generic recruitment illustration only; no claim that the person is a real FLOURISH creator; no readable dashboard text, logos, platform marks, brand products, captions, badges or watermark.
+Avoid: malformed hands, impossible cameras, floating equipment, fake readable analytics, split-screen collage, duplicated person, over-retouched skin, celebrity likeness, luxury cliché, excessive neon, obvious AI glow.
+```
 
 ### SVG support visuals
 
@@ -69,4 +120,3 @@ These assets are not production-served by default but are kept in Git for projec
 - Keep all production-critical assets under `assets/`.
 - If a design reference image becomes a production asset, copy it into `assets/` and update this manifest.
 - After image changes, run `npm test`, `npm run build`, and browser QA before release.
-

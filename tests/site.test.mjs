@@ -78,6 +78,39 @@ test("browser QA locks the system-Chrome automation dependency", async () => {
   assert.equal(packageJson.devDependencies?.["playwright-core"], "1.62.1");
 });
 
+test("only Service 03 and Our Talent use the two approved new AI assets", async () => {
+  const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const serviceThree =
+    section(html, "services")
+      .match(/<article class="service-block reveal">[\s\S]*?<\/article>/g)
+      ?.find((article) => article.includes('<span class="service-number">03</span>')) ?? "";
+  const talent = section(html, "talent");
+
+  assert.match(serviceThree, /assets\/service-creative-localization-meetup\.webp/);
+  assert.match(talent, /assets\/talent-creator-growth-studio\.webp/);
+  assert.doesNotMatch(serviceThree, /hong-kong-culture/);
+  assert.doesNotMatch(talent, /about-hk-cross-border-bridge/);
+
+  const approvedAltText = [
+    "Creators collaborating in a cross-cultural content workshop with cameras and product samples",
+    "A creator producing content in a professional studio with production equipment and growth insights",
+  ];
+  for (const alt of approvedAltText) {
+    assert.match(html, new RegExp(`alt="${alt}"`));
+    assert.doesNotMatch(alt, /our meetup|FLOURISH event|client|partner|FLOURISH|TikTok|Instagram|YouTube/i);
+  }
+
+  for (const path of [
+    "../assets/service-creative-localization-meetup.webp",
+    "../assets/talent-creator-growth-studio.webp",
+  ]) {
+    const bytes = await readFile(new URL(path, import.meta.url));
+    assert.equal(bytes.subarray(0, 4).toString("ascii"), "RIFF");
+    assert.equal(bytes.subarray(8, 12).toString("ascii"), "WEBP");
+    assert.ok(bytes.length > 70_000, `${path} should be a production-quality image`);
+  }
+});
+
 test("homepage services use the approved three-block copy", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const services = section(html, "services");
@@ -126,7 +159,7 @@ test("homepage talent module uses the approved benefits and unified-form CTA", a
   const talent = section(html, "talent");
   const text = normalized(talent);
 
-  assert.match(talent, /<img[\s\S]*assets\/about-hk-cross-border-bridge\.png[\s\S]*alt="Global creator network bridging East and West through cultural content collaboration"/);
+  assert.match(talent, /<img[\s\S]*assets\/talent-creator-growth-studio\.webp[\s\S]*alt="A creator producing content in a professional studio with production equipment and growth insights"/);
   assert.match(talent, /Turn Your Influence into a Global Legacy\./);
   assertIncludesText(text, "FLOURISH CULTURE connects the world’s most talented creators with market-defining global brands. Let's build your digital empire together.");
   assert.match(talent, /Why Creators Partner With Us:/);

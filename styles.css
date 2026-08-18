@@ -1207,20 +1207,19 @@ h1 {
 
 .creator-benefits li {
   position: relative;
-  display: grid;
-  grid-template-columns: 6px minmax(0, 1fr);
-  gap: 12px;
-  padding-left: 0;
+  display: block;
+  padding-left: 18px;
   font-size: clamp(13px, 1.05vw, 16px);
   line-height: 1.55;
   font-weight: 400;
 }
 
 .creator-benefits li::before {
-  align-self: start;
+  position: absolute;
+  top: 0.65em;
+  left: 0;
   width: 6px;
   height: 6px;
-  margin-top: 0.65em;
   border-radius: 50%;
   background: var(--black);
   content: "";

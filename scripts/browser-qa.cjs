@@ -218,7 +218,10 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
   const baselineConsoleErrorCount = consoleErrors.length;
 
   await page.locator('[data-select-contact-role="creator"]').click();
-  await page.waitForTimeout(300);
+  await page.waitForFunction(() => {
+    const rect = document.querySelector("#contact")?.getBoundingClientRect();
+    return Boolean(rect && rect.top < window.innerHeight && rect.bottom > 0);
+  }, null, { timeout: 5_000 });
   const joinCta = await page.evaluate(() => {
     const rect = document.querySelector("#contact")?.getBoundingClientRect();
     return {

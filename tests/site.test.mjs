@@ -76,6 +76,8 @@ test("browser QA locks the system-Chrome automation dependency", async () => {
 
   assert.match(qaScript, /require\("playwright-core"\)/);
   assert.equal(packageJson.devDependencies?.["playwright-core"], "1.62.1");
+  assert.doesNotMatch(qaScript, /\[data-select-contact-role="creator"\][\s\S]{0,120}waitForTimeout\(300\)/);
+  assert.match(qaScript, /waitForFunction\([\s\S]*?#contact[\s\S]*?window\.innerHeight/);
 });
 
 test("only Service 03 and Our Talent use the two approved new AI assets", async () => {
@@ -175,6 +177,18 @@ test("homepage talent module uses the approved benefits and unified-form CTA", a
   }
   assert.doesNotMatch(talent, /<form|data-creator-form|Join the Culture|Apply to Join the Roster/);
   assert.match(talent, /<a class="button button-dark" href="#contact" data-select-contact-role="creator">Join Our Roster →<\/a>/);
+});
+
+test("talent benefit prose stays in the same flow as its bullet", async () => {
+  const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+  const benefitItem = css.match(/\.creator-benefits li\s*\{[^}]+\}/)?.[0] ?? "";
+  const benefitBullet = css.match(/\.creator-benefits li::before\s*\{[^}]+\}/)?.[0] ?? "";
+
+  assert.match(benefitItem, /display:\s*block/);
+  assert.match(benefitItem, /padding-left:\s*18px/);
+  assert.doesNotMatch(benefitItem, /grid-template-columns/);
+  assert.match(benefitBullet, /position:\s*absolute/);
+  assert.match(benefitBullet, /left:\s*0/);
 });
 
 test("homepage about module uses exact mission and advantage copy with image", async () => {

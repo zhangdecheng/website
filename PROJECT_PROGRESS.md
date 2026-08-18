@@ -1,6 +1,6 @@
 # FLOURISH CULTURE Website — Project Progress
 
-Last updated: 2026-06-24
+Last updated: 2026-08-18
 
 ## Goal
 
@@ -18,12 +18,12 @@ requirements document.
 
 ## Current Phase
 
-Phase 6 — Local delivery complete.
+Phase 7 — v1.2.0 local release candidate complete; production rollout in progress.
 
 ## Completed
 
 - Located the existing static site and deployment scripts.
-- Confirmed the site is currently a single temporary `index.html`.
+- Confirmed the original site was a single temporary `index.html`.
 - Confirmed final interaction level: complete single-page frontend interaction.
 - Confirmed Chrome as the primary preview and QA browser.
 - Confirmed the official CLI source: `larksuite/cli`.
@@ -45,7 +45,7 @@ Phase 6 — Local delivery complete.
 - Saved `design-options/neon-culture-bridge.png` as the canonical visual truth.
 - Generated dedicated hero, service, creator, and Hong Kong cultural assets.
 - Rebuilt the homepage as an English black/coral responsive static site.
-- Added honest mailto form flows and automated behavior/content tests.
+- Added the original honest mailto form flows and automated behavior/content tests; the mailto submission path was superseded by v1.2.0.
 - Replaced the placeholder deployment script with a non-destructive static-file
   copy workflow that does not edit Nginx or `/review/`.
 - Passed Chrome responsive QA at 1920 × 1080, 1440 × 1024,
@@ -74,23 +74,29 @@ Phase 6 — Local delivery complete.
 
 ## In Progress
 
-- None.
+- Re-authenticate the Volcengine CLI session.
+- Read back the actual ECS instance, Nginx sources, Node.js version, disk, permissions and `/review/` health before any production write.
+- Create the production Turnstile widget and install its Secret plus the SMTP authorization code through a private server session.
 
 ## Pending
 
-- Optional future production publication, only when explicitly approved.
+- Protected Contact service, minimal Nginx patch and static-package production deployment.
+- Public desktop/mobile checks plus one real Brand and one real Creator inbox/Reply-To acceptance test.
+- Remote source synchronization and GitHub Pages closure only after every live gate passes.
 
 ## Locked Decisions
 
 - Existing project directory: `flourishculturekol-site`.
-- Frontend remains static and Nginx-compatible.
-- No new business backend.
+- Marketing frontend remains static and Nginx-compatible.
+- One loopback-only Contact relay is allowed; there is no database.
 - Existing deployment scripts remain in place.
 - `/review/` compatibility must be preserved.
 - Credentials and tokens must never be stored in project files.
 - Selected direction: Option 1 — Neon Culture Bridge.
-- Creator application mailto target: `irisa@flourishculture.com`.
-- Project inquiry mailto target: `flourishculture@outlook.com`.
+- SMTP From is fixed to `business@flourish-culture.com`.
+- Creator recipient is fixed to `irisa@flourishculture.com`.
+- Brand recipient is fixed to `hannah@flourish-culture.com`.
+- Visitor email appears only in Reply-To; no mailto submission flow remains.
 - Production deployment was explicitly approved and completed on 2026-06-25;
   future production changes still require explicit approval.
 
@@ -107,8 +113,20 @@ Phase 6 — Local delivery complete.
 
 ## Blockers
 
-- None currently. The live Influencer Marketing Factory benchmark remained
-  inaccessible through Cloudflare; no inaccessible visual details were used.
+- Volcengine OAuth refresh token is invalid; a new one-time authorization code is required before server preflight.
+- Production Turnstile Site/Secret values have not been installed.
+- Server facts, deployment backups and real inbox delivery remain unconfirmed.
+
+## 2026-08-18 — v1.2.0 Local Release Candidate
+
+- Replaced the two mailto flows with one accessible Brand/Creator form backed by a same-origin Node.js Contact API.
+- Fixed immutable mail routing: Brand to `hannah@flourish-culture.com`, Creator to `irisa@flourishculture.com`, fixed SMTP From, validated visitor Reply-To.
+- Added Turnstile server verification, signed one-hour form sessions, honeypot, strict validation, body/origin limits, IP/email rate limits, duplicate suppression and redacted security logs.
+- Added a generic Privacy Notice and two approved AI-generated WebP images for Service 03 and Our Talent without changing the prior 35 image assets.
+- Added a hardened systemd unit, allow-listed service package, atomic service deploy/rollback script, minimal Nginx API template and protected eight-key environment schema.
+- Generated and audited the static and service archives; no assigned secret, forbidden filename or symlink was found.
+- Added a strict public release checker for canonical redirects, security headers, APIs, exact file hashes and `/review/` regression.
+- Fresh local verification passed 70/70 Node tests, both builds and the release checksum gate. Production remains **未完成** until the cloud/server, Turnstile, live browser, inbox, Reply-To, remote source and Pages gates are read back.
 
 ## 2026-06-24 — Feishu Whiteboard 3 Local Implementation
 

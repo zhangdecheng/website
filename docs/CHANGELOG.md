@@ -2,11 +2,24 @@
 
 ## Project version records
 
-Current recorded project version: `v1.0.0`
+Current source version: `v1.2.0` local release candidate
 
 | Version | Date | Status | Notes |
 | --- | --- | --- | --- |
-| `v1.0.0` | 2026-06-26 | Current recorded version | Baseline project version record for documentation and handoff tracking. |
+| `v1.2.0` | 2026-08-18 | Locally verified; production incomplete | Unified Contact flow, privacy, abuse controls, approved AI images and deterministic production tooling. |
+| `v1.1.0` | 2026-06-26 | Historical production record | Static homepage release. |
+| `v1.0.0` | 2026-06-26 | Historical record | Baseline project version record for documentation and handoff tracking. |
+
+## 2026-08-18
+
+### v1.2.0 local release candidate
+
+- Replaced mailto submission with one same-origin Brand/Creator form and a loopback-only Node.js Contact service.
+- Fixed Brand routing to `hannah@flourish-culture.com`, Creator routing to `irisa@flourishculture.com`, SMTP From to `business@flourish-culture.com`, and visitor email to Reply-To only.
+- Added Cloudflare Turnstile server verification, signed form sessions, honeypot, input/origin/body controls, rate limits, duplicate suppression and privacy-safe logs.
+- Added a generic Privacy Notice plus approved Service 03 and Our Talent AI images while preserving the earlier image inventory.
+- Added deterministic service packaging, hardened systemd/Nginx templates, safe service rollback, immutable release hashes and strict public acceptance checks.
+- Fresh local gates passed 70/70 tests and both builds. No production deployment, live inbox acceptance, remote push or GitHub Pages deletion has yet been confirmed.
 
 ## 2026-06-26
 

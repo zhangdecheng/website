@@ -25,9 +25,13 @@ excludes this review helper page.
 ## Test and build
 
 ```bash
+npm ci
 npm test
 npm run build
+npm run build:contact
+node scripts/browser-qa.cjs
 cd dist && zip -qr ../release/flourishculturekol-homepage.zip .
+cd .. && tar -C release/contact-service -czf release/flourish-contact-service.tgz .
 ```
 
 Final Chrome evidence and the pass report are stored in `qa/` and
@@ -35,14 +39,19 @@ Final Chrome evidence and the pass report are stored in `qa/` and
 `design-options/`. Visual QA uses equal-width, section-aligned comparison
 boards; it never stretches full-page images to equal height.
 
-The site has no API, database, cookies, analytics, or server-side form handler.
-Both forms validate in the browser and open a prefilled email: creator
-applications go to `irisa@flourishculture.com`, and project inquiries go to
-`flourishculture@outlook.com`.
+Version 1.2.0 keeps the marketing frontend static but adds a same-origin,
+loopback-only Contact API. The browser validates the unified Brand/Creator form,
+uses Cloudflare Turnstile, and submits JSON without opening a mail client. The
+service authenticates as `business@flourish-culture.com`; Brand inquiries route
+to `hannah@flourish-culture.com`, Creator applications route to
+`irisa@flourishculture.com`, and the validated visitor address is used only as
+Reply-To. There is no database or analytics integration.
 
 ## Project documentation
 
 - Project handoff and production notes: `docs/PROJECT_HANDOFF.md`
+- Production release and rollback runbook: `docs/PRODUCTION_RUNBOOK.md`
+- Latest production preflight evidence: `qa/production-preflight-2026-08-18.md`
 - Asset inventory and handling rules: `docs/ASSET_MANIFEST.md`
 - Change history: `docs/CHANGELOG.md`
 - Detailed progress log: `PROJECT_PROGRESS.md`
@@ -52,20 +61,24 @@ applications go to `irisa@flourishculture.com`, and project inquiries go to
 This project is now organized as a local Git repository. Source files,
 documentation, design references, QA evidence, Feishu annotation exports, and
 the archived white/green draft are tracked. Generated dependencies and release
-outputs such as `node_modules/`, `dist/`, and `release/*.zip` are ignored and
+outputs such as `node_modules/`, `dist/`, and `release/` are ignored and
 can be recreated with the commands above.
 
 ## Server deployment
 
-The release is intentionally not deployed automatically.
+The release is intentionally not deployed automatically. Version 1.2.0 requires
+the protected Contact service, a minimal Nginx patch, and the static package;
+do not deploy only the frontend because the form would have no working API.
 
-1. Upload `release/flourishculturekol-homepage.zip` to the server.
-2. Run `deploy-cloud-assistant.sh /path/to/flourishculturekol-homepage.zip` as
-   a user allowed to write the website root.
+Follow `docs/PRODUCTION_RUNBOOK.md`. Before any write, authenticate to the correct
+cloud account, match the instance to public IP `150.5.135.196`, inspect
+`nginx -T`, verify Node.js >= 20 and `/review/healthz`, and create readable
+rollback evidence. Private Turnstile/SMTP values must be entered directly in a
+protected server session and must never be put in Git, chat, screenshots, or
+Cloud Assistant command output.
 
-The script backs up the existing web root and copies the packaged static files.
-It does not write Nginx configuration, certificates, or `/review/` application
-files and does not use deletion-based synchronization.
+As of 2026-08-18, the v1.2.0 release is locally verified but **not yet confirmed
+deployed to production**.
 
 ## Recovery
 

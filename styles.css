@@ -1189,7 +1189,6 @@ h1 {
 }
 
 .creator-benefits h3,
-.creator-form h3,
 .project-form h3 {
   margin: 0;
   font-family: "Archivo", system-ui, sans-serif;
@@ -1228,19 +1227,21 @@ h1 {
   opacity: 0.7;
 }
 
-.creator-form,
+.talent-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 22px;
+  align-items: center;
+}
+
+.talent-cta h3 {
+  margin: 0;
+  font-size: clamp(22px, 2vw, 30px);
+}
+
 .project-form {
   display: grid;
   gap: 14px;
-}
-
-.creator-form {
-  max-width: 760px;
-  padding: clamp(20px, 2.4vw, 28px);
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 4px;
-  backdrop-filter: blur(10px);
 }
 
 .field-grid {
@@ -1522,12 +1523,114 @@ textarea:user-invalid {
   box-shadow: 0 0 0 1px var(--coral);
 }
 
+.role-fields {
+  margin-top: 12px;
+}
+
+.role-fields[hidden] {
+  display: none;
+}
+
+.privacy-consent {
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.privacy-consent input {
+  width: 24px;
+  min-height: 24px;
+  margin: 0;
+  accent-color: var(--coral);
+}
+
+.privacy-consent span {
+  min-height: 0;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.privacy-consent a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.honeypot-field {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.turnstile-slot {
+  min-height: 65px;
+}
+
+.form-status {
+  min-height: 1.5em;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.form-status[data-state="success"] {
+  color: #256b45;
+}
+
+.form-status[data-state="error"] {
+  color: #8d2f24;
+}
+
+.project-form[aria-busy="true"] {
+  cursor: progress;
+}
+
 .field-wide {
   grid-column: 1 / -1;
 }
 
 .project-form .button {
   justify-self: start;
+}
+
+.privacy-main {
+  min-height: 100vh;
+  padding: clamp(120px, 14vw, 180px) var(--gutter) 80px;
+  background: var(--black);
+}
+
+.privacy-article {
+  width: min(100%, 760px);
+  margin: 0 auto;
+  color: var(--white);
+}
+
+.privacy-article h1 {
+  margin-bottom: 16px;
+  font-size: clamp(44px, 6vw, 76px);
+}
+
+.privacy-article h2 {
+  margin: 42px 0 12px;
+  font-size: clamp(24px, 3vw, 34px);
+}
+
+.privacy-article p {
+  color: var(--muted);
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.75;
+}
+
+.privacy-article a {
+  color: var(--coral);
+}
+
+.privacy-effective {
+  margin-bottom: 34px;
 }
 
 .site-footer {
@@ -1917,7 +2020,6 @@ textarea:user-invalid {
   }
 
   .service-copy,
-  .creator-form,
   .project-form {
     padding: 18px;
   }
@@ -2018,7 +2120,6 @@ textarea:user-invalid {
     grid-column: auto;
   }
 
-  .creator-form .button,
   .project-form .button {
     width: 100%;
   }

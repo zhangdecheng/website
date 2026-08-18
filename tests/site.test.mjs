@@ -328,6 +328,30 @@ test("styles preserve social-first polish without changing locked content", asyn
   assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*\.service-media img,[\s\S]*\.about-media\s*{[\s\S]*min-height:\s*260px/);
 });
 
+test("new contact and privacy styles extend the existing visual system accessibly", async () => {
+  const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+
+  for (const token of ["--coral", "--paper", "--ink", "--line-light"]) {
+    assert.match(css, new RegExp(`var\\(${token}\\)`));
+  }
+  const talentCta = css.match(/\.talent-cta\s*\{[^}]+\}/)?.[0] ?? "";
+  assert.match(talentCta, /display:\s*flex/);
+  assert.doesNotMatch(talentCta, /background|backdrop-filter|box-shadow|border-radius/);
+  assert.match(css, /\.role-fields\[hidden\]\s*\{\s*display:\s*none/);
+  assert.match(css, /\.privacy-consent\s*\{[\s\S]*grid-template-columns:\s*24px minmax\(0, 1fr\)/);
+  assert.match(css, /\.privacy-consent input\s*\{[\s\S]*width:\s*24px;[\s\S]*min-height:\s*24px/);
+  const honeypot = css.match(/\.honeypot-field\s*\{[^}]+\}/)?.[0] ?? "";
+  assert.match(honeypot, /left:\s*-10000px/);
+  assert.doesNotMatch(honeypot, /display:\s*none/);
+  assert.match(css, /\.form-status\s*\{[\s\S]*min-height:\s*1\.5em/);
+  assert.match(css, /\.form-status\[data-state="success"\]/);
+  assert.match(css, /\.form-status\[data-state="error"\]/);
+  assert.match(css, /\.privacy-main\s*\{[\s\S]*background:\s*var\(--black\)/);
+  assert.match(css, /\.privacy-article\s*\{[\s\S]*width:\s*min\(100%, 760px\)/);
+  assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*\.project-form \.button\s*\{[\s\S]*width:\s*100%/);
+  assert.doesNotMatch(css, /\.creator-form/);
+});
+
 test("annotated hero removes the old eyebrow and secondary controls", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");

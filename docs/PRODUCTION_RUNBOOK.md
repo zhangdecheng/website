@@ -19,8 +19,9 @@
 | 项目 | 已确认值 |
 | --- | --- |
 | 版本 | `1.2.0` |
-| 已通过完整本地门禁的提交 | `9e438abe0bb6904c783a368345c5bde1ac7072a7` |
-| 功能与发布脚本提交 | `f0f121c184bef4be024673ba6b5a81ac31e67049` |
+| 当前已通过完整本地门禁的提交 | `e4b336350bd2adf07f9b5eff574ce6776026f4c4` |
+| 功能与基础发布脚本提交 | `f0f121c184bef4be024673ba6b5a81ac31e67049` |
+| 独立 Contact 运行时提交 | `fda47ab67282c7b4cd39c5180001136ca7475cd0` |
 | 静态包 | `release/flourishculturekol-homepage.zip` |
 | 静态包字节数 | `1,003,971` |
 | 静态包 SHA-256 | `0da47fcc6fc49917373aa0863eb9afc23189c0aaa892a7cee9e6efd51b7d09da` |
@@ -33,6 +34,8 @@
 | systemd unit SHA-256 | `245f763ea8dc04a795f6fdf3b908f00baa2138b28b261a5e51dcc38b27a98e50` |
 | Nginx API 模板 SHA-256 | `a826fe31820b6095d18cd7a9cfde8965d70338cd6267305f64afa4ea157911cf` |
 | 公开验收脚本 SHA-256 | `40ff782dce9c49129de0e1c3f9d83bbf91b4224ab90718bd6e4a9414febeefa3` |
+| 单文件传输包 | `release/flourish-production-transfer-v1.2.0.tgz`（`1,020,973` 字节） |
+| 单文件传输包 SHA-256 | `c2d54eb22b9634dd5e41f4cfeff0c7f234826c868f471b9e25a8eddf1cf633ef` |
 
 生成包位于被 Git 忽略的 `release/` 目录，不包含 `.env`、凭据、日志、测试或
 `node_modules`。传输后必须在服务器再次核对 SHA-256，任何不一致都应停止发布。
@@ -191,7 +194,9 @@ df -h /var /opt
 
 ## 传输与校验
 
-将以下文件按现有相对路径上传到服务器的同一个受限暂存根目录；不得上传整个仓库：
+首选只传输 `release/flourish-production-transfer-v1.2.0.tgz`。服务器必须先用上表固定
+哈希核对外层压缩包，再解压到本次新建的受限暂存目录；外层包内恰好包含下列九个
+普通文件（八个发布文件加一份内层校验清单），不得包含 symlink，也不得上传整个仓库：
 
 - `release/flourishculturekol-homepage.zip`
 - `release/flourish-contact-service.tgz`
@@ -203,7 +208,7 @@ df -h /var /opt
 - `ops/nginx/flourish-contact-api.conf`
 - `check-https-cloud-assistant.sh`
 
-在服务器暂存根目录执行：
+在服务器暂存根目录执行内层复核：
 
 ```bash
 sha256sum -c release/SHA256SUMS

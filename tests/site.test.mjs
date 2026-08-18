@@ -48,6 +48,28 @@ test("release modules use production-safe JavaScript MIME extensions", async () 
   assert.doesNotMatch(deployScript, /site-core\.mjs/);
 });
 
+test("release build packages every contact page module and rejects incomplete assets", async () => {
+  const buildScript = await readFile(new URL("../scripts/build-release.mjs", import.meta.url), "utf8");
+  const deployScript = await readFile(new URL("../deploy-cloud-assistant.sh", import.meta.url), "utf8");
+
+  for (const file of [
+    "index.html",
+    "privacy.html",
+    "styles.css",
+    "script.js",
+    "contact-form.js",
+    "site-core.js",
+  ]) {
+    assert.match(buildScript, new RegExp(`"${file.replace(".", "\\.")}"`));
+  }
+  assert.match(buildScript, /for \(const entry of await readdir\(dist\)\)[\s\S]*await rm\(/);
+  assert.match(buildScript, /for \(const asset of requiredAssets\)[\s\S]*await stat\(source\)[\s\S]*await cp\(source, target\)/);
+  assert.match(
+    deployScript,
+    /for required in index\.html privacy\.html styles\.css script\.js contact-form\.js site-core\.js assets; do/,
+  );
+});
+
 test("homepage services use the approved three-block copy", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const services = section(html, "services");

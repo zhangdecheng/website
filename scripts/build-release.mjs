@@ -4,7 +4,14 @@ import { basename, dirname, join, resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const dist = join(root, "dist");
 const release = join(root, "release");
-const files = ["index.html", "styles.css", "script.js", "site-core.js"];
+const files = [
+  "index.html",
+  "privacy.html",
+  "styles.css",
+  "script.js",
+  "contact-form.js",
+  "site-core.js",
+];
 const optimizedPhotoFallbacks = new Map([
   ["assets/17bcea7b-424b-4593-9f31-697e7cbecd7d.jpeg", "assets/optimized/hero-global-talent.webp"],
   ["assets/service-performance.jpg", "assets/optimized/hero-performance.webp"],
@@ -53,6 +60,7 @@ for (const file of files) {
 for (const asset of requiredAssets) {
   const source = join(root, asset);
   const target = join(dist, asset);
+  await stat(source);
   await mkdir(dirname(target), { recursive: true });
   await cp(source, target);
   if (asset === "assets/icons/remixicon.css") {

@@ -24,7 +24,7 @@ command -v unzip >/dev/null 2>&1 || {
 
 unzip -q "$ARCHIVE" -d "$STAGE"
 
-for required in index.html styles.css script.js site-core.js assets; do
+for required in index.html privacy.html styles.css script.js contact-form.js site-core.js assets; do
   if [[ ! -e "$STAGE/$required" ]]; then
     echo "Release archive is missing: $required" >&2
     exit 1

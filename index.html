@@ -413,56 +413,82 @@
               Drop us a line. Our team of cross-border marketing strategists will map out
               your route to global dominance.
             </p>
-            <a href="mailto:flourishculture@outlook.com">flourishculture@outlook.com</a>
+            <a href="mailto:business@flourish-culture.com">business@flourish-culture.com</a>
           </div>
 
-          <form class="project-form reveal" data-project-form novalidate>
-            <h3>Project Inquiry Form</h3>
+          <form class="project-form reveal" data-contact-form novalidate>
+            <h3>Contact FLOURISH CULTURE</h3>
             <div class="field-grid">
               <label>
-                <span>I am a...</span>
-                <select name="project-identity" required>
-                  <option value="">Select your role</option>
-                  <option>Brand looking for growth</option>
-                  <option>Creator looking for representation</option>
+                <span>I am a…</span>
+                <select name="role" required data-role-select>
+                  <option value="brand">Brand</option>
+                  <option value="creator">Creator</option>
                 </select>
               </label>
               <label>
-                <span>Name &amp; Job Title</span>
-                <input name="project-name" type="text" autocomplete="name" required />
+                <span>Full Name</span>
+                <input name="name" type="text" autocomplete="name" minlength="2" maxlength="120" required />
               </label>
-              <label>
-                <span>Company Name &amp; Website URL</span>
-                <input name="project-company" type="text" autocomplete="organization url" />
-              </label>
-              <label>
+              <label class="field-wide">
                 <span>Email Address</span>
-                <input name="project-email" type="email" autocomplete="email" required />
+                <input name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" required />
+              </label>
+            </div>
+
+            <div class="field-grid role-fields" data-role-fields="brand">
+              <label>
+                <span>Company</span>
+                <input name="company" type="text" autocomplete="organization" minlength="2" maxlength="160" required />
               </label>
               <label>
-                <span>Estimated Monthly Marketing Budget</span>
-                <select name="project-budget" required>
+                <span>Budget</span>
+                <select name="budget" required>
                   <option value="">Select a budget range</option>
-                  <option>$10,000 - $30,000</option>
-                  <option>$30,000 - $100,000</option>
+                  <option>$10,000–$30,000</option>
+                  <option>$30,000–$100,000</option>
                   <option>$100,000+</option>
+                  <option>Not sure yet</option>
                 </select>
               </label>
               <label class="field-wide">
-                <span>Tell us about your global goals...</span>
-                <textarea
-                  name="project-goal"
-                  rows="5"
-                  placeholder="Markets, platforms, audience and growth objective"
-                  required
-                ></textarea>
+                <span>Growth Objectives</span>
+                <textarea name="growthObjectives" rows="5" minlength="20" maxlength="2000" required></textarea>
               </label>
             </div>
-            <button class="button button-dark" type="submit">
-              Book a Strategy Call
+
+            <div class="field-grid role-fields" data-role-fields="creator" hidden aria-hidden="true">
+              <label class="field-wide">
+                <span>Social Media Handles</span>
+                <textarea name="socialHandles" rows="3" minlength="3" maxlength="1000" disabled required placeholder="TikTok, Instagram or YouTube handles and links"></textarea>
+              </label>
+              <label>
+                <span>Niche</span>
+                <input name="niche" type="text" minlength="2" maxlength="160" disabled required />
+              </label>
+              <label>
+                <span>Main Audience Demographics</span>
+                <textarea name="audienceDemographics" rows="4" minlength="5" maxlength="1000" disabled required></textarea>
+              </label>
+            </div>
+
+            <label class="honeypot-field" aria-hidden="true">
+              <span>Website</span>
+              <input name="website" type="text" tabindex="-1" autocomplete="off" />
+            </label>
+
+            <label class="privacy-consent">
+              <input name="privacyAccepted" type="checkbox" required />
+              <span>I have read the <a href="privacy.html">Privacy Notice</a> and agree that Flourish Culture may use my information to respond to and assess this inquiry.</span>
+            </label>
+
+            <div class="turnstile-slot" data-turnstile-slot aria-label="Security verification"></div>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+            <button class="button button-dark" type="submit" data-submit-button disabled>
+              Send Inquiry
               <i class="ri-arrow-right-line" aria-hidden="true"></i>
             </button>
-            <p class="form-note">No server submission or tracking is used.</p>
+            <p class="form-note">Protected by Cloudflare Turnstile. We do not use this form for advertising analytics.</p>
           </form>
         </div>
       </section>
@@ -485,10 +511,11 @@
           <a href="#talent">Our Talent</a>
           <a href="#about">About Us</a>
           <a href="#contact">Contact Us</a>
+          <a href="privacy.html">Privacy Notice</a>
         </nav>
         <div class="footer-contact">
           <span>Get in touch</span>
-          <a href="mailto:flourishculture@outlook.com">flourishculture@outlook.com</a>
+          <a href="mailto:business@flourish-culture.com">business@flourish-culture.com</a>
           <p>Hong Kong SAR</p>
         </div>
       </div>

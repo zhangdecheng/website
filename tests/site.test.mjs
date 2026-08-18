@@ -2,15 +2,6 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-import {
-  CREATOR_APPLICATION_EMAIL,
-  PROJECT_INQUIRY_EMAIL,
-  buildCreatorMailto,
-  buildProjectMailto,
-  isValidEmail,
-  isValidHttpUrl,
-} from "../site-core.js";
-
 function section(html, className) {
   return html.match(new RegExp(`<section class="${className}"[\\s\\S]*?<\\/section>`))?.[0] ?? "";
 }
@@ -22,48 +13,6 @@ function normalized(value) {
 function assertIncludesText(source, expected) {
   assert.ok(source.includes(expected), `Expected text not found: ${expected}`);
 }
-
-test("creator mailto targets the approved inbox and includes every field", () => {
-  const href = buildCreatorMailto({
-    name: "Maya Chen",
-    email: "maya@example.com",
-    social: "https://instagram.com/maya",
-    region: "North America",
-  });
-
-  assert.equal(CREATOR_APPLICATION_EMAIL, "irisa@flourishculture.com");
-  assert.match(href, /^mailto:irisa@flourishculture\.com\?/);
-  assert.match(decodeURIComponent(href), /Creator Application — Maya Chen/);
-  assert.match(decodeURIComponent(href), /maya@example\.com/);
-  assert.match(decodeURIComponent(href), /https:\/\/instagram\.com\/maya/);
-  assert.match(decodeURIComponent(href), /North America/);
-});
-
-test("project mailto falls back to the contact name when company is empty", () => {
-  const href = buildProjectMailto({
-    identity: "Creator looking for representation",
-    name: "Alex Rivera",
-    company: "",
-    email: "alex@example.com",
-    budget: "$10,000 - $30,000",
-    goal: "Build an international creator launch plan.",
-  });
-
-  assert.equal(PROJECT_INQUIRY_EMAIL, "flourishculture@outlook.com");
-  assert.match(href, /^mailto:flourishculture@outlook\.com\?/);
-  assert.match(decodeURIComponent(href), /Project Inquiry — Alex Rivera/);
-  assert.match(decodeURIComponent(href), /Identity: Creator looking for representation/);
-  assert.match(decodeURIComponent(href), /Budget: \$10,000 - \$30,000/);
-  assert.match(decodeURIComponent(href), /Build an international creator launch plan/);
-});
-
-test("email and social link validators reject malformed values", () => {
-  assert.equal(isValidEmail("hello@example.com"), true);
-  assert.equal(isValidEmail("not-an-email"), false);
-  assert.equal(isValidHttpUrl("https://tiktok.com/@creator"), true);
-  assert.equal(isValidHttpUrl("ftp://example.com"), false);
-  assert.equal(isValidHttpUrl("example.com/profile"), false);
-});
 
 test("homepage exposes the locked English anchors and canonical metadata", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
@@ -89,7 +38,9 @@ test("release modules use production-safe JavaScript MIME extensions", async () 
   const deployScript = await readFile(new URL("../deploy-cloud-assistant.sh", import.meta.url), "utf8");
 
   assert.match(html, /<script type="module" src="script\.js"><\/script>/);
-  assert.match(script, /from "\.\/site-core\.js"/);
+  const contactClient = await readFile(new URL("../contact-form.js", import.meta.url), "utf8");
+  assert.match(script, /from "\.\/contact-form\.js"/);
+  assert.match(contactClient, /from "\.\/site-core\.js"/);
   assert.doesNotMatch(script, /site-core\.mjs/);
   assert.match(buildScript, /site-core\.js/);
   assert.doesNotMatch(buildScript, /site-core\.mjs/);
@@ -181,7 +132,7 @@ test("homepage about module uses exact mission and advantage copy with image", a
   }
 });
 
-test("homepage contact module uses exact inquiry copy, fields, options and image", async () => {
+test("homepage has one unified accessible Brand and Creator contact form", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const contact = section(html, "contact");
   const text = normalized(contact);
@@ -190,22 +141,116 @@ test("homepage contact module uses exact inquiry copy, fields, options and image
   for (const expected of [
     "Ready to Scale Your Global Footprint?",
     "Drop us a line. Our team of cross-border marketing strategists will map out your route to global dominance.",
-    "Project Inquiry Form",
-    "I am a\.\.\.",
-    "Brand looking for growth",
-    "Creator looking for representation",
-    "Name &amp; Job Title",
-    "Company Name &amp; Website URL",
+    "Contact FLOURISH CULTURE",
+    "I am a…",
+    "Brand",
+    "Creator",
+    "Full Name",
     "Email Address",
-    "Estimated Monthly Marketing Budget",
-    "$10,000 - $30,000",
-    "$30,000 - $100,000",
+    "Company",
+    "Budget",
+    "$10,000–$30,000",
+    "$30,000–$100,000",
     "$100,000+",
-    "Tell us about your global goals...",
-    "Book a Strategy Call",
+    "Not sure yet",
+    "Growth Objectives",
+    "Social Media Handles",
+    "Niche",
+    "Main Audience Demographics",
+    "Privacy Notice",
+    "Send Inquiry",
   ]) {
     assertIncludesText(text, expected);
   }
+
+  assert.equal(html.match(/data-contact-form/g)?.length, 1);
+  assert.equal(html.match(/<form\b/g)?.length, 1);
+  for (const name of [
+    "role",
+    "name",
+    "email",
+    "company",
+    "budget",
+    "growthObjectives",
+    "socialHandles",
+    "niche",
+    "audienceDemographics",
+    "privacyAccepted",
+    "website",
+  ]) {
+    assert.match(contact, new RegExp(`name="${name}"`));
+  }
+  assert.match(contact, /data-role-fields="brand"/);
+  assert.match(contact, /data-role-fields="creator" hidden aria-hidden="true"/);
+  assert.match(contact, /data-turnstile-slot/);
+  assert.match(contact, /data-form-status role="status" aria-live="polite"/);
+  assert.doesNotMatch(html, /type="tel"|name="(?:phone|telephone)"/i);
+  assert.doesNotMatch(html, /data-creator-form|data-project-form|form[^>]+mailto:/i);
+  assert.doesNotMatch(html, /flourishculture@outlook\.com/i);
+  const mailtoRecipients = [...html.matchAll(/href="mailto:([^"]+)"/g)].map((match) => match[1]);
+  assert.ok(mailtoRecipients.length > 0);
+  assert.ok(mailtoRecipients.every((recipient) => recipient === "business@flourish-culture.com"));
+});
+
+test("Privacy Notice is original, generic and accurately describes the contact flow", async () => {
+  const privacy = await readFile(new URL("../privacy.html", import.meta.url), "utf8");
+  const text = normalized(privacy);
+
+  assert.match(privacy, /<title>Privacy Notice \| FLOURISH CULTURE<\/title>/);
+  assert.match(privacy, /<link rel="canonical" href="https:\/\/www\.flourishculturekol\.com\/privacy\.html" \/>/);
+  assertIncludesText(text, "Effective August 18, 2026");
+  for (const heading of [
+    "Information We Collect",
+    "How We Use Information",
+    "Service Providers and Sharing",
+    "Cloudflare Turnstile",
+    "Retention",
+    "International Processing",
+    "Security",
+    "Your Choices",
+    "Changes to This Notice",
+    "Contact",
+  ]) {
+    assertIncludesText(text, heading);
+  }
+  assertIncludesText(text, "We use Cloudflare Turnstile to distinguish legitimate submissions from automated abuse.");
+  assertIncludesText(text, "business@flourish-culture.com");
+  assertIncludesText(text, "We do not sell information submitted through this form or use it for advertising analytics.");
+  assert.doesNotMatch(
+    text,
+    /\b(?:Google|Meta|Apple|Example Company|Google Analytics|copied boilerplate)\b/i,
+  );
+  assert.doesNotMatch(privacy, /(?:30|60|90|180|365) days/i);
+});
+
+test("contact client uses Turnstile and same-page JSON submission without mailto navigation", async () => {
+  const client = await readFile(new URL("../contact-form.js", import.meta.url), "utf8");
+  const script = await readFile(new URL("../script.js", import.meta.url), "utf8");
+  const core = await readFile(new URL("../site-core.js", import.meta.url), "utf8");
+
+  assert.match(client, /CONTACT_CONFIG_ENDPOINT/);
+  assert.match(client, /CONTACT_SUBMIT_ENDPOINT/);
+  assert.match(client, /https:\/\/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js\?render=explicit/);
+  assert.match(client, /action:\s*"contact_submit"/);
+  assert.match(client, /"expired-callback"/);
+  assert.match(client, /"error-callback"/);
+  assert.match(client, /method:\s*"POST"/);
+  assert.match(client, /"content-type":\s*"application\/json"/);
+  assert.match(client, /body:\s*JSON\.stringify\(payload\)/);
+  assert.doesNotMatch(client, /window\.location|win\.location/);
+  assert.equal(client.match(/form\.reset\(\)/g)?.length, 1);
+  assert.match(
+    client,
+    /accepted = response\.status === 201 \|\| response\.status === 202;[\s\S]*if \(accepted\) \{[\s\S]*form\.reset\(\)/,
+  );
+
+  assert.match(script, /import \{ initContactForm \} from "\.\/contact-form\.js"/);
+  assert.match(script, /initContactForm\(\)/);
+  assert.doesNotMatch(script, /buildCreatorMailto|buildProjectMailto|window\.location/);
+  assert.doesNotMatch(
+    core,
+    /CREATOR_APPLICATION_EMAIL|PROJECT_INQUIRY_EMAIL|buildCreatorMailto|buildProjectMailto|flourishculture@outlook\.com/,
+  );
 });
 
 test("review editable mirrors remaining Feishu module copy", async () => {

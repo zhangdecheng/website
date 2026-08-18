@@ -1,9 +1,11 @@
 # Dependencies
 node_modules/
 
-# Generated build and release artifacts
+# Generated build artifacts
 dist/
-release/*.zip
+
+# Generated release artifacts and staging directories
+release/
 
 # Local environment and secrets
 .env

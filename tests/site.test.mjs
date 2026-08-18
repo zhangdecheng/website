@@ -65,28 +65,19 @@ test("email and social link validators reject malformed values", () => {
   assert.equal(isValidHttpUrl("example.com/profile"), false);
 });
 
-test("homepage exposes the locked English anchors and both form interfaces", async () => {
+test("homepage exposes the locked English anchors and canonical metadata", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
 
   assert.match(html, /<html lang="en">/);
+  assert.match(
+    html,
+    /<meta\s+name="description"\s+content="FLOURISH CULTURE connects visionary brands and global creators through influencer partnerships, data-driven growth, and culture-first localization\."\s*\/>/,
+  );
+  assert.match(html, /<link rel="canonical" href="https:\/\/www\.flourishculturekol\.com\/" \/>/);
   for (const id of ["services", "talent", "about", "contact"]) {
     assert.match(html, new RegExp(`id="${id}"`));
     const matches = html.match(new RegExp(`id="${id}"`, "g")) ?? [];
     assert.equal(matches.length, 1, `#${id} should appear exactly once`);
-  }
-  for (const name of [
-    "creator-name",
-    "creator-email",
-    "creator-social",
-    "creator-region",
-    "project-identity",
-    "project-name",
-    "project-company",
-    "project-email",
-    "project-budget",
-    "project-goal",
-  ]) {
-    assert.match(html, new RegExp(`name="${name}"`));
   }
   assert.doesNotMatch(html, /20K\+|98%|已记录合作意向/);
 });
@@ -106,7 +97,7 @@ test("release modules use production-safe JavaScript MIME extensions", async () 
   assert.doesNotMatch(deployScript, /site-core\.mjs/);
 });
 
-test("homepage services use exact Feishu three-block structure", async () => {
+test("homepage services use the approved three-block copy", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const services = section(html, "services");
   const text = normalized(services);
@@ -115,7 +106,7 @@ test("homepage services use exact Feishu three-block structure", async () => {
   assert.equal(services.match(/class="service-block reveal"/g)?.length, 3);
   for (const title of [
     "Global Influencer Marketing",
-    "Performance-Driven Growth &amp; Paid Media",
+    "Data-Driven Growth &amp; Performance Insights",
     "Creative Strategy &amp; Localization",
   ]) {
     assert.match(services, new RegExp(title));
@@ -133,18 +124,23 @@ test("homepage services use exact Feishu three-block structure", async () => {
   }
   assert.doesNotMatch(services, /<span>TikTok<\/span>|<span>YouTube<\/span>|<span>Instagram<\/span>|<span>Shorts<\/span>|<span>Reels<\/span>/);
   for (const copy of [
-    "We engineer full-funnel influencer campaigns across TikTok, YouTube, Instagram, Shorts, and Reels.",
-    "Organic reach is just the beginning.",
-    "To conquer global markets, you need to speak the local language of social media.",
-    "End-to-End Campaign Management: Talent scouting, contract negotiation, compliance, and localized creative briefing.",
-    "Creator Whitelisting &amp; Spark Ads: We gain secure access to creator profiles to run high-converting ad variants directly through their handles.",
-    "UGC (User Generated Content) Production: Generating an endless library of high-quality, authentic content assets for your brand's long-term marketing channels.",
+    "We build high-impact partnerships between visionary brands and top-tier creators across TikTok, YouTube, and Instagram. We engineer win-win campaigns that elevate brand authority while driving sustainable monetization for creators.",
+    "Going viral shouldn’t be a guessing game. We leverage real-time platform analytics, retention metrics, and audience engagement data to turn one-off viral hits into a predictable, high-performing content flywheel for both brands and creators.",
+    "Algorithmic &amp; Retention Audits: Deconstruct video performance line-by-line (retention curves, 3-second hook rates, and CTRs) to optimize content structures for maximum algorithmic push.",
+    "E-Commerce &amp; Direct-Response Optimization: Analyze audience purchasing behavior and conversion funnels to refine call-to-actions (CTAs), maximizing both brand sales and creator commissions.",
+    "Audience Demographics &amp; Niche Matching: Utilize deep-level audience insights to pair creators with the exact brand categories their followers are most likely to buy from.",
+    "We break down cultural barriers by pairing brands with local trendsetters. We empower creators with algorithm coaching, script audits, and native trend insights to produce high-performing UGC.",
+    "Localized Trend Jacking: Aligning creator content with fast-moving global social trends, sounds, and native hooks.",
+    "Script Audits &amp; UGC Production: Actionable content optimizations and scalable asset creation for long-term brand equity.",
+    "Supply Chain &amp; Offline Immersion: Exclusive factory tours and sourcing trips that give creators first-look access to unreleased products.",
   ]) {
     assertIncludesText(text, copy);
   }
+
+  assert.doesNotMatch(html, /paid media|paid growth|Spark Ads|whitelisting/i);
 });
 
-test("homepage talent module uses exact creator copy and form labels", async () => {
+test("homepage talent module uses the approved benefits and unified-form CTA", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const talent = section(html, "talent");
   const text = normalized(talent);
@@ -154,18 +150,17 @@ test("homepage talent module uses exact creator copy and form labels", async () 
   assertIncludesText(text, "FLOURISH CULTURE connects the world’s most talented creators with market-defining global brands. Let's build your digital empire together.");
   assert.match(talent, /Why Creators Partner With Us:/);
   for (const expected of [
-    "Direct Access to Iconic Brands: Get exclusive sponsorship opportunities with hyper-growth global giants like Temu and pioneering lifestyle brands like Innerbrightness.",
-    "Global Monetization: Our dedicated management team handles the business side—negotiating top-tier rates, securing long-term contracts, and ensuring timely payments.",
-    "Strategic Career Growth: We provide algorithmic insights, content audits, and cross-platform strategies to help you expand your audience globally.",
-    "Join the Culture (Application Form)",
-    "Full Name",
-    "Email Address",
-    "Primary Social Media Handle &amp; Link",
-    "Main Audience Demographics (US, UK, Europe, etc.)",
-    "Apply to Join the Roster",
+    "Direct Access to Top Global Brands: Secure exclusive sponsorships with market leaders and pioneering lifestyle labels, high-tier deal flow.",
+    "Seamless Monetization &amp; Operations: We handle negotiation, contract compliance, and on-time payouts, so you can focus 100% on creating.",
+    "Data-Backed Creator Growth: Gain actionable script audits, algorithm insights, and cross-platform distribution strategies designed to turn viral moments into sustainable career growth.",
+    "Global Community &amp; Supply Chain Access: Join exclusive Creator Masterminds, global offline meetups, and sponsored China factory tours to test unreleased products and create behind-the-scenes content.",
+    "Ready to Scale?",
+    "Join Our Roster →",
   ]) {
     assertIncludesText(text, expected);
   }
+  assert.doesNotMatch(talent, /<form|data-creator-form|Join the Culture|Apply to Join the Roster/);
+  assert.match(talent, /<a class="button button-dark" href="#contact" data-select-contact-role="creator">Join Our Roster →<\/a>/);
 });
 
 test("homepage about module uses exact mission and advantage copy with image", async () => {
@@ -177,10 +172,10 @@ test("homepage about module uses exact mission and advantage copy with image", a
   for (const expected of [
     "[Our Mission]",
     "Making Cultural Boundaries Invisible.",
-    "At FLOURISH CULTURE, we believe that great brands shouldn't be limited by geography. Our mission is to empower visionaries to transcend borders, helping them not just market, but truly flourish in global digital soil.",
+    "At FLOURISH CULTURE, we believe that great brands shouldn't be limited by geography. Our mission is to empower both visionaries and creators to transcend borders, turning cross-cultural stories into meaningful global growth.",
     "[The FLOURISH Advantage: Why HK &amp; Why Us?]",
     "Headquartered in Hong Kong, FLOURISH CULTURE occupies a unique position as the ultimate bridge between East and West.",
-    "We possess an intrinsic, deep-rooted understanding of China’s world-class supply chains, e-commerce innovations, and brand aspirations.",
+    "We possess an intrinsic, deep-rooted understanding of China’s world-class supply chains, e-commerce innovations, and brand aspirations. Simultaneously, we operate with a 100% localized, ground-level execution network across North America, Europe, and beyond. This dual DNA allows us to eliminate cross-border friction entirely, making us the trusted launchpad for creators seeking top-tier sponsorships and brands conquering global markets.",
   ]) {
     assertIncludesText(text, expected);
   }
@@ -315,8 +310,8 @@ test("annotated hero media uses three cohesive brand story cards", async () => {
     assert.match(hero, new RegExp(`src="${src}"`));
   }
   assert.match(hero, /Brand Partnership Hub/);
-  assert.match(hero, /Global talent network/);
-  assert.match(hero, /Data-driven growth/);
+  assert.match(hero, /Global Talent Network/);
+  assert.match(hero, /Data-Driven Growth/);
   assert.doesNotMatch(hero, /Live commerce experience/);
   assert.doesNotMatch(hero, /class="hero-live-interface"/);
   assert.doesNotMatch(hero, /src="assets\/service-influencer\.jpg"/);
@@ -350,6 +345,14 @@ test("whiteboard 3 bridge section uses centered Who We Are double cards", async 
   assert.equal(bridge.match(/class="bridge-card reveal"/g)?.length, 2);
   assert.match(bridge, /From HK to the World/);
   assert.match(bridge, /The East-to-West Cross-Border Experts/);
+  assertIncludesText(
+    normalized(bridge),
+    "Headquartered in Hong Kong, we leverage the city’s unique status as a global hub to seamlessly connect East Asian innovation with international audiences. We provide creators with direct access to high-budget global sponsors and cross-cultural growth strategies.",
+  );
+  assertIncludesText(
+    normalized(bridge),
+    "Deeply rooted in China’s dynamic supply chains and brand ecosystems, paired with 100% localized global execution, we translate brand brilliance into cross-border viral success.",
+  );
   assert.match(bridge, /assets\/hong-kong-harbour\.jpg/);
   assert.match(bridge, /assets\/service-localization\.jpg/);
   assert.doesNotMatch(bridge, /From Hong Kong<br \/>to the World|class="eyebrow eyebrow-dark"/);

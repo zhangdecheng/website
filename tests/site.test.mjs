@@ -70,6 +70,14 @@ test("release build packages every contact page module and rejects incomplete as
   );
 });
 
+test("browser QA locks the system-Chrome automation dependency", async () => {
+  const qaScript = await readFile(new URL("../scripts/browser-qa.cjs", import.meta.url), "utf8");
+  const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+
+  assert.match(qaScript, /require\("playwright-core"\)/);
+  assert.equal(packageJson.devDependencies?.["playwright-core"], "1.62.1");
+});
+
 test("homepage services use the approved three-block copy", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const services = section(html, "services");

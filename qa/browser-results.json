@@ -1,431 +1,351 @@
 {
-  "generatedAt": "2026-06-24T16:22:53.625Z",
-  "browser": "Google Chrome via Playwright",
+  "generatedAt": "2026-08-18T08:32:16.261Z",
+  "browser": "System Google Chrome via playwright-core 1.62.1",
   "viewports": {
-    "wide-1920x1080": {
-      "title": "FLOURISH CULTURE | Global Influencer Marketing",
-      "h1": "Scaling Global Impact for Visionary Brands.",
-      "anchorsPresent": {
-        "services": true,
-        "talent": true,
-        "about": true,
-        "contact": true
-      },
-      "horizontalOverflow": false,
-      "dimensions": {
-        "scrollWidth": 1920,
-        "clientWidth": 1920,
-        "scrollHeight": 6703
-      },
-      "sections": {
-        "hero": {
-          "top": 0,
-          "width": 1920,
-          "height": 760
-        },
-        "logos": {
-          "top": 760,
-          "width": 1920,
-          "height": 388
-        },
-        "bridge": {
-          "top": 1148,
-          "width": 1920,
-          "height": 948
-        },
-        "services": {
-          "top": 2096,
-          "width": 1920,
-          "height": 1997
-        },
-        "talent": {
-          "top": 4094,
-          "width": 1920,
-          "height": 939
-        },
-        "about": {
-          "top": 5032,
-          "width": 1920,
-          "height": 690
-        },
-        "contact": {
-          "top": 5722,
-          "width": 1920,
-          "height": 795
-        },
-        "footer": {
-          "top": 6518,
-          "width": 1920,
-          "height": 185
-        }
-      },
-      "missingAlt": 0,
-      "visibleButtonSizes": [
-        {
-          "text": "Add to cart",
-          "width": 75,
-          "height": 28
-        },
-        {
-          "text": "Apply to Join the Roster",
-          "width": 714,
-          "height": 52
-        },
-        {
-          "text": "Book a Strategy Call",
-          "width": 225,
-          "height": 52
-        }
-      ],
-      "hiddenRevealCount": 0,
-      "consoleErrors": []
-    },
     "desktop-1440x1024": {
-      "title": "FLOURISH CULTURE | Global Influencer Marketing",
-      "h1": "Scaling Global Impact for Visionary Brands.",
-      "anchorsPresent": {
-        "services": true,
-        "talent": true,
-        "about": true,
-        "contact": true
+      "viewport": {
+        "width": 1440,
+        "height": 1024
       },
-      "horizontalOverflow": false,
-      "dimensions": {
-        "scrollWidth": 1440,
-        "clientWidth": 1440,
-        "scrollHeight": 6434
+      "screenshot": "qa/screenshots/contact-desktop-1440x1024.png",
+      "defaultState": {
+        "role": "brand",
+        "brandVisible": true,
+        "creatorHidden": true,
+        "horizontalOverflow": false,
+        "hiddenRevealCount": 12
       },
-      "sections": {
-        "hero": {
-          "top": 0,
-          "width": 1440,
-          "height": 691
-        },
-        "logos": {
-          "top": 691,
-          "width": 1440,
-          "height": 388
-        },
-        "bridge": {
-          "top": 1079,
-          "width": 1440,
-          "height": 947
-        },
-        "services": {
-          "top": 2026,
-          "width": 1440,
-          "height": 1843
-        },
-        "talent": {
-          "top": 3869,
-          "width": 1440,
-          "height": 1001
-        },
-        "about": {
-          "top": 4870,
-          "width": 1440,
-          "height": 660
-        },
-        "contact": {
-          "top": 5530,
-          "width": 1440,
-          "height": 718
-        },
-        "footer": {
-          "top": 6248,
-          "width": 1440,
-          "height": 185
-        }
+      "creatorState": {
+        "role": "creator",
+        "brandHidden": true,
+        "creatorVisible": true
       },
-      "missingAlt": 0,
-      "visibleButtonSizes": [
-        {
-          "text": "Add to cart",
-          "width": 75,
-          "height": 28
-        },
-        {
-          "text": "Apply to Join the Roster",
-          "width": 616,
-          "height": 52
-        },
-        {
-          "text": "Book a Strategy Call",
-          "width": 225,
-          "height": 52
-        }
+      "joinCta": {
+        "role": "creator",
+        "contactVisible": true
+      },
+      "focusOrder": [
+        "role",
+        "name",
+        "email",
+        "company",
+        "budget",
+        "growthObjectives",
+        "privacyAccepted",
+        "privacy-link",
+        "turnstile",
+        "submit",
+        "a",
+        "a",
+        "a"
       ],
-      "hiddenRevealCount": 0,
-      "consoleErrors": []
+      "failureState": {
+        "name": "QA Brand Contact",
+        "email": "qa@example.com",
+        "company": "QA North Star",
+        "budget": "$30,000–$100,000",
+        "growthObjectives": "Validate that a simulated delivery failure preserves every entered field.",
+        "privacyAccepted": true,
+        "status": "We couldn’t send your message right now. Your details are still here—please try again."
+      },
+      "successState": {
+        "role": "brand",
+        "name": "",
+        "company": "",
+        "privacyAccepted": false,
+        "status": "Thank you—your message has been received."
+      },
+      "mobileMenu": null,
+      "reducedMotion": {
+        "mediaMatches": true,
+        "scrollBehavior": "auto",
+        "htmlScrollBehavior": "auto",
+        "hiddenRevealCount": 0
+      },
+      "privacy": {
+        "horizontalOverflow": false,
+        "articleWidth": 760,
+        "bodyFontSize": 17.28,
+        "hasTurnstileDisclosure": true
+      },
+      "baselineConsoleErrorCount": 0,
+      "expectedFailureConsoleSignals": [
+        "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+      ],
+      "unexpectedConsoleErrors": [],
+      "checks": {
+        "defaultBrand": true,
+        "creatorSwitch": true,
+        "joinCta": true,
+        "keyboardOrder": true,
+        "failurePreservesValues": true,
+        "successResetsValues": true,
+        "noHorizontalOverflow": true,
+        "reducedMotion": true,
+        "privacyReadable": true,
+        "noConsoleErrors": true
+      }
     },
     "tablet-1024x1366": {
-      "title": "FLOURISH CULTURE | Global Influencer Marketing",
-      "h1": "Scaling Global Impact for Visionary Brands.",
-      "anchorsPresent": {
-        "services": true,
-        "talent": true,
-        "about": true,
-        "contact": true
+      "viewport": {
+        "width": 1024,
+        "height": 1366
       },
-      "horizontalOverflow": false,
-      "dimensions": {
-        "scrollWidth": 1024,
-        "clientWidth": 1024,
-        "scrollHeight": 5507
+      "screenshot": "qa/screenshots/contact-tablet-1024x1366.png",
+      "defaultState": {
+        "role": "brand",
+        "brandVisible": true,
+        "creatorHidden": true,
+        "horizontalOverflow": false,
+        "hiddenRevealCount": 9
       },
-      "sections": {
-        "hero": {
-          "top": 0,
-          "width": 1024,
-          "height": 680
-        },
-        "logos": {
-          "top": 680,
-          "width": 1024,
-          "height": 282
-        },
-        "bridge": {
-          "top": 962,
-          "width": 1024,
-          "height": 700
-        },
-        "services": {
-          "top": 1662,
-          "width": 1024,
-          "height": 1552
-        },
-        "talent": {
-          "top": 3215,
-          "width": 1024,
-          "height": 862
-        },
-        "about": {
-          "top": 4077,
-          "width": 1024,
-          "height": 568
-        },
-        "contact": {
-          "top": 4644,
-          "width": 1024,
-          "height": 663
-        },
-        "footer": {
-          "top": 5307,
-          "width": 1024,
-          "height": 201
-        }
+      "creatorState": {
+        "role": "creator",
+        "brandHidden": true,
+        "creatorVisible": true
       },
-      "missingAlt": 0,
-      "visibleButtonSizes": [
-        {
-          "text": "Open menu",
-          "width": 46,
-          "height": 46
-        },
-        {
-          "text": "Add to cart",
-          "width": 60,
-          "height": 28
-        },
-        {
-          "text": "Apply to Join the Roster",
-          "width": 459,
-          "height": 52
-        },
-        {
-          "text": "Book a Strategy Call",
-          "width": 225,
-          "height": 52
-        }
+      "joinCta": {
+        "role": "creator",
+        "contactVisible": true
+      },
+      "focusOrder": [
+        "role",
+        "name",
+        "email",
+        "company",
+        "budget",
+        "growthObjectives",
+        "privacyAccepted",
+        "privacy-link",
+        "turnstile",
+        "submit",
+        "a",
+        "a",
+        "a"
       ],
-      "hiddenRevealCount": 0,
-      "consoleErrors": []
+      "failureState": {
+        "name": "QA Brand Contact",
+        "email": "qa@example.com",
+        "company": "QA North Star",
+        "budget": "$30,000–$100,000",
+        "growthObjectives": "Validate that a simulated delivery failure preserves every entered field.",
+        "privacyAccepted": true,
+        "status": "We couldn’t send your message right now. Your details are still here—please try again."
+      },
+      "successState": {
+        "role": "brand",
+        "name": "",
+        "company": "",
+        "privacyAccepted": false,
+        "status": "Thank you—your message has been received."
+      },
+      "mobileMenu": null,
+      "reducedMotion": {
+        "mediaMatches": true,
+        "scrollBehavior": "auto",
+        "htmlScrollBehavior": "auto",
+        "hiddenRevealCount": 0
+      },
+      "privacy": {
+        "horizontalOverflow": false,
+        "articleWidth": 760,
+        "bodyFontSize": 15,
+        "hasTurnstileDisclosure": true
+      },
+      "baselineConsoleErrorCount": 0,
+      "expectedFailureConsoleSignals": [
+        "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+      ],
+      "unexpectedConsoleErrors": [],
+      "checks": {
+        "defaultBrand": true,
+        "creatorSwitch": true,
+        "joinCta": true,
+        "keyboardOrder": true,
+        "failurePreservesValues": true,
+        "successResetsValues": true,
+        "noHorizontalOverflow": true,
+        "reducedMotion": true,
+        "privacyReadable": true,
+        "noConsoleErrors": true
+      }
     },
     "mobile-390x844": {
-      "title": "FLOURISH CULTURE | Global Influencer Marketing",
-      "h1": "Scaling Global Impact for Visionary Brands.",
-      "anchorsPresent": {
-        "services": true,
-        "talent": true,
-        "about": true,
-        "contact": true
+      "viewport": {
+        "width": 390,
+        "height": 844
       },
-      "horizontalOverflow": false,
-      "dimensions": {
-        "scrollWidth": 390,
-        "clientWidth": 390,
-        "scrollHeight": 9766
+      "screenshot": "qa/screenshots/contact-mobile-390x844.png",
+      "defaultState": {
+        "role": "brand",
+        "brandVisible": true,
+        "creatorHidden": true,
+        "horizontalOverflow": false,
+        "hiddenRevealCount": 12
       },
-      "sections": {
-        "hero": {
-          "top": 0,
-          "width": 390,
-          "height": 1501
-        },
-        "logos": {
-          "top": 1501,
-          "width": 390,
-          "height": 283
-        },
-        "bridge": {
-          "top": 1784,
-          "width": 390,
-          "height": 1119
-        },
-        "services": {
-          "top": 2903,
-          "width": 390,
-          "height": 2626
-        },
-        "talent": {
-          "top": 5529,
-          "width": 390,
-          "height": 1403
-        },
-        "about": {
-          "top": 6932,
-          "width": 390,
-          "height": 1041
-        },
-        "contact": {
-          "top": 7973,
-          "width": 390,
-          "height": 1307
-        },
-        "footer": {
-          "top": 9280,
-          "width": 390,
-          "height": 486
-        }
+      "creatorState": {
+        "role": "creator",
+        "brandHidden": true,
+        "creatorVisible": true
       },
-      "missingAlt": 0,
-      "visibleButtonSizes": [
-        {
-          "text": "Open menu",
-          "width": 46,
-          "height": 46
-        },
-        {
-          "text": "Add to cart",
-          "width": 75,
-          "height": 28
-        },
-        {
-          "text": "Apply to Join the Roster",
-          "width": 316,
-          "height": 52
-        },
-        {
-          "text": "Book a Strategy Call",
-          "width": 316,
-          "height": 52
-        }
+      "joinCta": {
+        "role": "creator",
+        "contactVisible": true
+      },
+      "focusOrder": [
+        "role",
+        "name",
+        "email",
+        "company",
+        "budget",
+        "growthObjectives",
+        "privacyAccepted",
+        "privacy-link",
+        "turnstile",
+        "submit",
+        "a",
+        "a",
+        "a"
       ],
-      "hiddenRevealCount": 0,
-      "consoleErrors": []
+      "failureState": {
+        "name": "QA Brand Contact",
+        "email": "qa@example.com",
+        "company": "QA North Star",
+        "budget": "$30,000–$100,000",
+        "growthObjectives": "Validate that a simulated delivery failure preserves every entered field.",
+        "privacyAccepted": true,
+        "status": "We couldn’t send your message right now. Your details are still here—please try again."
+      },
+      "successState": {
+        "role": "brand",
+        "name": "",
+        "company": "",
+        "privacyAccepted": false,
+        "status": "Thank you—your message has been received."
+      },
+      "mobileMenu": {
+        "opens": true,
+        "closesWithEscape": true
+      },
+      "reducedMotion": {
+        "mediaMatches": true,
+        "scrollBehavior": "auto",
+        "htmlScrollBehavior": "auto",
+        "hiddenRevealCount": 0
+      },
+      "privacy": {
+        "horizontalOverflow": false,
+        "articleWidth": 354,
+        "bodyFontSize": 15,
+        "hasTurnstileDisclosure": true
+      },
+      "baselineConsoleErrorCount": 0,
+      "expectedFailureConsoleSignals": [
+        "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+      ],
+      "unexpectedConsoleErrors": [],
+      "checks": {
+        "defaultBrand": true,
+        "creatorSwitch": true,
+        "joinCta": true,
+        "keyboardOrder": true,
+        "failurePreservesValues": true,
+        "successResetsValues": true,
+        "noHorizontalOverflow": true,
+        "reducedMotion": true,
+        "privacyReadable": true,
+        "noConsoleErrors": true,
+        "mobileMenu": true
+      }
     },
     "small-mobile-360x800": {
-      "title": "FLOURISH CULTURE | Global Influencer Marketing",
-      "h1": "Scaling Global Impact for Visionary Brands.",
-      "anchorsPresent": {
-        "services": true,
-        "talent": true,
-        "about": true,
-        "contact": true
+      "viewport": {
+        "width": 360,
+        "height": 800
       },
-      "horizontalOverflow": false,
-      "dimensions": {
-        "scrollWidth": 360,
-        "clientWidth": 360,
-        "scrollHeight": 9912
+      "screenshot": "qa/screenshots/contact-small-mobile-360x800.png",
+      "defaultState": {
+        "role": "brand",
+        "brandVisible": true,
+        "creatorHidden": true,
+        "horizontalOverflow": false,
+        "hiddenRevealCount": 12
       },
-      "sections": {
-        "hero": {
-          "top": 0,
-          "width": 360,
-          "height": 1563
-        },
-        "logos": {
-          "top": 1563,
-          "width": 360,
-          "height": 276
-        },
-        "bridge": {
-          "top": 1839,
-          "width": 360,
-          "height": 1112
-        },
-        "services": {
-          "top": 2950,
-          "width": 360,
-          "height": 2755
-        },
-        "talent": {
-          "top": 5705,
-          "width": 360,
-          "height": 1416
-        },
-        "about": {
-          "top": 7121,
-          "width": 360,
-          "height": 1027
-        },
-        "contact": {
-          "top": 8148,
-          "width": 360,
-          "height": 1279
-        },
-        "footer": {
-          "top": 9426,
-          "width": 360,
-          "height": 486
-        }
+      "creatorState": {
+        "role": "creator",
+        "brandHidden": true,
+        "creatorVisible": true
       },
-      "missingAlt": 0,
-      "visibleButtonSizes": [
-        {
-          "text": "Open menu",
-          "width": 46,
-          "height": 46
-        },
-        {
-          "text": "Add to cart",
-          "width": 75,
-          "height": 28
-        },
-        {
-          "text": "Apply to Join the Roster",
-          "width": 286,
-          "height": 52
-        },
-        {
-          "text": "Book a Strategy Call",
-          "width": 286,
-          "height": 52
-        }
+      "joinCta": {
+        "role": "creator",
+        "contactVisible": true
+      },
+      "focusOrder": [
+        "role",
+        "name",
+        "email",
+        "company",
+        "budget",
+        "growthObjectives",
+        "privacyAccepted",
+        "privacy-link",
+        "turnstile",
+        "submit",
+        "a",
+        "a",
+        "a"
       ],
-      "hiddenRevealCount": 0,
-      "consoleErrors": []
+      "failureState": {
+        "name": "QA Brand Contact",
+        "email": "qa@example.com",
+        "company": "QA North Star",
+        "budget": "$30,000–$100,000",
+        "growthObjectives": "Validate that a simulated delivery failure preserves every entered field.",
+        "privacyAccepted": true,
+        "status": "We couldn’t send your message right now. Your details are still here—please try again."
+      },
+      "successState": {
+        "role": "brand",
+        "name": "",
+        "company": "",
+        "privacyAccepted": false,
+        "status": "Thank you—your message has been received."
+      },
+      "mobileMenu": {
+        "opens": true,
+        "closesWithEscape": true
+      },
+      "reducedMotion": {
+        "mediaMatches": true,
+        "scrollBehavior": "auto",
+        "htmlScrollBehavior": "auto",
+        "hiddenRevealCount": 0
+      },
+      "privacy": {
+        "horizontalOverflow": false,
+        "articleWidth": 324,
+        "bodyFontSize": 15,
+        "hasTurnstileDisclosure": true
+      },
+      "baselineConsoleErrorCount": 0,
+      "expectedFailureConsoleSignals": [
+        "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
+      ],
+      "unexpectedConsoleErrors": [],
+      "checks": {
+        "defaultBrand": true,
+        "creatorSwitch": true,
+        "joinCta": true,
+        "keyboardOrder": true,
+        "failurePreservesValues": true,
+        "successResetsValues": true,
+        "noHorizontalOverflow": true,
+        "reducedMotion": true,
+        "privacyReadable": true,
+        "noConsoleErrors": true,
+        "mobileMenu": true
+      }
     }
   },
-  "interaction": {
-    "mobileMenuOpens": true,
-    "mobileMenuClosesWithEscape": true,
-    "creatorInvalidUrlMessage": "Enter a complete link beginning with http:// or https://.",
-    "projectRequiredInvalidCount": 5
-  },
-  "accessibility": {
-    "keyboardFocus": {
-      "tag": "A",
-      "label": "Skip to content",
-      "outlineStyle": "solid",
-      "outlineWidth": "3px"
-    },
-    "reducedMotion": {
-      "mediaMatches": true,
-      "hiddenRevealCount": 0,
-      "htmlScrollBehavior": "auto"
-    }
-  },
-  "consoleErrors": []
+  "failures": []
 }

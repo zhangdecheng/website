@@ -12,7 +12,8 @@ The current production direction is the approved Option 1, “Neon Culture Bridg
 The v1.2.0 architecture is:
 
 - static HTML/CSS/JavaScript marketing pages under `/var/www/flourishculturekol.com`;
-- one Node.js >= 20 Contact service bound only to `127.0.0.1:3101`;
+- one Node.js >= 20 Contact service bound only to `127.0.0.1:3101`, using the stable
+  `/opt/flourish-contact/runtime` symlink rather than system or Review Node;
 - Nginx proxies only `/api/contact` to that service;
 - Cloudflare Turnstile with mandatory server-side Siteverify;
 - SMTP relay through the fixed `business@flourish-culture.com` identity;
@@ -132,7 +133,12 @@ Public production baseline observed on 2026-08-18:
 - Web root: `/var/www/flourishculturekol.com`
 - `www.flourishculturekol.com` and `flourishculturekol.com` resolved to `150.5.135.196`.
 - Both HTTPS hostnames returned the same historical homepage; apex did not yet redirect to www.
-- The exact cloud account, region, instance ID, Nginx source file and current backup state remain unconfirmed until cloud authentication and read-only server preflight succeed.
+- Confirmed cloud account `2103632597`, region `cn-hongkong`, ECS
+  `i-yeo9geadc0plsv0abgv0`, and Nginx source
+  `/etc/nginx/conf.d/00-flourishculturekol.com.conf`.
+- Confirmed Review production/staging use independent Node 22 processes on 8787/8788 and pass
+  local TLS/SNI health checks. Contact will use the existing independent Node 24 path through its
+  own stable symlink.
 - Do not use `AI-OpenClaw-b6uN-000` / `118.196.85.61` for homepage releases unless DNS and server routing are intentionally changed. On 2026-06-26, that candidate host redirected the FLOURISH host to `/todolist/`.
 
 Historical release backup records (current existence not yet re-verified):

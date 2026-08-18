@@ -5,9 +5,10 @@
 状态：**未完成**。
 
 本地代码、静态包、Contact 服务包和浏览器回归已通过；公开网络基线与服务器内只读
-预检也已留证。目标为香港实例 `i-yeo9geadc0plsv0abgv0`，实际 Node.js 是
-`v12.22.9`，低于服务要求的 20，已触发发布硬停止。本手册中的传输、安装、Nginx
-修改与部署步骤当前不得执行。
+预检也已留证。目标为香港实例 `i-yeo9geadc0plsv0abgv0`。系统 Node.js 虽为
+`v12.22.9`，但 Review 已确认使用独立 Node 22，服务器另有 Contact 可用的独立 Node
+24 路径。Contact 通过 `/opt/flourish-contact/runtime` 稳定 symlink 使用该运行时，
+不会替换系统 Node 或 Review 运行时。私密环境与发布备份完成前仍不得启动生产服务。
 
 本手册遵循以下停止条件：目标 IP 不匹配、`/review/` 不健康、Node.js 低于 20、
 无法读取 `nginx -T`、磁盘或备份权限不足、私密凭据无法安全写入时，立即停止并将
@@ -22,13 +23,13 @@
 | 功能与发布脚本提交 | `f0f121c184bef4be024673ba6b5a81ac31e67049` |
 | 静态包 | `release/flourishculturekol-homepage.zip` |
 | 静态包字节数 | `1,003,971` |
-| 静态包 SHA-256 | `0d0e16bc0437158f00b6db1eedc3df600d98ad2b36dfc214270060d201c2d0ee` |
+| 静态包 SHA-256 | `1da00f09c5dac993f1e885b0036eceb9bf4081e16a01e8ba42fa9a3142fbc5ea` |
 | Contact 服务包 | `release/flourish-contact-service.tgz` |
-| Contact 服务包字节数 | `10,178` |
-| Contact 服务包 SHA-256 | `f3a28d909767bbb5d1ca970d451fc5a56071f888cfad5927110e6d903e36279a` |
-| Contact 部署脚本 SHA-256 | `125b32fe1a9cfe63f17c5dfe8fd080ec8ea79f3d4734aa0334eb6a9ff4dcd6b4` |
+| Contact 服务包字节数 | `10,162` |
+| Contact 服务包 SHA-256 | `b6628615defb2b9243dcc1c8f3c124ebb7f22038e16cafc36421e3aab4d06c6a` |
+| Contact 部署脚本 SHA-256 | `da85d4340c7ad1216b19da15292b54cf1b999204aac1d3baf75eb2b91dfa8cdb` |
 | 静态部署脚本 SHA-256 | `30b34b4da2973432d226ec4490297e934517036a4e587ea81dfca0f94191753c` |
-| systemd unit SHA-256 | `79c9288ec3d5c5fc765dfa09dc5ddb2e193207ac5c352a5f5517ecf051c7e182` |
+| systemd unit SHA-256 | `245f763ea8dc04a795f6fdf3b908f00baa2138b28b261a5e51dcc38b27a98e50` |
 | Nginx API 模板 SHA-256 | `a826fe31820b6095d18cd7a9cfde8965d70338cd6267305f64afa4ea157911cf` |
 | 公开验收脚本 SHA-256 | `40ff782dce9c49129de0e1c3f9d83bbf91b4224ab90718bd6e4a9414febeefa3` |
 
@@ -174,10 +175,12 @@ df -h /var /opt
 - `/review/` → `127.0.0.1:8787/`；
 - `/review-staging/` → `127.0.0.1:8788/`。
 
-本机 HTTP `/review/healthz` 探针只得到到 HTTPS 的 `301`，不能作为 upstream 直连
-健康证据。npm 的准确版本、现有两个 Review 进程的 Node 依赖、本机 TLS/SNI 健康、
-Nginx 文件哈希及历史备份内容仍未确认。完整证据见
-`qa/production-preflight-2026-08-18.md`。
+补充审计确认系统 npm 包为 `8.5.1`，Review production/staging 均使用
+`/opt/node-v22.16.0-linux-x64/bin/node`，本机 TLS/SNI `/review/healthz` 为 200，Nginx
+来源文件为 `root:root 644`，SHA-256 为
+`77688b28f0977175bb7730083527774f1a55ea7b184da35ca678e37b1ae9a1c8`。Contact 使用
+`/opt/node-v24.17.0-linux-x64`，正式写入前仍要直接读回该 binary/npm 的版本。完整证据
+见 `qa/production-preflight-2026-08-18.md`。
 
 ## 传输与校验
 
@@ -224,7 +227,7 @@ tar -tzf release/flourish-contact-service.tgz
 
 ## Contact 服务发布
 
-仅在私密环境文件通过检查、Node.js >= 20、服务包哈希匹配后执行：
+仅在私密环境文件通过检查、独立 Node.js >= 20 直接复核通过、服务包哈希匹配后执行：
 
 ```bash
 if ! id flourish-contact >/dev/null 2>&1; then
@@ -232,13 +235,17 @@ if ! id flourish-contact >/dev/null 2>&1; then
 fi
 sudo install -o root -g root -m 0644 ops/flourish-contact.service /etc/systemd/system/flourish-contact.service
 sudo systemctl daemon-reload
-sudo bash scripts/deploy-contact-service.sh /absolute/path/to/flourish-contact-service.tgz
+sudo bash scripts/deploy-contact-service.sh \
+  /absolute/path/to/flourish-contact-service.tgz \
+  /opt/node-v24.17.0-linux-x64
 sudo systemctl enable flourish-contact
 ```
 
-`useradd` 只在 `id flourish-contact` 确认用户不存在时执行。部署脚本会安装版本化目录、
-原子切换 `/opt/flourish-contact/current`、重启、轮询本机健康端点；健康失败时恢复原
-symlink。它不会编辑 Nginx、不会读取/打印环境值，也不会删除旧版本。
+`useradd` 只在 `id flourish-contact` 确认用户不存在时执行。部署脚本会验证明确传入的
+Node/npm、安装版本化目录、原子切换 `/opt/flourish-contact/current` 与
+`/opt/flourish-contact/runtime`、重启并轮询本机健康端点；健康失败时恢复两个原
+symlink。它不会编辑 Nginx、不会读取/打印环境值，也不会删除旧版本或改写
+`/usr/bin/node`、`/opt/nodejs`。
 
 服务验证：
 
@@ -385,11 +392,11 @@ Creator 测试。服务返回 `201` 或重复请求 `202` 仅代表接口接受�
 | --- | --- |
 | 火山引擎账号/区域/实例 ID | 已确认：`2103632597` / `cn-hongkong` / `i-yeo9geadc0plsv0abgv0` |
 | 服务器公网 IP 读回 | 已确认：唯一目标实例绑定 `150.5.135.196` |
-| Node.js/npm/Nginx 版本 | Node.js `v12.22.9`（不合格）；npm 版本因 5 秒超时未确认；Nginx `1.18.0 (Ubuntu)` |
+| Node.js/npm/Nginx 版本 | 系统 Node `v12.22.9` / npm `8.5.1`（不用于 Contact）；隔离 Node 24 路径已确认，直接版本复核待执行；Nginx `1.18.0 (Ubuntu)` |
 | Nginx 来源文件及备份 | 来源已确认：`/etc/nginx/conf.d/00-flourishculturekol.com.conf`；本次备份未创建 |
 | web root 备份路径 | 根目录与四个历史目录已确认；本次发布备份未创建 |
 | Contact 前一版本与当前 release 路径 | 当前未找到 Contact 目录、unit 或环境文件；新 release 未安装 |
-| systemd active 与 loopback health | Nginx/Review active；公开 Review health 200；本机 HTTP 只验证到 301，TLS/SNI 未确认 |
+| systemd active 与 loopback health | Nginx、Review production/staging active；本机 TLS/SNI Review health 200、root 302 到登录 |
 | SMTP 身份验证 | 未确认 |
 | 公开静态/API/安全头/哈希 | 未确认 |
 | Brand 收件箱及 Reply-To | 未确认 |

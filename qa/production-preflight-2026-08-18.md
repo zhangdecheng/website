@@ -2,13 +2,15 @@
 
 ## 结论
 
-状态：**未完成（服务器只读预检已完成；Node.js 版本触发发布硬停止）**。
+状态：**未完成（服务器只读预检与运行时兼容性审计已完成；生产写入尚未开始）**。
 
 公开网络部分已于 2026-08-18 10:13–10:16 UTC 实测。域名仍指向历史生产 IP，
 主页与 `/review/` 行为和上次审计一致。火山引擎已于 2026-08-18 19:20–19:26 CST
 重新认证，账号、区域、实例与 Cloud Assistant 在线状态已经由 API 读回。经用户明确
-确认后，服务器内只读预检于 2026-08-18 11:48 UTC 完成：实际 Node.js 为
-`v12.22.9`，低于发布要求的 20；因此当前不得上传、安装、改写 Nginx 或部署。
+确认后，服务器内只读预检于 2026-08-18 11:48 UTC 完成：系统 Node.js 为
+`v12.22.9`。补充运行时审计于 2026-08-18 21:32 UTC 完成，确认 Review 服务使用独立
+Node 22，服务器另有独立 Node 24 路径，因此无需替换系统 Node，也不会复用 Review 的
+运行时。生产文件、服务与 Nginx 尚未修改。
 
 ## 已确认事实
 
@@ -89,6 +91,23 @@ Permissions-Policy 或 X-Frame-Options；这只是本次响应证据，不代表
 | 磁盘 | `/dev/vda2` 30G，总用量 21G，可用 8.0G，72%；`/var` 与 `/opt` 在同一文件系统 |
 | 监听端口 | Nginx 监听 IPv4/IPv6 的 80/443；当前没有 3101 监听 |
 
+### 补充运行时兼容性审计
+
+| 检查项 | 2026-08-18 21:32 UTC 读回结果 |
+| --- | --- |
+| 体系结构 / glibc | `x86_64` / `amd64`；Ubuntu GLIBC `2.35` |
+| 系统包 | `nodejs 12.22.9~dfsg-1ubuntu3.6`；`npm 8.5.1~ds-1` |
+| 可选 Node 路径 | `/opt/node-v22.16.0-linux-x64/bin/node`、`/opt/node-v24.17.0-linux-x64/bin/node` |
+| Review production | `tiktok-review-agent.service`，PID 645，8787，实际 executable 为独立 Node 22 路径 |
+| Review staging | `tiktok-review-agent-staging.service`，PID 644，8788，实际 executable 为独立 Node 22 路径 |
+| 本机 TLS/SNI health | `200` JSON，Review `2.0.4`，`ok:true` |
+| 本机 TLS/SNI root | `302` → `https://www.flourishculturekol.com/review/login` |
+| Nginx 来源元数据 | `root:root 644`，2073 bytes，SHA-256 `77688b28f0977175bb7730083527774f1a55ea7b184da35ca678e37b1ae9a1c8` |
+
+Contact 将使用自身稳定入口 `/opt/flourish-contact/runtime/bin/node`，由部署流程原子指向
+经预检的 `/opt/node-v24.17.0-linux-x64`。systemd 与部署脚本均不会改写系统
+`/usr/bin/node`、`/opt/nodejs` 或两个 Review unit。
+
 备份根目录下当前读到四个时间戳目录：`20260625-114135`、`20260625-135253`、
 `20260626-000044`、`20260626-113529`。这只确认目录名存在，尚未核对其内容、完整性或
 是否可作为本次回滚源。
@@ -121,6 +140,7 @@ HTTP 跳转规则生效，**不能**证明 8787 upstream 在本机直连路径�
 | 首次整段只读预检 | `ivk-yet4b9txzm8vwwljhgjp` | `Timeout` / `TaskExecutionTimeout`，无输出，未改变服务器 |
 | 拆分后的有界基础预检 | `ivk-yet4c5m7ikec6i60j8ke` | `Success` / exit `0`，11:48:07–11:48:26 UTC |
 | 拆分后的 Nginx dump | `ivk-yet4c61jam9lu09pna2h` | `Success` / exit `0`，11:48:07–11:48:15 UTC |
+| 运行时兼容性审计 | `ivk-yet5e54uae9ltzogxp6d` | `Success` / exit `0`，21:32:05 UTC |
 
 提交给 Cloud Assistant 的三份脚本只在本机临时目录保留，SHA-256 分别为：
 
@@ -128,6 +148,7 @@ HTTP 跳转规则生效，**不能**证明 8787 upstream 在本机直连路径�
 d648d7ccc6485e5cfe75f88ca2b3c7d1f421f97224df4a14ffe00886677da228  flourish-readonly-preflight.sh
 3cf6c1dd0f234aacba1126a219733529a622060fe2287d4c33785387f556ee28  flourish-readonly-preflight-bounded.sh
 52155c44e131f0642a9599ca7480c9ff4c3d0592af7027b289e251a34a0b0526  flourish-readonly-nginx-dump.sh
+a86810384f2239721c2451513d2f43b99ab57f32e287ca69429ffadb52857858  flourish-readonly-runtime-audit.sh
 ```
 
 Nginx 私钥路径在保存证据时已脱敏；没有读取私钥内容。
@@ -136,11 +157,7 @@ Nginx 私钥路径在保存证据时已脱敏；没有读取私钥内容。
 
 以下项目仍缺少直接证据，不能据此继续部署：
 
-- 可供 Contact 服务使用且不会替换系统 Node 的 Node.js >= 20 运行时路径；
-- npm 的准确版本及其超时原因；
-- `tiktok-review-agent` 与 8788 staging 进程是否依赖当前 `/usr/bin/node`；
-- 通过 `--resolve` 和有效 SNI 发起的本机 HTTPS `/review/healthz` 结果；
-- FLOURISH Nginx 来源文件的 owner/mode/SHA-256；
+- `/opt/node-v24.17.0-linux-x64/bin/node` 和 npm 在正式写入前的直接版本/可执行性复核；
 - 四个历史备份目录的内容、哈希与实际可回滚性；
 - Turnstile、SMTP 与 Contact security secret 的受保护安装状态。
 
@@ -165,13 +182,13 @@ ve ecs DescribeCloudAssistantStatus --InstanceIds.1 i-yeo9geadc0plsv0abgv0 --Pag
 ```
 
 公开证书保存于 `/private/tmp/flourish-cert.pem`，没有读取或保存私钥。
-服务器内只读命令由以上三个已记录的 Cloud Assistant invocation 执行；完整脚本保留于
+服务器内只读命令由以上四个已记录的 Cloud Assistant invocation 执行；完整脚本保留于
 本机 `/private/tmp`，没有写入仓库或服务器。
 
 ## 当前停止条件
 
-火山引擎身份、目标实例和主要服务器拓扑已经确认，但实际 Node.js 为 EOL 的
-`v12.22.9`，且低于服务声明的最低版本 20。这已触发发布硬停止。为避免影响现有
-`/review/` 与 `/review-staging/`，不得直接替换 `/usr/bin/node`；必须先确认现有服务
-运行时依赖，再选定并验证一个隔离的受支持 Node.js 运行时。任何新的 Cloud Assistant
-`RunCommand` 仍须先展示完整命令并取得明确确认。生产部署保持**未完成**。
+火山引擎身份、目标实例、Nginx 来源、Review 健康和隔离运行时路径已经确认。系统
+Node 12 不用于 Contact；Contact 通过专用稳定 symlink 使用现有 Node 24 路径。运行时
+硬停止已经解除，但 Turnstile/SMTP/安全密钥尚未通过私密服务器会话安装，本次发布
+备份也尚未创建。任何新的 Cloud Assistant `RunCommand` 仍须先展示完整命令并取得
+明确确认。生产部署保持**未完成**。

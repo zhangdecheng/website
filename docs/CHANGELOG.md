@@ -10,6 +10,14 @@ Current source version: `v1.2.0` local release candidate
 | `v1.1.0` | 2026-06-26 | Historical production record | Static homepage release. |
 | `v1.0.0` | 2026-06-26 | Historical record | Baseline project version record for documentation and handoff tracking. |
 
+## 2026-08-19
+
+### v1.2.0 isolated production runtime
+
+- Confirmed Review production/staging use independent Node 22 processes and pass local TLS/SNI checks.
+- Adapted the Contact unit and deploy script to an atomic `/opt/flourish-contact/runtime` symlink targeting the server's separate Node 24 installation.
+- Added release-contract coverage for explicit runtime validation and rollback of both release and runtime symlinks; production deployment remains incomplete pending protected secrets and live acceptance.
+
 ## 2026-08-18
 
 ### v1.2.0 local release candidate

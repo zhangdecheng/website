@@ -4,7 +4,7 @@
 
 **Goal:** Package, stage and release the static site plus Contact API to the existing production host with secure credentials, canonical www routing, verified real email delivery, protected `/review/`, reproducible source, and a tested rollback path.
 
-**Architecture:** Static files continue to live in `/var/www/flourishculturekol.com`; the Node service is deployed in versioned directories under `/opt/flourish-contact/releases` with an atomic `current` symlink and a hardened systemd unit. Existing Nginx configuration is inspected first, then minimally patched to redirect apex to www, proxy only `/api/contact`, and scope static-page security headers without altering `/review/` routing.
+**Architecture:** Static files continue to live in `/var/www/flourishculturekol.com`; the Node service is deployed in versioned directories under `/opt/flourish-contact/releases` with atomic `current` and `runtime` symlinks plus a hardened systemd unit. Existing Nginx configuration is inspected first, then minimally patched to redirect apex to www, proxy only `/api/contact`, and scope static-page security headers without altering `/review/` routing.
 
 **Tech Stack:** Existing release builder, Node.js/Nodemailer service artifact, systemd, Nginx, Volcengine/BytePlus host, Yunyou SMTP TLS 465, Cloudflare Turnstile, Git/GitHub CLI, curl/OpenSSL, existing `/review/healthz` checks.
 
@@ -23,7 +23,7 @@
 - `ops/flourish-contact.service` — hardened loopback Contact API systemd unit.
 - `ops/nginx/flourish-contact-api.conf` — minimal include snippet for API proxy.
 - `scripts/build-contact-release.mjs` — deterministic backend staging directory without secrets/tests.
-- `scripts/deploy-contact-service.sh` — versioned service install, health check and symlink rollback.
+- `scripts/deploy-contact-service.sh` — versioned service install, explicit isolated runtime validation, health check and two-symlink rollback.
 - `tests/release.test.mjs` — artifact, unit, Nginx snippet and secret-exclusion contract.
 - `.gitignore` — ignore every generated release artifact and staging directory.
 - `docs/PRODUCTION_RUNBOOK.md` — exact configuration, backup, validation and rollback record.
@@ -118,8 +118,8 @@ test("systemd unit is loopback-service hardened and reads one protected env file
   for (const line of [
     "EnvironmentFile=/etc/flourish-contact.env",
     "WorkingDirectory=/opt/flourish-contact/current",
-    "ExecStartPre=/usr/bin/env node server/smtp-check.js",
-    "ExecStart=/usr/bin/env node server/index.js",
+    "ExecStartPre=/opt/flourish-contact/runtime/bin/node server/smtp-check.js",
+    "ExecStart=/opt/flourish-contact/runtime/bin/node server/index.js",
     "User=flourish-contact",
     "NoNewPrivileges=true",
     "PrivateTmp=true",
@@ -140,7 +140,7 @@ test("nginx snippet proxies only the contact API and sets the real IP itself", a
 });
 ```
 
-Also assert the contact build copies only `server/`, `package.json`, `package-lock.json` and the service unit; excludes `node_modules`, tests, every `.env` variant, logs, docs and frontend assets; and that the deploy script verifies Node >=20, creates a versioned release, runs `npm ci --omit=dev --ignore-scripts`, flips only `/opt/flourish-contact/current`, checks loopback health, and rolls the symlink back on failure.
+Also assert the contact build copies only `server/`, `package.json`, `package-lock.json` and the service unit; excludes `node_modules`, tests, every `.env` variant, logs, docs and frontend assets; and that the deploy script verifies an explicit Node >=20 runtime, creates a versioned release, runs `npm ci --omit=dev --ignore-scripts` through that runtime, atomically flips `/opt/flourish-contact/current` and `/opt/flourish-contact/runtime`, checks loopback health, and rolls both symlinks back on failure.
 
 - [ ] **Step 2: Run and verify missing-artifact failures**
 
@@ -164,8 +164,8 @@ User=flourish-contact
 Group=flourish-contact
 WorkingDirectory=/opt/flourish-contact/current
 EnvironmentFile=/etc/flourish-contact.env
-ExecStartPre=/usr/bin/env node server/smtp-check.js
-ExecStart=/usr/bin/env node server/index.js
+ExecStartPre=/opt/flourish-contact/runtime/bin/node server/smtp-check.js
+ExecStart=/opt/flourish-contact/runtime/bin/node server/index.js
 Restart=on-failure
 RestartSec=3
 TimeoutStopSec=15
@@ -213,7 +213,7 @@ location ^~ /api/contact/ {
 
 `scripts/build-contact-release.mjs` must empty `release/contact-service`, copy the explicit allowed paths, recursively reject symlinks and filenames matching `.env`, `secret`, `token`, `.pem`, `.key`, `.log`, and print a sorted file list plus byte count.
 
-`scripts/deploy-contact-service.sh` must use `set -euo pipefail`, accept one explicit `.tgz` argument, stage with `mktemp -d`, validate required files, require Node major >=20, create a release directory named by `date -u +%Y%m%dT%H%M%SZ` under `/opt/flourish-contact/releases`, install production dependencies there, atomically update `current`, restart `flourish-contact`, poll `http://127.0.0.1:3101/api/contact/health`, and restore the prior symlink/service when the poll fails. It must not read/print `/etc/flourish-contact.env`, edit Nginx, delete old releases, or touch `/review/`.
+`scripts/deploy-contact-service.sh` must use `set -euo pipefail`, accept an explicit `.tgz` plus absolute Node runtime directory, stage with `mktemp -d`, validate required files, require runtime Node major >=20 and working npm, create a release directory named by `date -u +%Y%m%dT%H%M%SZ` under `/opt/flourish-contact/releases`, install production dependencies through that runtime, atomically update `current` plus `runtime`, restart `flourish-contact`, poll `http://127.0.0.1:3101/api/contact/health`, and restore both prior symlinks/service when the poll fails. It must not read/print `/etc/flourish-contact.env`, edit Nginx, delete old releases, alter system/Review Node, or touch `/review/`.
 
 Add scripts:
 
@@ -356,6 +356,7 @@ Do not accept a workaround that puts secrets in Git, a command argument, a publi
 **Files:**
 - Production: a UTC timestamp-named directory under `/opt/flourish-contact/releases/`
 - Production: `/opt/flourish-contact/current`
+- Production: `/opt/flourish-contact/runtime`
 - Production: `/etc/systemd/system/flourish-contact.service`
 
 - [ ] **Step 1: Transfer both archives and hashes without embedding credentials**
@@ -368,7 +369,7 @@ Create a timestamped directory under `/var/backups/flourishculturekol.com/` cont
 
 - [ ] **Step 3: Install the dedicated user, unit and versioned release**
 
-Create system user/group `flourish-contact` only if absent. Install the reviewed unit to `/etc/systemd/system/flourish-contact.service`, run `systemctl daemon-reload`, then run `scripts/deploy-contact-service.sh` with the verified service archive.
+Create system user/group `flourish-contact` only if absent. Install the reviewed unit to `/etc/systemd/system/flourish-contact.service`, run `systemctl daemon-reload`, then run `scripts/deploy-contact-service.sh` with the verified service archive and `/opt/node-v24.17.0-linux-x64` runtime target.
 
 - [ ] **Step 4: Verify loopback API and SMTP authentication before public routing**
 

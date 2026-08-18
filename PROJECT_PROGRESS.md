@@ -1,6 +1,6 @@
 # FLOURISH CULTURE Website — Project Progress
 
-Last updated: 2026-08-18
+Last updated: 2026-08-19
 
 ## Goal
 
@@ -74,8 +74,8 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 
 ## In Progress
 
-- Select and verify an isolated supported Node.js runtime without replacing the system Node used by existing services.
-- Complete the bounded runtime-dependency, local TLS/SNI `/review/` health, Nginx hash and backup-content audit before any production write.
+- Re-verify the confirmed `/opt/node-v24.17.0-linux-x64` binary/npm immediately before production write and stage the rebuilt release artifacts.
+- Create the protected Contact environment through a private server session, then create the v1.2.0 production backup.
 - Create the production Turnstile widget and install its Secret plus the SMTP authorization code through a private server session.
 
 ## Pending
@@ -113,11 +113,10 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 
 ## Blockers
 
-- The confirmed production `/usr/bin/node` is `v12.22.9`, below the Contact service minimum of 20; npm version lookup also timed out after five seconds.
-- A non-invasive Node.js runtime path must be selected only after confirming that `/review/` and `/review-staging/` are not affected.
+- GitHub CLI authentication is currently invalid and must be restored before temporary artifact transfer, source synchronization or Pages closure.
 - Any further Cloud Assistant `RunCommand`, including read-only shell content, requires explicit command-level confirmation.
 - Production Turnstile Site/Secret values have not been installed.
-- Local TLS/SNI Review health, historical backup contents, deployment backups and real inbox delivery remain unconfirmed.
+- Historical backup contents, the v1.2.0 deployment backup and real inbox delivery remain unconfirmed.
 
 ## 2026-08-18 — v1.2.0 Local Release Candidate
 
@@ -137,6 +136,14 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 - Confirmed Ubuntu `22.04.5 LTS`, Nginx `1.18.0`, valid Nginx syntax, active Nginx and TikTok Review services, 8.0G available disk and the expected web/backup roots.
 - Confirmed the loaded FLOURISH file is `/etc/nginx/conf.d/00-flourishculturekol.com.conf`; it contains both `/review/` on 8787 and previously undocumented `/review-staging/` on 8788, both of which are now locked for preservation.
 - Hit a hard stop: `/usr/bin/node` is `v12.22.9`, npm version detection timed out, and the planned Contact runtime requires Node.js >= 20. No production write or upload followed.
+
+## 2026-08-19 — Isolated Contact Runtime Adaptation
+
+- The user-confirmed runtime audit invocation `ivk-yet5e54uae9ltzogxp6d` completed successfully with exit 0.
+- Confirmed both Review services are independently running on Node 22 at ports 8787/8788, and local TLS/SNI health plus login redirect checks pass.
+- Confirmed an existing `/opt/node-v24.17.0-linux-x64/bin/node` path is available for Contact without replacing system Node or Review's `/opt/nodejs` route.
+- Updated the Contact unit and deploy script to use `/opt/flourish-contact/runtime/bin/node`; deployment now validates an explicit runtime target and atomically rolls back both release and runtime symlinks.
+- Fresh runtime-contract tests passed 6/6; the full suite passed 70/70 when run with permitted loopback listening. Static and Contact builds both completed locally. Production remains **未完成**.
 
 ## 2026-06-24 — Feishu Whiteboard 3 Local Implementation
 

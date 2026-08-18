@@ -167,3 +167,22 @@ Phase 6 — Local delivery complete.
 - Added a regression test to prevent the release path from reintroducing `.mjs` browser module imports.
 - Rebuilt and published the hotfix package to production. Server backup created at `/var/backups/flourishculturekol.com/20260625-135253`.
 - Verification after hotfix: `site-core.js` returns `application/javascript`, `script.js` imports `./site-core.js`, Chrome console has no errors, the first screen visibly renders the hero copy/images, all homepage image URLs return HTTP 200, `/review/healthz` remains healthy, and Nginx config still passes.
+
+## 2026-06-26 — v1.1.0 Production Homepage Release
+
+- Pulled GitHub `main` from `https://github.com/zhangdecheng/website` and fast-forwarded the local repository to `3e33cd6`, matching package version `1.1.0`.
+- Confirmed `www.flourishculturekol.com` and `flourishculturekol.com` both resolve to the current homepage host `150.5.135.196`.
+- Checked the candidate instance `AI-OpenClaw-b6uN-000` / `118.196.85.61` and confirmed it is not the current homepage target: HTTPS with the FLOURISH host redirects to `/todolist/`.
+- Rebuilt the release archive and verified local gates: `npm test` passed with 21/21 tests, `npm run build` succeeded, and `release/flourishculturekol-homepage.zip` SHA256 was `10a8f930776f54866e459455ed8ec15545ed9f7c6a50ff7358864fb80d63660e`.
+- Published the verified package to `150.5.135.196` using the static homepage deployment script. Server-side SHA256 matched the local archive before deployment.
+- Server backup created at `/var/backups/flourishculturekol.com/20260626-000044`.
+- Post-release verification passed: public homepage returns the v1.1.0 21,604-byte HTML, `index.html`, `styles.css`, `script.js`, and `site-core.js` hashes match local `dist/`, new JPEG assets return HTTP 200 with valid dimensions, `/review/healthz` remains healthy at review version `2.0.4`, and `/review/` still redirects to `/review/login`.
+
+## 2026-06-26 — Minimal Asset Production Homepage Release
+
+- Updated the release build to copy only the static files and assets actually needed by the homepage instead of the entire `assets/` tree.
+- The production build rewrites photo fallbacks to the matching compressed WebP assets, keeps required brand logos, fonts, and Remix Icon WOFF2, and excludes source JPG/PNG photos from the release archive.
+- Local gates passed: `npm test` passed with 21/21 tests, `npm run build` succeeded, and `release/flourishculturekol-homepage.zip` was rebuilt as a 988 KB archive with SHA256 `96d36e6aef3319076daf105fbe6d519fc20d90f11abb772b84e3646d96fa8992`.
+- Published the verified minimal package to `150.5.135.196` by using a temporary GitHub artifact branch for transfer, downloading it to `/tmp` on the server, verifying SHA256, then deleting the temporary branch after deployment.
+- Server backup created at `/var/backups/flourishculturekol.com/20260626-113529`.
+- Post-release verification passed: public `index.html`, `styles.css`, `script.js`, and `site-core.js` hashes match local `dist/`; key WebP assets and `remixicon.woff2` return HTTP 200; `/review/healthz` remains healthy at review version `2.0.4`; Nginx config passes.

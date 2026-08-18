@@ -68,6 +68,15 @@ img {
   max-width: 100%;
 }
 
+.hero-card picture,
+.bridge-card picture,
+.service-media picture,
+.talent-media picture,
+.about-media picture,
+.contact-copy picture {
+  display: contents;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -859,6 +868,7 @@ h1 {
 
 .bridge-card img {
   width: 100%;
+  height: auto;
   aspect-ratio: 16 / 9;
   object-fit: cover;
   filter: saturate(0.95) contrast(1.04) brightness(0.94);
@@ -1442,6 +1452,7 @@ textarea:user-invalid {
 
 .contact-copy img {
   width: 100%;
+  height: auto;
   aspect-ratio: 16 / 10;
   object-fit: cover;
   border-radius: 4px;

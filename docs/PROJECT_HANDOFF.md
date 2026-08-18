@@ -30,6 +30,14 @@ The production server also hosts the separate `/review/` TikTok review applicati
 
 `review-editable.html` is a local-only helper for manual browser editing. Confirmed changes should be copied back to `index.html`, `styles.css`, and `script.js`. It is intentionally excluded from generated release archives.
 
+## Project version records
+
+Current recorded project version: `v1.0.0`
+
+| Version | Date | Status | Notes |
+| --- | --- | --- | --- |
+| `v1.0.0` | 2026-06-26 | Current recorded version | Baseline project version record for documentation and handoff tracking. |
+
 ## Current production implementation
 
 Primary source files:
@@ -103,13 +111,33 @@ The deploy script backs up the current web root, copies the static package into 
 
 ## Production release notes
 
-2026-06-25 production homepage release:
+Current production target:
 
 - Host: `150.5.135.196`
 - Web root: `/var/www/flourishculturekol.com`
+- `www.flourishculturekol.com` and `flourishculturekol.com` currently resolve to `150.5.135.196`.
+- Do not use `AI-OpenClaw-b6uN-000` / `118.196.85.61` for homepage releases unless DNS and server routing are intentionally changed. On 2026-06-26, that candidate host redirected the FLOURISH host to `/todolist/`.
+
+Release backups:
+
 - Initial release backup: `/var/backups/flourishculturekol.com/20260625-114135`
 - MIME hotfix backup: `/var/backups/flourishculturekol.com/20260625-135253`
+- v1.1.0 release backup: `/var/backups/flourishculturekol.com/20260626-000044`
+- Minimal asset release backup: `/var/backups/flourishculturekol.com/20260626-113529`
 - `/review/healthz` remained healthy after release.
+
+2026-06-26 v1.1.0 homepage release:
+
+- Source: GitHub `main`, commit `3e33cd6`, package version `1.1.0`.
+- Release archive SHA256: `10a8f930776f54866e459455ed8ec15545ed9f7c6a50ff7358864fb80d63660e`.
+- Post-release verification confirmed the public homepage HTML, CSS, `script.js`, and `site-core.js` hashes matched local `dist/`, new JPEG assets returned HTTP 200 with valid dimensions, `/review/healthz` remained healthy at review version `2.0.4`, and `/review/` still redirected to `/review/login`.
+
+2026-06-26 minimal asset homepage release:
+
+- Release archive SHA256: `96d36e6aef3319076daf105fbe6d519fc20d90f11abb772b84e3646d96fa8992`.
+- The release build now copies only required static assets, rewrites production photo fallbacks to compressed WebP files, and keeps only required brand logos, fonts, and Remix Icon WOFF2.
+- Transfer used a temporary GitHub artifact branch because no production SSH key was available locally; the branch was deleted after the server downloaded and verified the package.
+- Post-release verification confirmed public HTML, CSS, `script.js`, and `site-core.js` hashes matched local `dist/`, key WebP assets returned HTTP 200, `/review/healthz` remained healthy at review version `2.0.4`, and Nginx config passed.
 
 Lessons from the release:
 
@@ -117,6 +145,8 @@ Lessons from the release:
 2. Do not use `.mjs` browser module files unless Nginx is configured to serve `.mjs` as JavaScript. This project now uses `site-core.js`.
 3. After copying static files from a temporary extraction directory, reset directory and file permissions so Nginx can read the web root.
 4. Continue checking `/review/healthz` and `/review/` redirect behavior after homepage releases.
+5. Before publishing, confirm DNS and server behavior identify the correct production host; the historical homepage target is `150.5.135.196`, not every similarly named ECS instance.
+6. Keep the release archive minimal: do not copy the entire `assets/` tree when the homepage only needs optimized WebP photos, brand logos, fonts, and icon fonts.
 
 ## Recovery
 
@@ -130,4 +160,3 @@ If the homepage needs rollback:
 6. Verify homepage, key assets, and `/review/healthz`.
 
 Do not patch production files piecemeal unless the root cause is understood and the change is minimal.
-

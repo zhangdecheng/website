@@ -74,8 +74,8 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 
 ## In Progress
 
-- Re-authenticate the Volcengine CLI session.
-- Read back the actual ECS instance, Nginx sources, Node.js version, disk, permissions and `/review/` health before any production write.
+- Select and verify an isolated supported Node.js runtime without replacing the system Node used by existing services.
+- Complete the bounded runtime-dependency, local TLS/SNI `/review/` health, Nginx hash and backup-content audit before any production write.
 - Create the production Turnstile widget and install its Secret plus the SMTP authorization code through a private server session.
 
 ## Pending
@@ -113,9 +113,11 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 
 ## Blockers
 
-- Volcengine OAuth refresh token is invalid; a new one-time authorization code is required before server preflight.
+- The confirmed production `/usr/bin/node` is `v12.22.9`, below the Contact service minimum of 20; npm version lookup also timed out after five seconds.
+- A non-invasive Node.js runtime path must be selected only after confirming that `/review/` and `/review-staging/` are not affected.
+- Any further Cloud Assistant `RunCommand`, including read-only shell content, requires explicit command-level confirmation.
 - Production Turnstile Site/Secret values have not been installed.
-- Server facts, deployment backups and real inbox delivery remain unconfirmed.
+- Local TLS/SNI Review health, historical backup contents, deployment backups and real inbox delivery remain unconfirmed.
 
 ## 2026-08-18 — v1.2.0 Local Release Candidate
 
@@ -127,6 +129,14 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 - Generated and audited the static and service archives; no assigned secret, forbidden filename or symlink was found.
 - Added a strict public release checker for canonical redirects, security headers, APIs, exact file hashes and `/review/` regression.
 - Fresh local verification passed 70/70 Node tests, both builds and the release checksum gate. Production remains **未完成** until the cloud/server, Turnstile, live browser, inbox, Reply-To, remote source and Pages gates are read back.
+
+## 2026-08-18 — Production Read-only Preflight
+
+- Re-authenticated Volcengine account `2103632597` and uniquely matched public IP `150.5.135.196` to running Hong Kong ECS `i-yeo9geadc0plsv0abgv0` (`webhkhome`).
+- After explicit user confirmation, ran two bounded Cloud Assistant read-only commands. Both split commands succeeded; the earlier monolithic command timed out without output. No server file, service or network configuration was changed.
+- Confirmed Ubuntu `22.04.5 LTS`, Nginx `1.18.0`, valid Nginx syntax, active Nginx and TikTok Review services, 8.0G available disk and the expected web/backup roots.
+- Confirmed the loaded FLOURISH file is `/etc/nginx/conf.d/00-flourishculturekol.com.conf`; it contains both `/review/` on 8787 and previously undocumented `/review-staging/` on 8788, both of which are now locked for preservation.
+- Hit a hard stop: `/usr/bin/node` is `v12.22.9`, npm version detection timed out, and the planned Contact runtime requires Node.js >= 20. No production write or upload followed.
 
 ## 2026-06-24 — Feishu Whiteboard 3 Local Implementation
 

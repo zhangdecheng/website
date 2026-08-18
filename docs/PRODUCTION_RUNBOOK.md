@@ -4,9 +4,10 @@
 
 状态：**未完成**。
 
-本地代码、静态包、Contact 服务包和浏览器回归已通过；公开网络基线也已留证。
-服务器身份、真实 Nginx 来源文件、Node.js 版本、磁盘、权限和备份路径尚未通过
-火山引擎读回确认，因此本手册中的生产写入步骤当前不得执行。
+本地代码、静态包、Contact 服务包和浏览器回归已通过；公开网络基线与服务器内只读
+预检也已留证。目标为香港实例 `i-yeo9geadc0plsv0abgv0`，实际 Node.js 是
+`v12.22.9`，低于服务要求的 20，已触发发布硬停止。本手册中的传输、安装、Nginx
+修改与部署步骤当前不得执行。
 
 本手册遵循以下停止条件：目标 IP 不匹配、`/review/` 不健康、Node.js 低于 20、
 无法读取 `nginx -T`、磁盘或备份权限不足、私密凭据无法安全写入时，立即停止并将
@@ -162,7 +163,21 @@ df -h /var /opt
 - 静态 web root 是否确为 `/var/www/flourishculturekol.com`；
 - `/api/contact` 当前是否已存在，避免覆盖未知服务。
 
-服务器预检的实际实例、区域、Nginx 文件、版本、磁盘和权限目前均为**未确认**。
+2026-08-18 已读回：目标实例为 `cn-hongkong` 的
+`i-yeo9geadc0plsv0abgv0`；hostname `webhkhome`，Ubuntu `22.04.5 LTS`；Node.js
+`v12.22.9`；Nginx `1.18.0 (Ubuntu)` 且 `nginx -t` 通过；Nginx 来源文件为
+`/etc/nginx/conf.d/00-flourishculturekol.com.conf`；web root 与备份根目录 owner/mode
+均为 `root:root 755`；磁盘可用 8.0G。
+
+当前同一 HTTPS server 同时承载 apex/www，并包含以下必须保留的现有路由：
+
+- `/review/` → `127.0.0.1:8787/`；
+- `/review-staging/` → `127.0.0.1:8788/`。
+
+本机 HTTP `/review/healthz` 探针只得到到 HTTPS 的 `301`，不能作为 upstream 直连
+健康证据。npm 的准确版本、现有两个 Review 进程的 Node 依赖、本机 TLS/SNI 健康、
+Nginx 文件哈希及历史备份内容仍未确认。完整证据见
+`qa/production-preflight-2026-08-18.md`。
 
 ## 传输与校验
 
@@ -192,8 +207,9 @@ tar -tzf release/flourish-contact-service.tgz
 
 ## 生产备份
 
-先根据 `nginx -T` 把 `<CONFIRMED_NGINX_FILE>` 替换为真实绝对路径，再创建 UTC
-时间戳备份。不得猜路径，也不得把 `/etc/flourish-contact.env` 复制到普通备份目录。
+使用已确认的 Nginx 来源文件
+`/etc/nginx/conf.d/00-flourishculturekol.com.conf` 创建 UTC 时间戳备份。不得改用猜测
+路径，也不得把 `/etc/flourish-contact.env` 复制到普通备份目录。
 
 备份至少包含：
 
@@ -202,7 +218,8 @@ tar -tzf release/flourish-contact-service.tgz
 - 已存在的 `/etc/systemd/system/flourish-contact.service`；
 - 已存在的 `/opt/flourish-contact/current` 链接目标记录。
 
-备份完成后记录实际目录、owner/mode、文件列表和 SHA-256。当前实际备份路径为
+备份完成后记录实际目录、owner/mode、文件列表和 SHA-256。当前只确认四个历史目录名
+存在，内容与完整性尚未检查；本次 v1.2.0 发布备份尚未创建，因此本次实际备份路径为
 **未确认**。
 
 ## Contact 服务发布
@@ -240,8 +257,10 @@ sudo journalctl -u flourish-contact --since '-10 minutes' --no-pager
 
 ## Nginx 最小变更
 
-必须从实际加载的配置生成候选文件并保留证书与 `/review/` 原样。只有 www HTTPS
-server 接收以下 API location：
+必须从实际加载的
+`/etc/nginx/conf.d/00-flourishculturekol.com.conf` 生成候选文件，并保留证书、
+`/review/` 和 `/review-staging/` 原样。只有 www HTTPS server 接收以下 API
+location：
 
 ```nginx
 location = /api/contact {
@@ -364,13 +383,13 @@ Creator 测试。服务返回 `201` 或重复请求 `202` 仅代表接口接受�
 
 | 证据 | 结果 |
 | --- | --- |
-| 火山引擎账号/区域/实例 ID | 未确认 |
-| 服务器公网 IP 读回 | 未确认 |
-| Node.js/npm/Nginx 版本 | 未确认 |
-| Nginx 来源文件及备份 | 未确认 |
-| web root 备份路径 | 未确认 |
-| Contact 前一版本与当前 release 路径 | 未确认 |
-| systemd active 与 loopback health | 未确认 |
+| 火山引擎账号/区域/实例 ID | 已确认：`2103632597` / `cn-hongkong` / `i-yeo9geadc0plsv0abgv0` |
+| 服务器公网 IP 读回 | 已确认：唯一目标实例绑定 `150.5.135.196` |
+| Node.js/npm/Nginx 版本 | Node.js `v12.22.9`（不合格）；npm 版本因 5 秒超时未确认；Nginx `1.18.0 (Ubuntu)` |
+| Nginx 来源文件及备份 | 来源已确认：`/etc/nginx/conf.d/00-flourishculturekol.com.conf`；本次备份未创建 |
+| web root 备份路径 | 根目录与四个历史目录已确认；本次发布备份未创建 |
+| Contact 前一版本与当前 release 路径 | 当前未找到 Contact 目录、unit 或环境文件；新 release 未安装 |
+| systemd active 与 loopback health | Nginx/Review active；公开 Review health 200；本机 HTTP 只验证到 301，TLS/SNI 未确认 |
 | SMTP 身份验证 | 未确认 |
 | 公开静态/API/安全头/哈希 | 未确认 |
 | Brand 收件箱及 Reply-To | 未确认 |

@@ -123,7 +123,9 @@ Production deployment and rollback must follow `docs/PRODUCTION_RUNBOOK.md`.
 Do not publish the static package before the protected service and Nginx proxy
 pass loopback checks. Never move Turnstile Secret, SMTP authorization code or
 the service security secret through Git, chat, screenshots, command arguments
-or Cloud Assistant output.
+or Cloud Assistant output. Use `scripts/configure-contact-env.sh` only from a
+private interactive ECS terminal; it refuses secret-bearing command arguments,
+does not echo secret input and will not overwrite an existing protected file.
 
 ## Production release notes
 

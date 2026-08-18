@@ -113,7 +113,7 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 
 ## Blockers
 
-- GitHub CLI authentication is currently invalid and must be restored before temporary artifact transfer, source synchronization or Pages closure.
+- GitHub CLI authentication is currently invalid and must be restored before source synchronization, PR/API evidence or Pages closure; ordinary Git push authentication passed a no-write dry run and remains available for a temporary artifact transfer.
 - Any further Cloud Assistant `RunCommand`, including read-only shell content, requires explicit command-level confirmation.
 - Production Turnstile Site/Secret values have not been installed.
 - Historical backup contents, the v1.2.0 deployment backup and real inbox delivery remain unconfirmed.
@@ -138,6 +138,17 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 - Hit a hard stop: `/usr/bin/node` is `v12.22.9`, npm version detection timed out, and the planned Contact runtime requires Node.js >= 20. No production write or upload followed.
 
 ## 2026-08-19 — Isolated Contact Runtime Adaptation
+
+- Added a private-terminal-only Contact environment configurator under
+  `scripts/configure-contact-env.sh`. It takes no secret-bearing arguments,
+  requires root plus an interactive TTY, hides and confirms Turnstile/SMTP
+  inputs, generates the security secret on the ECS, refuses overwrite and
+  atomically installs the eight-key file as `root:flourish-contact 0640`.
+- Added a release-contract test for syntax, TTY/argument boundaries, the exact
+  eight keys and atomic no-overwrite behavior. The focused test passed; the
+  complete suite then passed 71/71, both builds completed, archive contents
+  matched their staging trees byte-for-byte and all eight rebuilt transfer
+  checksums passed.
 
 - The user-confirmed runtime audit invocation `ivk-yet5e54uae9ltzogxp6d` completed successfully with exit 0.
 - Confirmed both Review services are independently running on Node 22 at ports 8787/8788, and local TLS/SNI health plus login redirect checks pass.

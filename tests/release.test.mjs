@@ -122,6 +122,46 @@ test("contact deploy script versions and rolls back release plus runtime symlink
   assert.doesNotMatch(deploy, /nginx|\/review\/|cat \/etc\/flourish-contact\.env|source \/etc\/flourish-contact\.env|rm -rf ["']?\/opt\/flourish-contact\/releases/);
 });
 
+test("contact environment setup is interactive, atomic, and never accepts secrets as arguments", async () => {
+  const setupUrl = new URL("../scripts/configure-contact-env.sh", import.meta.url);
+  const setup = await readFile(setupUrl, "utf8");
+
+  await runFile("/bin/bash", ["-n", setupUrl.pathname]);
+  for (const expected of [
+    "set -euo pipefail",
+    'TARGET="/etc/flourish-contact.env"',
+    'GROUP="flourish-contact"',
+    "[[ $# -eq 0 ]]",
+    "[[ -t 0 ]]",
+    "read -r -s",
+    "openssl rand -hex 48",
+    "umask 0077",
+    "mktemp",
+    "chown root:\"$GROUP\"",
+    "chmod 0640",
+    'ln "$STAGE" "$TARGET"',
+  ]) {
+    assert.match(setup, new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+
+  for (const key of [
+    "CONTACT_PORT",
+    "CONTACT_TURNSTILE_SITE_KEY",
+    "CONTACT_TURNSTILE_SECRET",
+    "CONTACT_SECURITY_SECRET",
+    "SMTP_HOST",
+    "SMTP_PORT",
+    "SMTP_USER",
+    "SMTP_PASSWORD",
+  ]) {
+    assert.match(setup, new RegExp(`${key}=`));
+  }
+
+  assert.doesNotMatch(setup, /(?:TURNSTILE|SMTP|SECURITY).*(?:\$1|\$2|\$3|\$4)/);
+  assert.doesNotMatch(setup, /cat\s+.*flourish-contact\.env|source\s+.*flourish-contact\.env/);
+  assert.doesNotMatch(setup, /mv\s+-f/);
+});
+
 test("package scripts and ignore rules keep generated releases out of Git", async () => {
   const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
   const ignore = await readFile(new URL("../.gitignore", import.meta.url), "utf8");

@@ -23,11 +23,12 @@
 | 功能与发布脚本提交 | `f0f121c184bef4be024673ba6b5a81ac31e67049` |
 | 静态包 | `release/flourishculturekol-homepage.zip` |
 | 静态包字节数 | `1,003,971` |
-| 静态包 SHA-256 | `1da00f09c5dac993f1e885b0036eceb9bf4081e16a01e8ba42fa9a3142fbc5ea` |
+| 静态包 SHA-256 | `0da47fcc6fc49917373aa0863eb9afc23189c0aaa892a7cee9e6efd51b7d09da` |
 | Contact 服务包 | `release/flourish-contact-service.tgz` |
-| Contact 服务包字节数 | `10,162` |
-| Contact 服务包 SHA-256 | `b6628615defb2b9243dcc1c8f3c124ebb7f22038e16cafc36421e3aab4d06c6a` |
+| Contact 服务包字节数 | `10,190` |
+| Contact 服务包 SHA-256 | `28d6365856f50145d40f4faac86437844d08f9183beff76a246966cbc9e1f934` |
 | Contact 部署脚本 SHA-256 | `da85d4340c7ad1216b19da15292b54cf1b999204aac1d3baf75eb2b91dfa8cdb` |
+| 私密环境配置脚本 SHA-256 | `a7c6592bf986b8e555547df67ecc8c23a7dc808b0d0d9a4515f913354d451825` |
 | 静态部署脚本 SHA-256 | `30b34b4da2973432d226ec4490297e934517036a4e587ea81dfca0f94191753c` |
 | systemd unit SHA-256 | `245f763ea8dc04a795f6fdf3b908f00baa2138b28b261a5e51dcc38b27a98e50` |
 | Nginx API 模板 SHA-256 | `a826fe31820b6095d18cd7a9cfde8965d70338cd6267305f64afa4ea157911cf` |
@@ -98,19 +99,25 @@ SMTP_USER=business@flourish-culture.com
 SMTP_PASSWORD=
 ```
 
+推荐使用 `scripts/configure-contact-env.sh` 在私密服务器会话中录入。脚本拒绝命令行
+参数和非 TTY 输入，Secret 与 SMTP 授权码各输入两次且不回显，在服务器本机生成
+96 位十六进制安全密钥，并通过同目录临时文件和原子硬链接创建目标文件；如目标已
+存在则拒绝覆盖。
+
 在私密服务器会话中：
 
-1. 先确认专用组 `flourish-contact` 已存在。
-2. 使用 `sudoedit /etc/flourish-contact.env` 录入值；不要通过命令参数传值。
-3. `CONTACT_SECURITY_SECRET` 使用服务器本机生成的至少 32 字节随机值；建议
-   `openssl rand -hex 48`，只在私密终端中处理。
-4. 设置 `root:flourish-contact` 和 `0640`：
+1. 先确认专用用户/组 `flourish-contact` 已存在。
+2. 保持 Cloudflare 创建结果页打开，以便直接把 Site Key 与 Secret Key复制到私密
+   终端；不得经过聊天或 Cloud Assistant 命令。
+3. 运行交互脚本：
 
 ```bash
-sudo chown root:flourish-contact /etc/flourish-contact.env
-sudo chmod 0640 /etc/flourish-contact.env
+sudo bash scripts/configure-contact-env.sh
 sudo stat -c '%U:%G %a %n' /etc/flourish-contact.env
 ```
+
+只有脚本不可用且能够确保同等私密边界时，才使用 `sudoedit` 手工创建同样八个键，
+在服务器本机执行 `openssl rand -hex 48`，再设置 `root:flourish-contact` 与 `0640`。
 
 只验证键名与 set/unset 状态，不输出值：
 
@@ -189,6 +196,7 @@ df -h /var /opt
 - `release/flourishculturekol-homepage.zip`
 - `release/flourish-contact-service.tgz`
 - `release/SHA256SUMS`
+- `scripts/configure-contact-env.sh`
 - `scripts/deploy-contact-service.sh`
 - `deploy-cloud-assistant.sh`
 - `ops/flourish-contact.service`
@@ -205,7 +213,7 @@ tar -tzf release/flourish-contact-service.tgz
 
 不要移动文件或改写清单路径。
 
-预期七个文件校验均为 `OK`。服务包顶层只能出现 `ops/`、`server/`、`package.json`、
+预期八个文件校验均为 `OK`。服务包顶层只能出现 `ops/`、`server/`、`package.json`、
 `package-lock.json`；静态包必须包含六个站点文件、Privacy 页面与两张新 WebP。
 
 ## 生产备份

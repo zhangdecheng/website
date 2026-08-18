@@ -8,6 +8,7 @@ release/*.zip
 # Local environment and secrets
 .env
 .env.*
+!.env.example
 *.pem
 *.key
 *.crt
@@ -30,4 +31,3 @@ yarn-error.log*
 .cache/
 tmp/
 temp/
-

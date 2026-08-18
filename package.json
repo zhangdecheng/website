@@ -6,11 +6,16 @@
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "build": "node scripts/build-release.mjs",
-    "serve": "python3 -m http.server 4173"
+    "serve": "python3 -m http.server 4173",
+    "start:contact": "node server/index.js"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.2.8",
     "@fontsource-variable/space-grotesk": "^5.2.10",
+    "nodemailer": "9.0.5",
     "remixicon": "^4.9.1"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

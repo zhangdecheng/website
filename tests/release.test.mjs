@@ -538,3 +538,14 @@ test("public release check is strict about canonical routing, APIs, headers, ass
     assert.match(check, new RegExp(hash), `${path} hash should be pinned in the public check`);
   }
 });
+
+test("final static rollout pins the audited candidate and never rolls Nginx back", async () => {
+  const script = await readFile(new URL("../deploy-cloud-assistant.sh", import.meta.url), "utf8");
+
+  assert.match(script, /af10b1f4888bc848afeafa0055e55f5a480736940148f5ced26b5ec5e6707253/u);
+  assert.match(script, /7339fe4e6d004739f0f2b86de92af0c86038502e0dc6b985bee738f860d533f2/u);
+  assert.match(script, /61afde1b48e96219fb39db0f4930d0b7e5e9d76716f9d2cc9fea7bd8a54b2824/u);
+  assert.match(script, /rsync -a --delete "\$BACKUP\/" "\$WEB_ROOT\/"/u);
+  assert.match(script, /rsync -a "\$WEB_ROOT\/" "\$BACKUP\/"[\s\S]*chmod 0700 "\$BACKUP"/u);
+  assert.doesNotMatch(script, /NGINX_ROLLBACK|static-rollback|restoring the predeploy Nginx/u);
+});

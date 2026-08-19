@@ -1,6 +1,6 @@
 # FLOURISH CULTURE Website Project Handoff
 
-Last updated: 2026-08-18
+Last updated: 2026-08-19
 
 ## Project background
 
@@ -38,6 +38,8 @@ certificate directives and all `/review/` locations, files, data and services.
 ## Project version records
 
 Current source version: `v1.2.0` local release candidate
+
+The authoritative current source commit, archive byte counts and SHA-256 values are pinned in `docs/PRODUCTION_RUNBOOK.md`. Production is still serving the historical site; do not infer deployment from a local build or archive.
 
 | Version | Date | Status | Notes |
 | --- | --- | --- | --- |
@@ -105,6 +107,7 @@ Local verification:
 
 ```bash
 npm test
+npm run test:release
 npm run build
 npm run build:contact
 node scripts/browser-qa.cjs

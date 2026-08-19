@@ -74,9 +74,9 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 
 ## In Progress
 
-- Re-verify the confirmed `/opt/node-v24.17.0-linux-x64` binary/npm immediately before production write and stage the rebuilt release artifacts.
-- Create the protected Contact environment through a private server session, then create the v1.2.0 production backup.
-- Create the production Turnstile widget and install its Secret plus the SMTP authorization code through a private server session.
+- Confirm the ECS-observed SSH source address and restore the temporary, forced-command transfer channel without broadening access unnecessarily.
+- Upload and server-side verify the rebuilt immutable transfer package, then re-verify `/opt/node-v24.17.0-linux-x64` immediately before production write.
+- Install the already-created Turnstile widget Secret plus the SMTP authorization code through a private server session, then create the v1.2.0 production backup.
 
 ## Pending
 
@@ -115,7 +115,8 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 
 - GitHub CLI authentication is currently invalid and must be restored before source synchronization, PR/API evidence or Pages closure; ordinary Git push authentication passed a no-write dry run and remains available for a temporary artifact transfer.
 - Any further Cloud Assistant `RunCommand`, including read-only shell content, requires explicit command-level confirmation.
-- Production Turnstile Site/Secret values have not been installed.
+- The rotated temporary SSH key was read back successfully, but strict SSH still exits 255. A bounded read-only ECS log diagnostic is pending explicit confirmation to identify the actual source address before changing the key restriction.
+- The Turnstile widget exists with the approved two hostnames and Managed mode, but its Site/Secret values and the SMTP authorization code have not been installed on the ECS.
 - Historical backup contents, the v1.2.0 deployment backup and real inbox delivery remain unconfirmed.
 
 ## 2026-08-18 — v1.2.0 Local Release Candidate
@@ -155,6 +156,15 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 - Confirmed an existing `/opt/node-v24.17.0-linux-x64/bin/node` path is available for Contact without replacing system Node or Review's `/opt/nodejs` route.
 - Updated the Contact unit and deploy script to use `/opt/flourish-contact/runtime/bin/node`; deployment now validates an explicit runtime target and atomically rolls back both release and runtime symlinks.
 - Fresh runtime-contract tests passed 6/6; the full suite passed 70/70 when run with permitted loopback listening. Static and Contact builds both completed locally. Production remains **未完成**.
+
+## 2026-08-19 — Contact Recovery Fix and Repinned Transfer Package
+
+- Added browser coverage for a server-returned field error followed by user correction, reproduced the stale native validity message, and fixed `contact-form.js` so editing only the affected control clears that stale server error.
+- Re-ran Chrome QA at 1440×1024, 1024×1366, 390×844 and 360×800; every recorded check passed with no unexpected console errors.
+- Rebuilt the static ZIP, Contact service archive, eight-file checksum manifest and exact nine-file outer transfer archive. Nested checksum verification, source-tree comparisons, regular-file inventory and credential-material scans all passed.
+- The current immutable transfer archive is `1,020,965` bytes with SHA-256 `c4e135440da8857546a00620fe62f36f66ee3e1a56aa6c367356047ba9220bdd`; its pinned release identity is committed in `docs/PRODUCTION_RUNBOOK.md`.
+- The release suite passed 7/7 and the complete suite passed 71/71 when permitted to bind loopback test sockets. The first sandboxed run's five `listen EPERM` results were environment restrictions, and the unchanged test command passed outside that restriction.
+- Rotated and read back the temporary forced-command SSH public key, but strict SSH authentication still failed before upload. No v1.2.0 package, Contact secret, service, Nginx change or static file has been deployed.
 
 ## 2026-06-24 — Feishu Whiteboard 3 Local Implementation
 

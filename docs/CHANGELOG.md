@@ -17,6 +17,8 @@ Current source version: `v1.2.0` local release candidate
 - Confirmed Review production/staging use independent Node 22 processes and pass local TLS/SNI checks.
 - Adapted the Contact unit and deploy script to an atomic `/opt/flourish-contact/runtime` symlink targeting the server's separate Node 24 installation.
 - Added release-contract coverage for explicit runtime validation and rollback of both release and runtime symlinks; production deployment remains incomplete pending protected secrets and live acceptance.
+- Fixed stale server field errors so correcting an invalid field cannot leave native validation blocking a retry; the four-viewport browser gate and complete 71/71 test suite pass.
+- Repinned the audited nine-file transfer archive at SHA-256 `c4e135440da8857546a00620fe62f36f66ee3e1a56aa6c367356047ba9220bdd`; it has not been uploaded or deployed.
 
 ## 2026-08-18
 

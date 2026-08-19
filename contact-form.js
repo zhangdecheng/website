@@ -123,6 +123,11 @@ export async function initContactForm({
     clearServerErrors(form);
     setRole(form, roleSelect.value);
   });
+  form.addEventListener("input", (event) => {
+    if (typeof event.target?.setCustomValidity === "function") {
+      event.target.setCustomValidity("");
+    }
+  });
 
   for (const link of doc.querySelectorAll('[data-select-contact-role="creator"]')) {
     link.addEventListener("click", (event) => {

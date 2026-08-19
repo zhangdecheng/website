@@ -105,12 +105,18 @@ async function installContactStubs(context, baseUrl, postState) {
 
   await context.route(`${baseUrl}/api/contact`, async (route) => {
     const status = postState.status;
+    const errors = status === 400 ? postState.errors : undefined;
     await route.fulfill({
       status,
       contentType: "application/json",
       body: JSON.stringify(status === 201 || status === 202
         ? { ok: true, requestId: `qa-${status}` }
-        : { ok: false, requestId: `qa-${status}`, message: "QA simulated failure" }),
+        : {
+            ok: false,
+            requestId: `qa-${status}`,
+            message: "QA simulated failure",
+            ...(errors ? { errors } : {}),
+          }),
     });
   });
 }
@@ -241,6 +247,23 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     "Validate that a simulated delivery failure preserves every entered field.",
   );
   await page.locator('[name="privacyAccepted"]').check();
+
+  postState.status = 400;
+  postState.errors = { company: "Enter a valid company." };
+  await waitForFormReady(page);
+  await page.locator("[data-submit-button]").click();
+  await page.waitForFunction(() =>
+    document.querySelector('[name="company"]')?.validationMessage === "Enter a valid company."
+  );
+  await page.locator('[name="company"]').fill("QA North Star Revised");
+  const validationRecovery = await page.evaluate(() => ({
+    company: document.querySelector('[name="company"]')?.value,
+    validationMessage: document.querySelector('[name="company"]')?.validationMessage,
+  }));
+  await page.locator('[name="company"]').evaluate((control) => control.setCustomValidity(""));
+  await page.locator('[name="company"]').fill("QA North Star");
+  postState.errors = undefined;
+
   postState.status = 502;
   await waitForFormReady(page);
   await page.locator("[data-submit-button]").click();
@@ -306,12 +329,9 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     };
   });
 
-  const expectedFailureConsoleSignals = consoleErrors.filter((error) =>
-    /status of 502|502 \(Bad Gateway\)/u.test(error),
-  );
-  const unexpectedConsoleErrors = consoleErrors.filter((error) =>
-    !/status of 502|502 \(Bad Gateway\)/u.test(error),
-  );
+  const expectedQaFailure = /status of (?:400|502)|400 \(Bad Request\)|502 \(Bad Gateway\)/u;
+  const expectedFailureConsoleSignals = consoleErrors.filter((error) => expectedQaFailure.test(error));
+  const unexpectedConsoleErrors = consoleErrors.filter((error) => !expectedQaFailure.test(error));
   const report = {
     viewport: { width: viewport.width, height: viewport.height },
     screenshot: path.relative(root, screenshotPath),
@@ -319,6 +339,7 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     creatorState,
     joinCta,
     focusOrder,
+    validationRecovery,
     failureState,
     successState,
     mobileMenu,
@@ -370,6 +391,12 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
       && failureState.privacyAccepted
       && failureState.status.includes("couldn’t send"),
     `${prefix}: 502 response did not preserve values and safe status`,
+  );
+  report.checks.serverValidationRecovery = check(
+    results,
+    validationRecovery.company === "QA North Star Revised"
+      && validationRecovery.validationMessage === "",
+    `${prefix}: corrected field retained a stale server validation error`,
   );
   report.checks.successResetsValues = check(
     results,

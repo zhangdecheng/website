@@ -219,7 +219,7 @@ assert_sha256 "$WORK_DIR/script.js" "c6565c4b184b7a804ac3a882094de228faf45b9d50a
 contact_form_status="$(fetch GET "$WWW_ORIGIN/contact-form.js" "$WORK_DIR/contact-form.headers" "$WORK_DIR/contact-form.js")"
 assert_status 200 "$contact_form_status" "contact-form.js"
 assert_header "$WORK_DIR/contact-form.headers" "Content-Type" "javascript" "contact-form.js"
-assert_sha256 "$WORK_DIR/contact-form.js" "7e2d9fa56c3bb5100d7ac674bf7ac17782b21999840da15c668939871ad8234f" "contact-form.js"
+assert_sha256 "$WORK_DIR/contact-form.js" "469f839535c4b8fefcecf7b8de61b9502cd06556a1a5fb89e2a1804ba68c96b2" "contact-form.js"
 
 site_core_status="$(fetch GET "$WWW_ORIGIN/site-core.js" "$WORK_DIR/site-core.headers" "$WORK_DIR/site-core.js")"
 assert_status 200 "$site_core_status" "site-core.js"

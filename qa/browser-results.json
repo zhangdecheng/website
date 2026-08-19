@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-18T10:27:50.173Z",
+  "generatedAt": "2026-08-19T15:29:30.473Z",
   "browser": "System Google Chrome via playwright-core 1.62.1",
   "viewports": {
     "desktop-1440x1024": {
@@ -39,6 +39,10 @@
         "a",
         "a"
       ],
+      "validationRecovery": {
+        "company": "QA North Star Revised",
+        "validationMessage": ""
+      },
       "failureState": {
         "name": "QA Brand Contact",
         "email": "qa@example.com",
@@ -70,6 +74,7 @@
       },
       "baselineConsoleErrorCount": 0,
       "expectedFailureConsoleSignals": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
         "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
       ],
       "unexpectedConsoleErrors": [],
@@ -79,6 +84,7 @@
         "joinCta": true,
         "keyboardOrder": true,
         "failurePreservesValues": true,
+        "serverValidationRecovery": true,
         "successResetsValues": true,
         "noHorizontalOverflow": true,
         "reducedMotion": true,
@@ -123,6 +129,10 @@
         "a",
         "a"
       ],
+      "validationRecovery": {
+        "company": "QA North Star Revised",
+        "validationMessage": ""
+      },
       "failureState": {
         "name": "QA Brand Contact",
         "email": "qa@example.com",
@@ -154,6 +164,7 @@
       },
       "baselineConsoleErrorCount": 0,
       "expectedFailureConsoleSignals": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
         "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
       ],
       "unexpectedConsoleErrors": [],
@@ -163,6 +174,7 @@
         "joinCta": true,
         "keyboardOrder": true,
         "failurePreservesValues": true,
+        "serverValidationRecovery": true,
         "successResetsValues": true,
         "noHorizontalOverflow": true,
         "reducedMotion": true,
@@ -207,6 +219,10 @@
         "a",
         "a"
       ],
+      "validationRecovery": {
+        "company": "QA North Star Revised",
+        "validationMessage": ""
+      },
       "failureState": {
         "name": "QA Brand Contact",
         "email": "qa@example.com",
@@ -241,6 +257,7 @@
       },
       "baselineConsoleErrorCount": 0,
       "expectedFailureConsoleSignals": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
         "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
       ],
       "unexpectedConsoleErrors": [],
@@ -250,6 +267,7 @@
         "joinCta": true,
         "keyboardOrder": true,
         "failurePreservesValues": true,
+        "serverValidationRecovery": true,
         "successResetsValues": true,
         "noHorizontalOverflow": true,
         "reducedMotion": true,
@@ -295,6 +313,10 @@
         "a",
         "a"
       ],
+      "validationRecovery": {
+        "company": "QA North Star Revised",
+        "validationMessage": ""
+      },
       "failureState": {
         "name": "QA Brand Contact",
         "email": "qa@example.com",
@@ -329,6 +351,7 @@
       },
       "baselineConsoleErrorCount": 0,
       "expectedFailureConsoleSignals": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
         "Failed to load resource: the server responded with a status of 502 (Bad Gateway)"
       ],
       "unexpectedConsoleErrors": [],
@@ -338,6 +361,7 @@
         "joinCta": true,
         "keyboardOrder": true,
         "failurePreservesValues": true,
+        "serverValidationRecovery": true,
         "successResetsValues": true,
         "noHorizontalOverflow": true,
         "reducedMotion": true,

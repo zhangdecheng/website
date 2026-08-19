@@ -8,18 +8,19 @@ readonly RELEASE_DIR="${PROJECT_ROOT}/release"
 readonly ARCHIVE_NAME="flourish-production-transfer-v1.2.0.tgz"
 readonly OUTPUT_PATH="${RELEASE_DIR}/${ARCHIVE_NAME}"
 
-readonly -a INVENTORY=(
+readonly -a PAYLOAD=(
   "check-https-cloud-assistant.sh"
   "deploy-cloud-assistant.sh"
   "ops/flourish-contact.service"
   "ops/nginx/flourish-contact-api.conf"
-  "release/SHA256SUMS"
   "release/flourish-contact-service.tgz"
   "release/flourishculturekol-homepage.zip"
+  "scripts/archive-safety.sh"
   "scripts/configure-contact-env.sh"
   "scripts/systemd-env.sh"
   "scripts/deploy-contact-service.sh"
 )
+readonly -a INVENTORY=("release/SHA256SUMS" "${PAYLOAD[@]}")
 
 build_dir=""
 
@@ -47,15 +48,17 @@ done
 
 [[ -d "${RELEASE_DIR}" && ! -L "${RELEASE_DIR}" ]] || fail "release directory is missing or unsafe"
 
-for relative_file in "${INVENTORY[@]}"; do
+for relative_file in "${PAYLOAD[@]}"; do
   absolute_file="${PROJECT_ROOT}/${relative_file}"
   [[ -f "${absolute_file}" && ! -L "${absolute_file}" ]] || fail "missing or unsafe input: ${relative_file}"
 done
 
 (
   cd "${PROJECT_ROOT}"
+  /usr/bin/shasum -a 256 "${PAYLOAD[@]}" >release/SHA256SUMS.next
+  /bin/mv -- release/SHA256SUMS.next release/SHA256SUMS
   /usr/bin/shasum -a 256 -c release/SHA256SUMS >/dev/null
-) || fail "inner release checksum verification failed"
+) || fail "inner release checksum generation or verification failed"
 
 build_dir="$(/usr/bin/mktemp -d "${RELEASE_DIR}/.transfer-build.XXXXXX")"
 candidate_path="${build_dir}/${ARCHIVE_NAME}"
@@ -63,7 +66,7 @@ candidate_tar_path="${build_dir}/flourish-production-transfer-v1.2.0.tar"
 
 (
   cd "${PROJECT_ROOT}"
-  COPYFILE_DISABLE=1 /usr/bin/tar -cf "${candidate_tar_path}" -- "${INVENTORY[@]}"
+  COPYFILE_DISABLE=1 /usr/bin/tar --format ustar --no-xattrs -cf "${candidate_tar_path}" -- "${INVENTORY[@]}"
 )
 /usr/bin/gzip -n -9 < "${candidate_tar_path}" > "${candidate_path}"
 
@@ -80,6 +83,8 @@ if actual != sorted(expected):
     raise SystemExit(f"unexpected transfer inventory: {actual!r}")
 if any(not member.isfile() for member in members):
     raise SystemExit("transfer archive contains a non-regular entry")
+if any(any("xattr" in key.lower() for key in member.pax_headers) for member in members):
+    raise SystemExit("transfer archive contains xattr headers")
 PY
 
 /usr/bin/tar -tzf "${candidate_path}" >/dev/null

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+ARCHIVE_SAFETY_HELPER="${SCRIPT_DIR}/archive-safety.sh"
 CONTACT_ROOT="/opt/flourish-contact"
 RELEASES_ROOT="$CONTACT_ROOT/releases"
 CURRENT_LINK="$CONTACT_ROOT/current"
@@ -63,6 +65,13 @@ rollback() {
 trap cleanup EXIT
 trap rollback ERR
 
+[[ -f "$ARCHIVE_SAFETY_HELPER" && ! -L "$ARCHIVE_SAFETY_HELPER" ]] ||
+  fail "Required archive safety helper is missing or unsafe."
+# shellcheck source=archive-safety.sh
+source "$ARCHIVE_SAFETY_HELPER"
+declare -F archive_members_are_safe >/dev/null ||
+  fail "Required archive safety helper is unavailable."
+
 [[ $# -eq 2 ]] || fail "Usage: $0 /absolute/path/to/flourish-contact-service.tgz /absolute/path/to/node-runtime"
 [[ $EUID -eq 0 ]] || fail "Run this deployment script as root."
 
@@ -88,14 +97,7 @@ timeout -k 1 10 env \
   PATH="$RUNTIME_TARGET/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
   "$RUNTIME_TARGET/bin/npm" --version >/dev/null
 
-while IFS= read -r member; do
-  normalized="${member#./}"
-  case "$normalized" in
-    ""|/*|../*|*/../*|*/..)
-      fail "Unsafe archive member: $member"
-      ;;
-  esac
-done < <(tar -tzf "$ARCHIVE")
+archive_members_are_safe < <(tar -tzf "$ARCHIVE")
 
 STAGE="$(mktemp -d)"
 tar -xzf "$ARCHIVE" -C "$STAGE"

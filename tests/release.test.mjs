@@ -122,6 +122,26 @@ test("contact deploy script versions and rolls back release plus runtime symlink
   assert.doesNotMatch(deploy, /nginx|\/review\/|cat \/etc\/flourish-contact\.env|source \/etc\/flourish-contact\.env|rm -rf ["']?\/opt\/flourish-contact\/releases/);
 });
 
+test("archive member guard accepts tar root markers and rejects traversal", async () => {
+  const helperUrl = new URL("../scripts/archive-safety.sh", import.meta.url);
+  const safe = await runFile(
+    "/bin/bash",
+    ["-c", 'source "$1"; printf "%s\\n" ./ ./server ./server/index.js package.json | archive_members_are_safe', "--", helperUrl.pathname],
+    { encoding: "utf8" },
+  );
+  assert.equal(safe.stdout, "");
+  assert.equal(safe.stderr, "");
+
+  await assert.rejects(
+    runFile(
+      "/bin/bash",
+      ["-c", 'source "$1"; printf "%s\\n" ./server ../outside | archive_members_are_safe', "--", helperUrl.pathname],
+      { encoding: "utf8" },
+    ),
+    /Unsafe archive member: \.\.\/outside/,
+  );
+});
+
 test("contact environment setup is interactive, atomic, and never accepts secrets as arguments", async () => {
   const setupUrl = new URL("../scripts/configure-contact-env.sh", import.meta.url);
   const setup = await readFile(setupUrl, "utf8");
@@ -206,6 +226,7 @@ test("production transfer builder strips macOS metadata and packages the exact a
     "release/SHA256SUMS",
     "release/flourish-contact-service.tgz",
     "release/flourishculturekol-homepage.zip",
+    "scripts/archive-safety.sh",
     "scripts/configure-contact-env.sh",
     "scripts/systemd-env.sh",
     "scripts/deploy-contact-service.sh",
@@ -220,11 +241,56 @@ test("production transfer builder strips macOS metadata and packages the exact a
   assert.doesNotMatch(builder, /(?:^|[\s"'])release\/(?:\*|\.)(?:[\s"']|$)/m);
 });
 
+test("production tar layers contain no macOS xattrs or contact root marker", async () => {
+  await runFile("npm", ["run", "build:transfer"], {
+    cwd: new URL("../", import.meta.url),
+    encoding: "utf8",
+  });
+
+  const python = String.raw`
+import io
+import sys
+import tarfile
+
+outer_path = sys.argv[1]
+
+def reject_xattrs(label, members):
+    for member in members:
+        keys = [key for key in member.pax_headers if "xattr" in key.lower()]
+        if keys:
+            raise SystemExit(f"{label} xattr headers on {member.name}: {keys}")
+
+with tarfile.open(outer_path, "r:gz") as outer:
+    outer_members = outer.getmembers()
+    reject_xattrs("outer", outer_members)
+    nested_file = outer.extractfile("release/flourish-contact-service.tgz")
+    if nested_file is None:
+        raise SystemExit("contact archive missing from transfer")
+    nested_bytes = nested_file.read()
+
+with tarfile.open(fileobj=io.BytesIO(nested_bytes), mode="r:gz") as contact:
+    contact_members = contact.getmembers()
+    reject_xattrs("contact", contact_members)
+    names = [member.name for member in contact_members]
+    if "." in names or "./" in names:
+        raise SystemExit(f"contact archive contains a root marker: {names[:3]}")
+`;
+
+  const { stdout, stderr } = await runFile(
+    "/usr/bin/python3",
+    ["-c", python, new URL("../release/flourish-production-transfer-v1.2.0.tgz", import.meta.url).pathname],
+    { encoding: "utf8" },
+  );
+  assert.equal(stdout, "");
+  assert.equal(stderr, "");
+});
+
 test("package scripts and ignore rules keep generated releases out of Git", async () => {
   const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
   const ignore = await readFile(new URL("../.gitignore", import.meta.url), "utf8");
   assert.equal(packageJson.scripts?.["build:contact"], "node scripts/build-contact-release.mjs");
-  assert.equal(packageJson.scripts?.["build:transfer"], "bash scripts/build-production-transfer.sh");
+  assert.equal(packageJson.scripts?.["build:artifacts"], "bash scripts/build-production-artifacts.sh");
+  assert.equal(packageJson.scripts?.["build:transfer"], "npm run build:artifacts && bash scripts/build-production-transfer.sh");
   assert.equal(packageJson.scripts?.["test:release"], "node --test tests/release.test.mjs");
   assert.match(ignore, /# Generated release artifacts and staging directories\nrelease\//);
   assert.doesNotMatch(ignore, /^release\/\*\.zip$/m);

@@ -19,10 +19,10 @@ remote-source acceptance remains incomplete.
   committing secret values; deployed the loopback-only Contact service through
   isolated Node 24 and confirmed active/enabled state, public field boundary and
   SMTP authentication preflight.
-- Staged and verified the portable 11-file release transfer, then created exact
+- Staged and verified the portable 11-file core release transfer, then created exact
   predeploy and pre-static rollback snapshots with read-back checksum evidence.
 - Added archive portability/safety fixes for GNU tar and systemd-safe SMTP
-  authorization-code serialization. The full local suite now passes 75/75.
+  authorization-code serialization.
 - Replaced the production Nginx source with canonical apex/www routing, scoped
   Contact proxy and static-page security headers while preserving Review
   production/staging blocks. The first immediate post-reload probe exercised and
@@ -33,6 +33,17 @@ remote-source acceptance remains incomplete.
   approved AI images and `/review/` health/login protection.
 - Re-ran system Chrome QA at four viewports with no recorded failures. A
   synthetic invalid Turnstile token was correctly rejected before SMTP.
+- Added allow-listed Siteverify diagnostics after real widget submissions still
+  returned `403`; request `471c2340-0dab-4269-bb4e-7124a7a1e5ee` proved the
+  production Turnstile Secret is invalid for the public Site Key. No mail send
+  occurred.
+- Added a hidden, single-key Turnstile rotation tool with atomic replacement and
+  rollback. Follow-up commit `ac8f54e` arms rollback before replacement and proves
+  restoration for signal, restart and health-check failures; follow-up `d3f4d05`
+  explicitly reports a failed rollback restart/health recovery. All tar layers now use
+  a portable deterministic ustar writer with canonical UTC metadata and member order;
+  Shanghai/UTC builds are byte-identical, the transfer has 12 regular files, and the
+  complete suite passes 80/80.
 - Real Turnstile success, Brand/Creator inbox delivery, Reply-To, remote `main`
   reconciliation and GitHub Pages disposition remain **未完成**.
 

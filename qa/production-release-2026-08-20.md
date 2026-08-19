@@ -6,8 +6,9 @@
 
 生产主机 `webhkhome` / `150.5.135.196` 已运行 v1.2.0 静态站点、规范化 Nginx
 路由和 loopback-only Contact 服务。服务器内完整发布检查、本机站外独立检查、TLS
-链读取、75/75 Node 测试和四视口系统 Chrome QA 均通过。当前没有证据证明真实
-Turnstile 成功 token 已通过，也没有 Hannah/Irisa 收件箱与 Reply-To 读回，因此不能
+链读取、80/80 Node 测试和四视口系统 Chrome QA 均通过。真实 Turnstile 请求已经
+定位到当前生产 Secret 错配，但尚未用正确 Secret 完成成功 token；也没有
+Hannah/Irisa 收件箱与 Reply-To 读回，因此不能
 把 SMTP 登录成功或 API 健康等同于真实邮件验收完成。
 
 ## 发布身份
@@ -15,18 +16,23 @@ Turnstile 成功 token 已通过，也没有 Hannah/Irisa 收件箱与 Reply-To 
 | 项目 | 已确认值 |
 | --- | --- |
 | 源提交 | `d8389aefde9ac684bdee8e9beb1a30cc1a04731b` |
+| Contact 诊断与轮换提交 | `a2251b0987b50f29295bca180c9b01ec87a6ce51` |
+| 轮换事务与跨平台归档审查修复 | `ac8f54ee930eb5c6e1b1c8984a55b6ab68542800`（本地候选，尚未整体部署） |
+| 回滚恢复失败显式告警 | `d3f4d059a8fca1738b176360a259dd750c584395`（本地候选，尚未整体部署） |
 | 静态 ZIP | 1,002,344 bytes；SHA-256 `e047d270ff8cf7ec5b9ff70da8c63109225dd07ba23b992975bbe25dfb82dc77` |
 | Contact TGZ | 8,787 bytes；SHA-256 `e84e04121dda5cf7b0c0f4dc42257fedda6fcdf5f3412a158751a79fc3ff5880` |
 | 最终传输 TGZ | 1,019,207 bytes；SHA-256 `2374bf4a652b93e459108366ba560836b3b577c2497dcea8bece2faffa093661` |
 | 传输成员 | 11 个普通文件；10/10 payload 校验 `OK`；无 AppleDouble/xattr 警告 |
 | 服务器暂存 | `/root/flourish-transfer-v1.2.0-d8389ae` |
+| 最新可复现候选包 | static 1,001,826 bytes / `1233343c…26b6`；Contact 9,010 bytes / `bab01f95…0628`；transfer 1,020,308 bytes / `c906d8e3…b6c0`；上海/UTC 构建逐字节一致 |
 
 ## 私密配置与 Contact
 
 - `/etc/flourish-contact.env` 已由用户在受保护 TTY 中录入；读回仅显示八个键均为
   `set`，assignment count 为 8，权限为 `root:flourish-contact 0640`；未读取或记录值。
 - systemd unit 为 `root:root 0644`，`flourish-contact.service` 为 active/enabled。
-- 当前 release：`/opt/flourish-contact/releases/20260819T191356Z`。
+- 当前 release：`/opt/flourish-contact/releases/20260819T202836Z`；前一版本
+  `/opt/flourish-contact/releases/20260819T191356Z` 保留用于回滚。
 - 运行时：`/opt/node-v24.17.0-linux-x64`；未替换系统 Node 或 Review Node。
 - 端口 3101 只监听 `127.0.0.1`。
 - loopback health 返回 `{"ok":true,"configured":true,"version":"1.2.0"}`。
@@ -72,7 +78,7 @@ f9187abb6213fdd05725f0db3cf45551619465cea9b3758dfe8863b3e4fceed2  talent-creator
 - `/review/healthz` 为 `200` JSON；`/review/` 为 `302` 到 `/review/login`。
 - TLS 链逐级 `verify return:1`；证书 issuer 为 Let's Encrypt YE2，SAN 覆盖 apex/www，
   有效期 `2026-08-10T17:37:15Z` 至 `2026-11-08T17:37:14Z`。
-- `npm test`：75/75。
+- `npm test`：80/80。
 - `qa/browser-results.json`：系统 Chrome / Playwright Core 1.62.1；1440×1024、
   1024×1366、390×844、360×800 四个视口 failure list 为空；角色切换、键盘顺序、
   错误恢复、成功重置、无横向溢出、reduced motion、Privacy 可读性及移动菜单均通过。
@@ -89,9 +95,24 @@ API 返回 `403`，request ID `4a8a51c0-ef19-4238-bb2c-c81f345cb8d6`。服务器
 这证明失败边界按设计工作，但不能证明真实 widget token、hostname/action 和成功路径
 已经通过。
 
+在用户确认真实提交后，正式页 Managed widget 已签发 token，Brand 表单三次到达
+Contact 服务。前两次日志为 `turnstile_rejected`；部署只记录 Cloudflare 官方安全错误码
+的诊断热修复后，第三次请求
+`471c2340-0dab-4269-bb4e-7124a7a1e5ee` 在
+`2026-08-19T20:37:24.854Z` 返回 `diagnostic=invalid-input-secret`。这直接证明当前 ECS
+保存的 Turnstile Secret 不属于公开 Site Key 对应的 widget，或录入时发生错误；它不
+是 hostname/action 校验失败。三个请求都在 Turnstile 边界停止，没有进入 SMTP。
+
+诊断热修复已部署到 `/opt/flourish-contact/releases/20260819T202836Z`，服务 active/
+enabled，只监听 `127.0.0.1:3101`，本地和公网 health 均为 `200`。受保护轮换脚本
+`scripts/rotate-contact-turnstile.sh` 只隐藏更新该一项，保留其余七项配置，失败自动
+回滚；ECS 副本为 `/root/flourish-turnstile-secret-update.sh`，`root:root 0700`，SHA-256
+`26bb4c7aa6797d2a9f2e9993ee3970cec5f6ec9c64984d9c1d7f4d049dd843e6`。正确 Secret
+仍需用户在私密 TTY 中输入，任何值均未读取或写入记录。
+
 ## 仍未确认 / 硬门槛
 
-- 真实 Managed Turnstile 成功 token 与 action `contact_submit`。
+- 用正确 Secret 完成真实 Managed Turnstile 成功 token 与 action `contact_submit`。
 - Brand 表单送达 `hannah@flourish-culture.com`，且 Reply-To 为受控测试邮箱。
 - Creator 表单送达 `irisa@flourishculture.com`，且 Reply-To 为受控测试邮箱。
 - `/review/` 受保护页面内的登录后内容（本次未取得 Review 登录凭据；仅确认代理、健康

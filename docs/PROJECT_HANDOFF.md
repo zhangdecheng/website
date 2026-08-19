@@ -154,9 +154,11 @@ Public production baseline observed on 2026-08-18:
 2026-08-20 v1.2.0 core production release:
 
 - Current Contact release is
-  `/opt/flourish-contact/releases/20260819T191356Z`, with runtime symlink to
+  `/opt/flourish-contact/releases/20260819T202836Z`, with runtime symlink to
   `/opt/node-v24.17.0-linux-x64`; the unit is active/enabled and listens only on
   `127.0.0.1:3101`.
+- The previous Contact release `/opt/flourish-contact/releases/20260819T191356Z`
+  remains available for explicit rollback.
 - Current Nginx source SHA-256 is
   `22efa58a328b5855999638133acc13a9472fa27132b1cba675479adbe2904d3e`.
 - Predeploy backup:
@@ -166,8 +168,21 @@ Public production baseline observed on 2026-08-18:
   its 47-file checksum manifest reads back `OK`.
 - www/apex canonical behavior, Contact public boundary, Privacy/security headers,
   exact release hashes, SMTP authentication preflight and `/review/` health/login
-  redirect all pass. Real Brand/Creator inbox delivery and Reply-To are not yet
-  confirmed.
+  redirect all pass. A real Brand widget submission reached Cloudflare Siteverify,
+  and request `471c2340-0dab-4269-bb4e-7124a7a1e5ee` proved the configured
+  Turnstile Secret is invalid for the public Site Key (`invalid-input-secret`).
+  No SMTP send occurred. Correct-Secret rotation, real Brand/Creator inbox delivery
+  and Reply-To are not yet confirmed.
+- Use tracked `scripts/rotate-contact-turnstile.sh` only from a private root TTY to
+  correct this single assignment. It takes no arguments, hides and confirms input,
+  preserves the other seven assignments and rolls back service/config on failure.
+  The verified ECS copy is `/root/flourish-turnstile-secret-update.sh`, root-only.
+- Deployed diagnostic and first rotation source is commit
+  `a2251b0987b50f29295bca180c9b01ec87a6ce51`. Local review-fix commit
+  `ac8f54ee930eb5c6e1b1c8984a55b6ab68542800` adds signal/restart/health rollback
+  coverage and portable cross-time-zone archives; `d3f4d059a8fca1738b176360a259dd750c584395`
+  adds explicit rollback recovery failure reporting. Neither is yet deployed. The full
+  local suite passes 80/80.
 - Full evidence and the one successfully exercised automatic Nginx rollback are
   recorded in `qa/production-release-2026-08-20.md`.
 

@@ -8,7 +8,9 @@
 香港实例 `i-yeo9geadc0plsv0abgv0`。Contact 通过
 `/opt/flourish-contact/runtime` 指向独立 Node 24，不替换系统 Node 12 或 Review 的
 运行时。公开 www/apex/API/Privacy/安全头/文件哈希及 `/review/` 健康与登录跳转均已
-通过服务器内和站外两轮检查。当前仍缺真实 Turnstile 成功提交、Brand/Creator 两个
+通过服务器内和站外两轮检查。真实请求已由 Cloudflare 明确返回
+`invalid-input-secret`，证明当前生产 Turnstile Secret 与公开 Site Key 不匹配；当前
+仍缺正确 Secret 下的真实 Turnstile 成功提交、Brand/Creator 两个
 收件箱投递与 Reply-To 读回，以及远端 `main`/GitHub Pages 收尾，所以不得声称项目
 已经全部完成。
 
@@ -22,6 +24,9 @@
 | --- | --- |
 | 版本 | `1.2.0` |
 | 当前已通过完整本地门禁并用于发布的提交 | `d8389aefde9ac684bdee8e9beb1a30cc1a04731b` |
+| Contact 诊断与首版轮换提交 | `a2251b0987b50f29295bca180c9b01ec87a6ce51` |
+| 轮换事务与跨平台可复现归档审查修复 | `ac8f54ee930eb5c6e1b1c8984a55b6ab68542800` |
+| 回滚恢复失败显式告警提交 | `d3f4d059a8fca1738b176360a259dd750c584395` |
 | 功能与基础发布脚本提交 | `f0f121c184bef4be024673ba6b5a81ac31e67049` |
 | 独立 Contact 运行时提交 | `fda47ab67282c7b4cd39c5180001136ca7475cd0` |
 | 静态包 | `release/flourishculturekol-homepage.zip` |
@@ -38,8 +43,18 @@
 | systemd unit SHA-256 | `245f763ea8dc04a795f6fdf3b908f00baa2138b28b261a5e51dcc38b27a98e50` |
 | Nginx API 模板 SHA-256 | `a826fe31820b6095d18cd7a9cfde8965d70338cd6267305f64afa4ea157911cf` |
 | 公开验收脚本 SHA-256 | `15a6394f38f62e7b5819b4cdbcef7ae1080dc512e711bcb8e63d73ed557673ce` |
+| Turnstile 轮换脚本候选 SHA-256 | `6c3f621527edf15721406596908ce11aa23272194afff6de5c61f938d5f8653a` |
+| 确定性 ustar 构建器 SHA-256 | `151a1c507c1fbf6c92461decd5402c40b3fbd68a8300d32dc0fe9188949c2c8f` |
 | 单文件传输包 | `release/flourish-production-transfer-v1.2.0.tgz`（`1,019,207` 字节） |
 | 单文件传输包 SHA-256 | `2374bf4a652b93e459108366ba560836b3b577c2497dcea8bece2faffa093661` |
+
+最新诊断源码的可复现候选包尚未整体覆盖静态生产：static ZIP 为 `1,001,826` bytes、
+SHA-256 `1233343c7cb1f823abc1dadd759ef2ea1c12a06167b82c1c647b3673352326b6`；
+Contact TGZ 为 `9,010` bytes、SHA-256
+`bab01f95865410715a947cc29993d7c3a568f2dd1fd7d66455159743aa4c0628`；12-file transfer
+为 `1,020,308` bytes、SHA-256
+`c906d8e374f6dfc07a0131340f7958b5122db84b8519f76e651c780c064eb6c0`。上海与 UTC
+时区各自构建后三项哈希完全一致。
 
 生成包位于被 Git 忽略的 `release/` 目录，不包含 `.env`、凭据、日志、测试或
 `node_modules`。传输后必须在服务器再次核对 SHA-256，任何不一致都应停止发布。
@@ -110,6 +125,19 @@ SMTP_PASSWORD=
 参数和非 TTY 输入，Secret 与 SMTP 授权码各输入两次且不回显，在服务器本机生成
 96 位十六进制安全密钥，并通过同目录临时文件和原子硬链接创建目标文件；如目标已
 存在则拒绝覆盖。
+
+如果 `/etc/flourish-contact.env` 已存在且 Siteverify 返回 `invalid-input-secret`，不要
+重新输入 SMTP 授权码，也不要删除整个环境文件。只在私密 root TTY 中运行：
+
+```bash
+sudo bash scripts/rotate-contact-turnstile.sh
+```
+
+该脚本不接受参数，隐藏并二次确认新的 Turnstile Secret，只替换
+`CONTACT_TURNSTILE_SECRET`，验证八个键仍各有且仅有一项，保留其余七项原始内容，使用
+同目录临时文件原子切换并重启 Contact。服务或健康检查失败时恢复受保护备份；任何
+Secret 值都不打印。轮换后仍必须用新的真实 widget token 验证，health `200` 不能证明
+Secret 正确。
 
 在私密服务器会话中：
 
@@ -199,13 +227,14 @@ df -h /var /opt
 ## 传输与校验
 
 首选只传输 `release/flourish-production-transfer-v1.2.0.tgz`。服务器必须先用上表固定
-哈希核对外层压缩包，再解压到本次新建的受限暂存目录；外层包内恰好包含下列十一个
-普通文件（十个 payload 文件加一份内层校验清单），不得包含 symlink，也不得上传整个仓库：
+哈希核对外层压缩包，再解压到本次新建的受限暂存目录；外层包内恰好包含下列十二个
+普通文件（十一个 payload 文件加一份内层校验清单），不得包含 symlink，也不得上传整个仓库：
 
 - `release/flourishculturekol-homepage.zip`
 - `release/flourish-contact-service.tgz`
 - `release/SHA256SUMS`
 - `scripts/configure-contact-env.sh`
+- `scripts/rotate-contact-turnstile.sh`
 - `scripts/systemd-env.sh`
 - `scripts/archive-safety.sh`
 - `scripts/deploy-contact-service.sh`
@@ -215,9 +244,10 @@ df -h /var /opt
 - `check-https-cloud-assistant.sh`
 
 外层包必须通过 `npm run build:transfer` 生成。构建器显式设置
-`COPYFILE_DISABLE=1`，并使用独立 tar 解析器确认真实成员恰好为上述十一个普通文件，
-以防 macOS `._`/AppleDouble 元数据被本机 tar 隐藏、却在 GNU/Linux 上暴露；gzip
-使用无时间戳模式，连续构建必须得到相同 SHA-256。
+`COPYFILE_DISABLE=1`，使用 Python 标准库写入确定性 ustar，并由独立 tar 解析器确认
+真实成员恰好为上述十二个普通文件，以防 macOS `._`/AppleDouble 元数据被本机 tar
+隐藏、却在 GNU/Linux 上暴露；gzip 使用无时间戳模式，上海与 UTC 时区构建必须得到
+相同 SHA-256。
 
 在服务器暂存根目录执行内层复核：
 
@@ -229,7 +259,7 @@ tar -tzf release/flourish-contact-service.tgz
 
 不要移动文件或改写清单路径。
 
-预期十个 payload 文件校验均为 `OK`。服务包顶层只能出现 `ops/`、`server/`、`package.json`、
+预期十一个 payload 文件校验均为 `OK`。服务包顶层只能出现 `ops/`、`server/`、`package.json`、
 `package-lock.json`；静态包必须包含六个站点文件、Privacy 页面与两张新 WebP。
 
 ## 生产备份
@@ -423,11 +453,11 @@ Creator 测试。服务返回 `201` 或重复请求 `202` 仅代表接口接受�
 | Node.js/npm/Nginx 版本 | 系统 Node `v12.22.9` / npm `8.5.1`（不用于 Contact）；Contact 使用 `/opt/node-v24.17.0-linux-x64`；Nginx `1.18.0 (Ubuntu)` |
 | Nginx 来源文件及备份 | 当前来源 SHA-256 `22efa5…d3e`；旧配置保存在 `20260819T190447Z-v1.2.0-predeploy/00-flourishculturekol.com.conf`，SHA-256 `77688b…a1c8` |
 | web root 备份路径 | 发布前备份 `20260819T190447Z-v1.2.0-predeploy/web-root`；静态覆盖前精确快照 `20260819T192328Z-v1.2.0-static-d8389ae`，47 个文件且全量校验 `OK` |
-| Contact 前一版本与当前 release 路径 | 当前 `/opt/flourish-contact/releases/20260819T191356Z`；保留前一次 release `20260819T191206Z` |
+| Contact 前一版本与当前 release 路径 | 当前诊断 release `/opt/flourish-contact/releases/20260819T202836Z`；保留前一次 release `20260819T191356Z` |
 | systemd active 与 loopback health | Nginx、Contact、Review production/staging 均 active/enabled；Contact 仅监听 `127.0.0.1:3101`；本机 TLS/SNI www/API/Review 为 `200/200/200`，Review root `302` |
 | SMTP 身份验证 | 已确认；启动预检日志为 `smtp_authentication_accepted`，未回显凭据 |
-| Turnstile 失败边界 | 已确认；合成无效令牌返回 `403`，审计结果 `verification_failed / turnstile_rejected`，未进入 SMTP |
-| 公开静态/API/安全头/哈希 | 已确认；服务器内完整发布脚本与本机独立外部检查均通过，75/75 Node 测试和四视口 Chrome QA 通过 |
+| Turnstile 失败边界 | 已确认；合成无效令牌返回 `403`；真实 widget 请求 `471c2340-0dab-4269-bb4e-7124a7a1e5ee` 返回 `invalid-input-secret`，均未进入 SMTP |
+| 公开静态/API/安全头/哈希 | 已确认；服务器内完整发布脚本与本机独立外部检查均通过，80/80 Node 测试和四视口 Chrome QA 通过 |
 | Brand 收件箱及 Reply-To | 未确认 |
 | Creator 收件箱及 Reply-To | 未确认 |
 | `/review/` 发布后回归 | 已确认 health `200` 与 root `302`；未使用登录凭据做受保护页面内容验收 |

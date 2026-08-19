@@ -74,6 +74,8 @@ Phase 8 — v1.2.0 core production release live; real-mail and source-hosting cl
 
 ## In Progress
 
+- Replace the misconfigured production Turnstile Secret through the hidden,
+  single-key rotation path; no credential may enter chat, Git or command arguments.
 - Complete one real Brand and one real Creator Turnstile submission from the public form.
 - Read back both target inboxes and confirm visitor Reply-To without recording message bodies or credentials.
 - Reconcile the feature branch with remote `main`; decide GitHub Pages only after all live gates pass.
@@ -114,7 +116,9 @@ Phase 8 — v1.2.0 core production release live; real-mail and source-hosting cl
 
 ## Blockers
 
-- Real Turnstile success requires an actual challenge token. Browser policy requires action-time user confirmation before solving a CAPTCHA and before two representational form submissions.
+- Real widget submissions now reproduce consistently, and the server diagnostic proves
+  `invalid-input-secret`. The user must copy the matching widget Secret into the protected
+  TTY rotation prompt before success-path testing can continue.
 - Hannah and Irisa inbox delivery/Reply-To cannot be confirmed without corresponding inbox read access or user readback.
 - GitHub CLI authentication remains invalid; remote `main` and Pages must be read before any source push or Pages deletion.
 - The in-app browser control channel timed out on production navigation. System Chrome QA against release-identical `dist/` passed, but it does not replace the real Turnstile success gate.
@@ -145,6 +149,26 @@ Phase 8 — v1.2.0 core production release live; real-mail and source-hosting cl
 - A synthetic invalid Turnstile token returned 403 and the redacted server log
   recorded `turnstile_rejected`; SMTP was not reached. Real Turnstile success,
   inbox delivery and Reply-To remain **未完成**.
+- Read back both Temu business containers as `Exited`, then disabled only
+  `temu-feishu-bridge.service` and `temu-query-existing-ecs.service` so a host
+  reboot cannot restart them. No container/network/data deletion was run;
+  certificate-renewal and audit-backup timers were left unchanged. Nginx,
+  Contact and Review remained active after the change.
+- Added an allow-listed Turnstile Siteverify diagnostic and reproduced a real Brand failure
+  as request `471c2340-0dab-4269-bb4e-7124a7a1e5ee`; Cloudflare returned
+  `invalid-input-secret`, and the request stopped before SMTP.
+- Deployed the diagnostic Contact release at
+  `/opt/flourish-contact/releases/20260819T202836Z`; source is commit `a2251b0`.
+  Local/deployed diagnostic file hashes match, service and public health pass, and the
+  previous release remains available for rollback.
+- Added `scripts/rotate-contact-turnstile.sh`, which updates only the hidden Turnstile
+  Secret, preserves the other seven assignments, atomically restarts and rolls back on
+  failure. Its verified ECS copy is root-only; no credential value was read.
+- Hardened the Secret rotation transaction so signal, restart and health-check failures all
+  restore the old protected environment. Replaced platform-specific tar flags with a portable
+  deterministic ustar writer; Shanghai/UTC builds now produce identical static, Contact and
+  transfer hashes. Review-fix commits are `ac8f54e` and `d3f4d05`; the complete suite
+  passes 80/80.
 
 ## 2026-08-18 — v1.2.0 Local Release Candidate
 

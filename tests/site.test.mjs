@@ -464,6 +464,31 @@ test("annotated hero media uses three cohesive brand story cards", async () => {
   assert.doesNotMatch(hero, /src="assets\/creator-recruitment\.jpg"/);
 });
 
+test("source reconciliation preserves image dimensions and loading priorities", async () => {
+  for (const filename of ["index.html", "review-editable.html"]) {
+    const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
+    const hero = html.match(/<section class="hero" id="top">[\s\S]*?<\/section>/)?.[0] ?? "";
+    const heroImages = hero.match(/<img\b[\s\S]*?\/>/g) ?? [];
+    const logoImages = html.match(/<img\b[^>]*src="assets\/brand-logos\/[^>]*\/>/g) ?? [];
+
+    assert.equal(heroImages.length, 3, `${filename} should retain three hero images`);
+    for (const image of heroImages) {
+      assert.match(image, /\bwidth="\d+"/);
+      assert.match(image, /\bheight="\d+"/);
+      assert.match(image, /\bloading="eager"/);
+    }
+    assert.match(heroImages[0], /\bfetchpriority="high"/);
+
+    assert.equal(logoImages.length, 14, `${filename} should retain the seamless logo pair`);
+    for (const image of logoImages) {
+      assert.match(image, /\bwidth="\d+"/);
+      assert.match(image, /\bheight="\d+"/);
+      assert.match(image, /\bloading="lazy"/);
+      assert.match(image, /\bdecoding="async"/);
+    }
+  }
+});
+
 test("review editable mirrors the production header and hero card structure", async () => {
   const html = await readFile(new URL("../review-editable.html", import.meta.url), "utf8");
   const header = html.match(/<header class="site-header"[\s\S]*?<\/header>/)?.[0] ?? "";

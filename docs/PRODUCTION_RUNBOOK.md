@@ -19,23 +19,23 @@
 | 项目 | 已确认值 |
 | --- | --- |
 | 版本 | `1.2.0` |
-| 当前已通过完整本地门禁的提交 | `e4b336350bd2adf07f9b5eff574ce6776026f4c4` |
+| 当前已通过完整本地门禁的提交 | `cdc2e971546d4b2ab8476dd4115f8d41dbdc49a5` |
 | 功能与基础发布脚本提交 | `f0f121c184bef4be024673ba6b5a81ac31e67049` |
 | 独立 Contact 运行时提交 | `fda47ab67282c7b4cd39c5180001136ca7475cd0` |
 | 静态包 | `release/flourishculturekol-homepage.zip` |
-| 静态包字节数 | `1,003,971` |
-| 静态包 SHA-256 | `0da47fcc6fc49917373aa0863eb9afc23189c0aaa892a7cee9e6efd51b7d09da` |
+| 静态包字节数 | `1,004,008` |
+| 静态包 SHA-256 | `2e811afbbd388260f6e54813fdf3319e13704838aeb49fccb853331333ef734f` |
 | Contact 服务包 | `release/flourish-contact-service.tgz` |
-| Contact 服务包字节数 | `10,190` |
-| Contact 服务包 SHA-256 | `28d6365856f50145d40f4faac86437844d08f9183beff76a246966cbc9e1f934` |
+| Contact 服务包字节数 | `10,175` |
+| Contact 服务包 SHA-256 | `b95ff6fc13d3f2c58fdf64f06a4f1fe4c736597d30e1fefd33c4bdbd4175edc1` |
 | Contact 部署脚本 SHA-256 | `da85d4340c7ad1216b19da15292b54cf1b999204aac1d3baf75eb2b91dfa8cdb` |
 | 私密环境配置脚本 SHA-256 | `a7c6592bf986b8e555547df67ecc8c23a7dc808b0d0d9a4515f913354d451825` |
 | 静态部署脚本 SHA-256 | `30b34b4da2973432d226ec4490297e934517036a4e587ea81dfca0f94191753c` |
 | systemd unit SHA-256 | `245f763ea8dc04a795f6fdf3b908f00baa2138b28b261a5e51dcc38b27a98e50` |
 | Nginx API 模板 SHA-256 | `a826fe31820b6095d18cd7a9cfde8965d70338cd6267305f64afa4ea157911cf` |
-| 公开验收脚本 SHA-256 | `40ff782dce9c49129de0e1c3f9d83bbf91b4224ab90718bd6e4a9414febeefa3` |
-| 单文件传输包 | `release/flourish-production-transfer-v1.2.0.tgz`（`1,020,973` 字节） |
-| 单文件传输包 SHA-256 | `c2d54eb22b9634dd5e41f4cfeff0c7f234826c868f471b9e25a8eddf1cf633ef` |
+| 公开验收脚本 SHA-256 | `e1f56cc05a89d69d912a3a0c85480184a46e57ead5f57146dd33cf820182b852` |
+| 单文件传输包 | `release/flourish-production-transfer-v1.2.0.tgz`（`1,020,965` 字节） |
+| 单文件传输包 SHA-256 | `c4e135440da8857546a00620fe62f36f66ee3e1a56aa6c367356047ba9220bdd` |
 
 生成包位于被 Git 忽略的 `release/` 目录，不包含 `.env`、凭据、日志、测试或
 `node_modules`。传输后必须在服务器再次核对 SHA-256，任何不一致都应停止发布。

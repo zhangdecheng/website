@@ -35,17 +35,32 @@ remote-source acceptance remains incomplete.
   synthetic invalid Turnstile token was correctly rejected before SMTP.
 - Added allow-listed Siteverify diagnostics after real widget submissions still
   returned `403`; request `471c2340-0dab-4269-bb4e-7124a7a1e5ee` proved the
-  production Turnstile Secret is invalid for the public Site Key. No mail send
-  occurred.
+  former production Turnstile Secret was invalid for the public Site Key. No mail
+  send occurred. The protected environment was later recreated without exposing
+  values; only a fresh real token can confirm the replacement.
 - Added a hidden, single-key Turnstile rotation tool with atomic replacement and
   rollback. Follow-up commit `ac8f54e` arms rollback before replacement and proves
   restoration for signal, restart and health-check failures; follow-up `d3f4d05`
   explicitly reports a failed rollback restart/health recovery. All tar layers now use
   a portable deterministic ustar writer with canonical UTC metadata and member order;
   Shanghai/UTC builds are byte-identical, the transfer has 12 regular files, and the
-  complete suite passes 80/80.
-- Real Turnstile success, Brand/Creator inbox delivery, Reply-To, remote `main`
-  reconciliation and GitHub Pages disposition remain **未完成**.
+  complete suite passes 82/82.
+- Reconciled GitHub `main` history without changing the reviewed tree, preserved
+  image loading dimensions/priorities, and fixed the 1024px Hero CTA clipping.
+- Published the final static ZIP (`af10b1f4…07253`) to ECS with production
+  homepage/styles hashes `7339fe4e…33f2` and `61afde1b…2824`; independent direct
+  HTTPS readback, Contact/Review regression checks and all security headers pass.
+- Replaced the permissive static copy helper with a pinned transactional rollout:
+  it creates an exact checksum backup, rolls back only the web root on failure,
+  leaves Nginx untouched, and verifies Contact/Review. Commit `474bd69` also fixes
+  the backup root to `0700`; the deployed 51-file snapshot was corrected and read
+  back at `root:root 0700` with its `0600` manifest fully valid.
+- Both Temu query systemd units are now `disabled/inactive`; the Compose-managed
+  query container/network were removed by the unit's declared stop action, both
+  named data volumes remain, and the bridge container remains exited.
+- Real Turnstile success, Brand/Creator inbox delivery, Reply-To, authenticated
+  remote push and GitHub Pages deletion/readback remain **未完成**; remote `main`
+  history itself is already reconciled locally by merge commit `94cb2ab`.
 
 ## 2026-08-19
 

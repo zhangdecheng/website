@@ -37,8 +37,8 @@ certificate directives and all `/review/` locations, files, data and services.
 
 ## Project version records
 
-Current source version: `v1.2.0` core production release at local commit
-`d8389aefde9ac684bdee8e9beb1a30cc1a04731b`; remote source synchronization and
+Current source version: `v1.2.0` final static production refresh at local commit
+`474bd69` (static content commit `6087ae5`); authenticated remote push and
 real-mail acceptance are still pending.
 
 The authoritative current source commit, archive byte counts and SHA-256 values
@@ -163,26 +163,43 @@ Public production baseline observed on 2026-08-18:
   `22efa58a328b5855999638133acc13a9472fa27132b1cba675479adbe2904d3e`.
 - Predeploy backup:
   `/var/backups/flourishculturekol.com/20260819T190447Z-v1.2.0-predeploy`.
-- Static pre-copy snapshot:
+- Initial static pre-copy snapshot:
   `/var/backups/flourishculturekol.com/20260819T192328Z-v1.2.0-static-d8389ae`;
   its 47-file checksum manifest reads back `OK`.
+- Final refresh snapshot:
+  `/var/backups/flourishculturekol.com/20260819T230115Z-v1.2.0-static-6087ae5`;
+  it contains 51 files, is `root:root 0700`, has a `0600` checksum manifest and
+  reads back fully `OK`.
 - www/apex canonical behavior, Contact public boundary, Privacy/security headers,
   exact release hashes, SMTP authentication preflight and `/review/` health/login
   redirect all pass. A real Brand widget submission reached Cloudflare Siteverify,
   and request `471c2340-0dab-4269-bb4e-7124a7a1e5ee` proved the configured
-  Turnstile Secret is invalid for the public Site Key (`invalid-input-secret`).
-  No SMTP send occurred. Correct-Secret rotation, real Brand/Creator inbox delivery
-  and Reply-To are not yet confirmed.
+  former Turnstile Secret was invalid for the public Site Key
+  (`invalid-input-secret`). No SMTP send occurred. The user has since recreated
+  the protected environment without exposing its values; a fresh real widget
+  token, Brand/Creator inbox delivery and Reply-To are not yet confirmed.
 - Use tracked `scripts/rotate-contact-turnstile.sh` only from a private root TTY to
   correct this single assignment. It takes no arguments, hides and confirms input,
   preserves the other seven assignments and rolls back service/config on failure.
   The verified ECS copy is `/root/flourish-turnstile-secret-update.sh`, root-only.
-- Deployed diagnostic and first rotation source is commit
+- Deployed Contact diagnostic and first rotation source is commit
   `a2251b0987b50f29295bca180c9b01ec87a6ce51`. Local review-fix commit
   `ac8f54ee930eb5c6e1b1c8984a55b6ab68542800` adds signal/restart/health rollback
   coverage and portable cross-time-zone archives; `d3f4d059a8fca1738b176360a259dd750c584395`
-  adds explicit rollback recovery failure reporting. Neither is yet deployed. The full
-  local suite passes 80/80.
+  adds explicit rollback recovery failure reporting. Current Contact source files
+  match the final `bab01f95…0628` service archive byte-for-byte. The full local
+  suite passes 82/82.
+- Final static ZIP `af10b1f4…07253` is live. Production `index.html`, `styles.css`
+  and `privacy.html` read back as `7339fe4e…33f2`, `61afde1b…2824` and
+  `ea1be315…77f5` from ECS and an independent direct HTTPS client. Nginx remains
+  unchanged at `22efa58a…4d3e`; Contact and both Review services remain active.
+- GitHub main history was reconciled locally in `94cb2ab`; source performance
+  reconciliation is `a32f9d9`, tablet containment is `6087ae5`, and transactional
+  static rollout hardening is `474bd69`. The final authenticated push and Pages
+  deletion/readback remain pending.
+- Both Temu query units are `disabled/inactive`. The query unit's declared Compose
+  stop removed its container/network; two named data volumes remain. The bridge
+  container remains exited. Certificate-renewal and audit-backup timers were not changed.
 - Full evidence and the one successfully exercised automatic Nginx rollback are
   recorded in `qa/production-release-2026-08-20.md`.
 

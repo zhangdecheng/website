@@ -18,7 +18,7 @@ requirements document.
 
 ## Current Phase
 
-Phase 8 — v1.2.0 core production release live; real-mail and source-hosting closure in progress.
+Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closure in progress.
 
 ## Completed
 
@@ -74,11 +74,12 @@ Phase 8 — v1.2.0 core production release live; real-mail and source-hosting cl
 
 ## In Progress
 
-- Replace the misconfigured production Turnstile Secret through the hidden,
-  single-key rotation path; no credential may enter chat, Git or command arguments.
+- Verify the Turnstile Secret that the user re-entered through the protected TTY;
+  health/config are normal, but only a fresh real widget token can prove the Secret matches.
 - Complete one real Brand and one real Creator Turnstile submission from the public form.
 - Read back both target inboxes and confirm visitor Reply-To without recording message bodies or credentials.
-- Reconcile the feature branch with remote `main`; decide GitHub Pages only after all live gates pass.
+- Push the already reconciled feature history to remote `main`; close GitHub Pages
+  only after all live and inbox gates pass.
 
 ## Pending
 
@@ -116,18 +117,19 @@ Phase 8 — v1.2.0 core production release live; real-mail and source-hosting cl
 
 ## Blockers
 
-- Real widget submissions now reproduce consistently, and the server diagnostic proves
-  `invalid-input-secret`. The user must copy the matching widget Secret into the protected
-  TTY rotation prompt before success-path testing can continue.
+- Historical real widget request `471c2340-0dab-4269-bb4e-7124a7a1e5ee` proved the former
+  value returned `invalid-input-secret`. The user has since recreated the protected eight-key
+  environment without exposing values, but the replacement still requires a fresh real token.
 - Hannah and Irisa inbox delivery/Reply-To cannot be confirmed without corresponding inbox read access or user readback.
-- GitHub CLI authentication remains invalid; remote `main` and Pages must be read before any source push or Pages deletion.
+- GitHub `main` was fetched and reconciled locally through merge commit `94cb2ab`; a final
+  authenticated non-force push and Pages deletion readback remain pending.
 - The in-app browser control channel timed out on production navigation. System Chrome QA against release-identical `dist/` passed, but it does not replace the real Turnstile success gate.
 
 ## 2026-08-20 — v1.2.0 Core Production Release
 
 - Created protected `/etc/flourish-contact.env` with exactly eight set keys and
   `root:flourish-contact 0640`; no values were printed or stored in Git.
-- Built and server-verified the portable 11-file transfer archive at SHA-256
+- Built and server-verified the original portable 11-file core transfer archive at SHA-256
   `2374bf4a652b93e459108366ba560836b3b577c2497dcea8bece2faffa093661`.
 - Created predeploy backup
   `/var/backups/flourishculturekol.com/20260819T190447Z-v1.2.0-predeploy` and
@@ -144,16 +146,17 @@ Phase 8 — v1.2.0 core production release live; real-mail and source-hosting cl
 - Deployed the static release. Server-side full production checks and an
   independent external check both passed for canonical routing, API, Privacy,
   five security headers, MIME, exact hashes, AI images and `/review/`.
-- Fresh `npm test` passed 75/75. System Chrome QA passed all recorded checks at
+- Fresh `npm test` now passes 82/82. System Chrome QA passed all recorded checks at
   1440×1024, 1024×1366, 390×844 and 360×800 with no unexpected console errors.
 - A synthetic invalid Turnstile token returned 403 and the redacted server log
   recorded `turnstile_rejected`; SMTP was not reached. Real Turnstile success,
   inbox delivery and Reply-To remain **未完成**.
-- Read back both Temu business containers as `Exited`, then disabled only
-  `temu-feishu-bridge.service` and `temu-query-existing-ecs.service` so a host
-  reboot cannot restart them. No container/network/data deletion was run;
-  certificate-renewal and audit-backup timers were left unchanged. Nginx,
-  Contact and Review remained active after the change.
+- Disabled and stopped `temu-feishu-bridge.service` and
+  `temu-query-existing-ecs.service`; both now read `disabled/inactive`. The query
+  unit's declared `docker compose down` removed its stopped container/network,
+  while both named data volumes remain present; the bridge container remains
+  `Exited`. Certificate-renewal and audit-backup timers were left unchanged.
+  Nginx, Contact and both Review services remained active.
 - Added an allow-listed Turnstile Siteverify diagnostic and reproduced a real Brand failure
   as request `471c2340-0dab-4269-bb4e-7124a7a1e5ee`; Cloudflare returned
   `invalid-input-secret`, and the request stopped before SMTP.
@@ -168,7 +171,17 @@ Phase 8 — v1.2.0 core production release live; real-mail and source-hosting cl
   restore the old protected environment. Replaced platform-specific tar flags with a portable
   deterministic ustar writer; Shanghai/UTC builds now produce identical static, Contact and
   transfer hashes. Review-fix commits are `ac8f54e` and `d3f4d05`; the complete suite
-  passes 80/80.
+  now passes 82/82.
+- Reconciled GitHub history (`94cb2ab`), preserved source image priorities (`a32f9d9`),
+  fixed the 1024px Hero CTA clipping (`6087ae5`), and deployed the resulting static ZIP
+  SHA-256 `af10b1f4888bc848afeafa0055e55f5a480736940148f5ced26b5ec5e6707253`.
+  Production `index.html` and `styles.css` read back as `7339fe4e…33f2` and
+  `61afde1b…2824` from both ECS and an independent direct client.
+- Created and verified the exact 51-file rollback snapshot
+  `/var/backups/flourishculturekol.com/20260819T230115Z-v1.2.0-static-6087ae5`;
+  its root is `root:root 0700`, manifest is `0600`, and full checksum readback is `OK`.
+- Hardened `deploy-cloud-assistant.sh` in commit `474bd69` so a failed static rollout
+  restores only the web root, never downgrades Nginx, and re-verifies Contact/Review.
 
 ## 2026-08-18 — v1.2.0 Local Release Candidate
 

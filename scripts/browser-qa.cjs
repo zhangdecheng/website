@@ -188,6 +188,10 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
   const defaultState = await page.evaluate(() => {
     const brand = document.querySelector('[data-role-fields="brand"]');
     const creator = document.querySelector('[data-role-fields="creator"]');
+    const hero = document.querySelector(".hero");
+    const heroCta = hero?.querySelector(".hero-actions .button");
+    const heroRect = hero?.getBoundingClientRect();
+    const heroCtaRect = heroCta?.getBoundingClientRect();
     return {
       role: document.querySelector('[name="role"]')?.value,
       brandVisible: !brand.hidden && [...brand.querySelectorAll("input, select, textarea")]
@@ -198,6 +202,15 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
         document.documentElement.scrollWidth > document.documentElement.clientWidth,
       hiddenRevealCount: [...document.querySelectorAll(".reveal")]
         .filter((element) => getComputedStyle(element).opacity === "0").length,
+      heroCtaFullyContained: Boolean(
+        heroRect
+          && heroCtaRect
+          && heroCtaRect.top >= heroRect.top
+          && heroCtaRect.bottom <= heroRect.bottom,
+      ),
+      heroCtaBottomGap: heroRect && heroCtaRect
+        ? Math.round(heroRect.bottom - heroCtaRect.bottom)
+        : null,
     };
   });
 
@@ -355,6 +368,11 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     results,
     defaultState.role === "brand" && defaultState.brandVisible && defaultState.creatorHidden,
     `${prefix}: Brand default field state is incorrect`,
+  );
+  report.checks.heroCtaContained = check(
+    results,
+    defaultState.heroCtaFullyContained && defaultState.heroCtaBottomGap >= 24,
+    `${prefix}: Hero CTA is clipped or has insufficient bottom spacing (${defaultState.heroCtaBottomGap}px)`,
   );
   report.checks.creatorSwitch = check(
     results,

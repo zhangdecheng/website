@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T19:30:30.995Z",
+  "generatedAt": "2026-08-19T21:57:32.487Z",
   "browser": "System Google Chrome via playwright-core 1.62.1",
   "viewports": {
     "desktop-1440x1024": {
@@ -13,7 +13,9 @@
         "brandVisible": true,
         "creatorHidden": true,
         "horizontalOverflow": false,
-        "hiddenRevealCount": 12
+        "hiddenRevealCount": 12,
+        "heroCtaFullyContained": true,
+        "heroCtaBottomGap": 97
       },
       "creatorState": {
         "role": "creator",
@@ -80,6 +82,7 @@
       "unexpectedConsoleErrors": [],
       "checks": {
         "defaultBrand": true,
+        "heroCtaContained": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
@@ -103,7 +106,9 @@
         "brandVisible": true,
         "creatorHidden": true,
         "horizontalOverflow": false,
-        "hiddenRevealCount": 9
+        "hiddenRevealCount": 9,
+        "heroCtaFullyContained": true,
+        "heroCtaBottomGap": 97
       },
       "creatorState": {
         "role": "creator",
@@ -170,6 +175,7 @@
       "unexpectedConsoleErrors": [],
       "checks": {
         "defaultBrand": true,
+        "heroCtaContained": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
@@ -193,7 +199,9 @@
         "brandVisible": true,
         "creatorHidden": true,
         "horizontalOverflow": false,
-        "hiddenRevealCount": 12
+        "hiddenRevealCount": 12,
+        "heroCtaFullyContained": true,
+        "heroCtaBottomGap": 931
       },
       "creatorState": {
         "role": "creator",
@@ -263,6 +271,7 @@
       "unexpectedConsoleErrors": [],
       "checks": {
         "defaultBrand": true,
+        "heroCtaContained": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
@@ -287,7 +296,9 @@
         "brandVisible": true,
         "creatorHidden": true,
         "horizontalOverflow": false,
-        "hiddenRevealCount": 12
+        "hiddenRevealCount": 12,
+        "heroCtaFullyContained": true,
+        "heroCtaBottomGap": 931
       },
       "creatorState": {
         "role": "creator",
@@ -357,6 +368,7 @@
       "unexpectedConsoleErrors": [],
       "checks": {
         "defaultBrand": true,
+        "heroCtaContained": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,

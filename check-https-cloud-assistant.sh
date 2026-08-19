@@ -119,10 +119,10 @@ systemctl is-active --quiet nginx
 pass "Nginx configuration and service are healthy"
 
 local_health_status="$(fetch GET \
-  "http://127.0.0.1/api/contact/health" \
+  "https://www.flourishculturekol.com/api/contact/health" \
   "$WORK_DIR/local-health.headers" \
   "$WORK_DIR/local-health.json" \
-  --header 'Host: www.flourishculturekol.com')"
+  --resolve 'www.flourishculturekol.com:443:127.0.0.1')"
 assert_status 200 "$local_health_status" "Loopback Contact health through Nginx"
 
 printf '\n== Canonical redirects ==\n'

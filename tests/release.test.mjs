@@ -323,6 +323,8 @@ test("public release check is strict about canonical routing, APIs, headers, ass
   }
 
   assert.doesNotMatch(check, /curl[^\n]*\s-k(?:\s|$)|curl[^\n]*--insecure/);
+  assert.match(check, /--resolve 'www\.flourishculturekol\.com:443:127\.0\.0\.1'/);
+  assert.doesNotMatch(check, /http:\/\/127\.0\.0\.1\/api\/contact\/health/);
   assert.doesNotMatch(check, /(?:health|config|canonical|privacy|review)[^\n]*\|\| true/i);
 
   await runFile(

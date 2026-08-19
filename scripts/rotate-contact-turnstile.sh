@@ -39,9 +39,25 @@ rollback() {
     if mv -f -- "$ROLLBACK" "$TARGET"; then
       ROLLBACK=""
       TARGET_REPLACED=0
-      chown root:"$GROUP" "$TARGET" || true
-      chmod 0640 "$TARGET" || true
-      systemctl restart "$SERVICE" || true
+      chown root:"$GROUP" "$TARGET" ||
+        printf '%s\n' 'Warning: the restored environment owner could not be reasserted.' >&2
+      chmod 0640 "$TARGET" ||
+        printf '%s\n' 'Warning: the restored environment mode could not be reasserted.' >&2
+      rollback_healthy=0
+      if systemctl restart "$SERVICE"; then
+        for _rollback_attempt in {1..30}; do
+          if curl -fsS --max-time 2 "$HEALTH_URL" >/dev/null; then
+            rollback_healthy=1
+            break
+          fi
+          sleep 1
+        done
+        if (( rollback_healthy == 0 )) || ! systemctl is-active --quiet "$SERVICE"; then
+          printf '%s\n' 'The previous environment was restored, but the Contact service failed its rollback health check.' >&2
+        fi
+      else
+        printf '%s\n' 'The previous environment was restored, but the Contact service restart failed.' >&2
+      fi
     else
       printf 'Automatic rollback failed; protected backup retained at %s\n' "$ROLLBACK" >&2
     fi

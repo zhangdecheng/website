@@ -312,6 +312,18 @@ exit 0
     await assert.rejects(invokeRotation(), (error) => error.code === 1);
     await assertRestored();
 
+    await rm(signalMarker, { force: true });
+    await writeFile(join(shimDir, "systemctl"), "#!/bin/bash\nexit 1\n");
+    await assert.rejects(
+      invokeRotation(),
+      (error) => {
+        assert.equal(error.code, 1);
+        assert.match(error.stderr, /previous environment was restored, but the Contact service restart failed/);
+        return true;
+      },
+    );
+    await assertRestored();
+
     await writeFile(join(shimDir, "systemctl"), "#!/bin/bash\nexit 0\n");
     await writeFile(join(shimDir, "curl"), "#!/bin/bash\nexit 1\n");
     await assert.rejects(invokeRotation(), (error) => error.code === 1);

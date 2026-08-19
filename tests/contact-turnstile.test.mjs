@@ -61,13 +61,22 @@ test("rejects unsuccessful and mismatched challenge contexts", async () => {
 });
 
 test("returns a safe Cloudflare error-code diagnostic for rejected challenges", async () => {
+  const safeCodes = [
+    "missing-input-secret",
+    "invalid-input-secret",
+    "missing-input-response",
+    "invalid-input-response",
+    "bad-request",
+    "timeout-or-duplicate",
+    "internal-error",
+  ];
   const result = await verifyTurnstile({
     ...base,
     fetchImpl: async () => ({
       ok: true,
       json: async () => ({
         success: false,
-        "error-codes": ["invalid-input-secret", "timeout-or-duplicate", "unexpected value"],
+        "error-codes": [...safeCodes, safeCodes[0], "unexpected value"],
       }),
     }),
   });
@@ -76,7 +85,7 @@ test("returns a safe Cloudflare error-code diagnostic for rejected challenges", 
     ok: false,
     unavailable: false,
     reason: "turnstile_rejected",
-    diagnostic: "invalid-input-secret,timeout-or-duplicate",
+    diagnostic: safeCodes.join(","),
   });
 });
 

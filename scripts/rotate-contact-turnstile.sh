@@ -18,18 +18,22 @@ fail() {
 }
 
 cleanup() {
+  local exit_code=$?
+  trap - EXIT HUP INT TERM
+  set +e
   unset TURNSTILE_SECRET TURNSTILE_SECRET_CONFIRM
   if [[ -n "$STAGE" && -e "$STAGE" ]]; then
     rm -f -- "$STAGE"
   fi
-  if (( TARGET_REPLACED == 0 )) && [[ -n "$ROLLBACK" && -e "$ROLLBACK" ]]; then
+  if (( TARGET_REPLACED == 1 )); then
+    rollback
+  elif [[ -n "$ROLLBACK" && -e "$ROLLBACK" ]]; then
     rm -f -- "$ROLLBACK"
   fi
+  exit "$exit_code"
 }
 
 rollback() {
-  local exit_code=$?
-  trap - ERR
   if (( TARGET_REPLACED == 1 )) && [[ -n "$ROLLBACK" && -f "$ROLLBACK" ]]; then
     printf '%s\n' 'Turnstile Secret update failed; restoring the previous protected environment.' >&2
     if mv -f -- "$ROLLBACK" "$TARGET"; then
@@ -41,8 +45,9 @@ rollback() {
     else
       printf 'Automatic rollback failed; protected backup retained at %s\n' "$ROLLBACK" >&2
     fi
+  elif (( TARGET_REPLACED == 1 )); then
+    printf '%s\n' 'Automatic rollback could not start because the protected backup is missing.' >&2
   fi
-  exit "$exit_code"
 }
 
 trap cleanup EXIT
@@ -111,10 +116,9 @@ chown root:"$GROUP" "$STAGE" "$ROLLBACK"
 chmod 0640 "$STAGE" "$ROLLBACK"
 sync -f "$STAGE"
 
-trap rollback ERR
+TARGET_REPLACED=1
 mv -f -- "$STAGE" "$TARGET"
 STAGE=""
-TARGET_REPLACED=1
 systemctl restart "$SERVICE"
 
 healthy=0
@@ -129,7 +133,6 @@ done
 systemctl is-active --quiet "$SERVICE"
 
 TARGET_REPLACED=0
-trap - ERR
 rm -f -- "$ROLLBACK"
 ROLLBACK=""
 

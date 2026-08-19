@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 umask 077
+export TZ=UTC
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 readonly PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd -P)"
@@ -30,9 +31,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
-for command in /usr/bin/find /usr/bin/gzip /usr/bin/mktemp /usr/bin/python3 /usr/bin/sed /usr/bin/shasum /usr/bin/tar /usr/bin/touch /usr/bin/zip; do
+for command in /usr/bin/find /usr/bin/gzip /usr/bin/mktemp /usr/bin/python3 /usr/bin/sed /usr/bin/shasum /usr/bin/touch /usr/bin/zip; do
   [[ -x "$command" ]] || die "missing required command: $command"
 done
+[[ -f "${SCRIPT_DIR}/create-deterministic-tar.py" ]] || die "deterministic tar helper is missing"
 command -v node >/dev/null 2>&1 || die "node is unavailable"
 
 (cd "$PROJECT_ROOT" && node scripts/build-release.mjs >/dev/null)
@@ -56,7 +58,7 @@ contact_candidate="${build_dir}/flourish-contact-service.tgz"
 contact_list="${build_dir}/contact-files.txt"
 static_list="${build_dir}/static-files.txt"
 
-/usr/bin/find "$DIST_DIR" "$CONTACT_DIR" -exec /usr/bin/touch -t 198001010000 {} +
+/usr/bin/find "$DIST_DIR" -exec /usr/bin/touch -t 198001010000 {} +
 
 (
   cd "$DIST_DIR"
@@ -70,16 +72,9 @@ static_list="${build_dir}/static-files.txt"
     printf '%s\n' package-lock.json package.json
     /usr/bin/find ops server -type f -print
   } | LC_ALL=C /usr/bin/sort >"$contact_list"
-  COPYFILE_DISABLE=1 /usr/bin/tar \
-    --format ustar \
-    --no-xattrs \
-    --uid 0 \
-    --gid 0 \
-    --uname root \
-    --gname root \
-    -cf "$contact_tar" \
-    -T "$contact_list"
 )
+/usr/bin/python3 "${SCRIPT_DIR}/create-deterministic-tar.py" \
+  "$CONTACT_DIR" "$contact_tar" "$contact_list"
 /usr/bin/gzip -n -9 <"$contact_tar" >"$contact_candidate"
 
 /usr/bin/python3 - "$static_candidate" "$contact_candidate" <<'PY'

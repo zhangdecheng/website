@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 umask 077
+export TZ=UTC
+export COPYFILE_DISABLE=1
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 readonly PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd -P)"
@@ -17,11 +19,10 @@ readonly -a PAYLOAD=(
   "release/flourishculturekol-homepage.zip"
   "scripts/archive-safety.sh"
   "scripts/configure-contact-env.sh"
+  "scripts/deploy-contact-service.sh"
   "scripts/rotate-contact-turnstile.sh"
   "scripts/systemd-env.sh"
-  "scripts/deploy-contact-service.sh"
 )
-readonly -a INVENTORY=("release/SHA256SUMS" "${PAYLOAD[@]}")
 
 build_dir=""
 
@@ -43,9 +44,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
-for required_command in /bin/cp /bin/mkdir /usr/bin/dirname /usr/bin/find /usr/bin/gzip /usr/bin/python3 /usr/bin/shasum /usr/bin/tar /usr/bin/touch; do
+for required_command in /bin/cp /bin/mkdir /usr/bin/dirname /usr/bin/find /usr/bin/gzip /usr/bin/python3 /usr/bin/shasum /usr/bin/sort; do
   [[ -x "${required_command}" ]] || fail "missing required command: ${required_command}"
 done
+[[ -f "${SCRIPT_DIR}/create-deterministic-tar.py" ]] || fail "deterministic tar helper is missing"
 
 [[ -d "${RELEASE_DIR}" && ! -L "${RELEASE_DIR}" ]] || fail "release directory is missing or unsafe"
 
@@ -65,39 +67,34 @@ build_dir="$(/usr/bin/mktemp -d "${RELEASE_DIR}/.transfer-build.XXXXXX")"
 candidate_path="${build_dir}/${ARCHIVE_NAME}"
 candidate_tar_path="${build_dir}/flourish-production-transfer-v1.2.0.tar"
 payload_root="${build_dir}/payload"
+inventory_list="${build_dir}/inventory.txt"
 
 /bin/mkdir -p "${payload_root}"
-for relative_file in "${INVENTORY[@]}"; do
+printf '%s\n' "release/SHA256SUMS" "${PAYLOAD[@]}" | LC_ALL=C /usr/bin/sort >"${inventory_list}"
+inventory_count="$(/usr/bin/wc -l <"${inventory_list}" | /usr/bin/tr -d '[:space:]')"
+[[ "${inventory_count}" == "12" ]] || fail "unexpected transfer inventory count"
+while IFS= read -r relative_file; do
   target_file="${payload_root}/${relative_file}"
   /bin/mkdir -p "$(/usr/bin/dirname "${target_file}")"
   /bin/cp -p -- "${PROJECT_ROOT}/${relative_file}" "${target_file}"
-done
-/usr/bin/find "${payload_root}" -exec /usr/bin/touch -t 198001010000 {} +
+done <"${inventory_list}"
 
-(
-  cd "${payload_root}"
-  COPYFILE_DISABLE=1 /usr/bin/tar \
-    --format ustar \
-    --no-xattrs \
-    --uid 0 \
-    --gid 0 \
-    --uname root \
-    --gname root \
-    -cf "${candidate_tar_path}" \
-    -- "${INVENTORY[@]}"
-)
+/usr/bin/python3 "${SCRIPT_DIR}/create-deterministic-tar.py" \
+  "${payload_root}" "${candidate_tar_path}" "${inventory_list}"
 /usr/bin/gzip -n -9 < "${candidate_tar_path}" > "${candidate_path}"
 
-/usr/bin/python3 - "${candidate_path}" "${INVENTORY[@]}" <<'PY'
+/usr/bin/python3 - "${candidate_path}" "${inventory_list}" <<'PY'
 import sys
 import tarfile
 
-archive_path, *expected = sys.argv[1:]
+archive_path, inventory_path = sys.argv[1:]
+with open(inventory_path, encoding="utf-8") as inventory:
+    expected = [line.rstrip("\n") for line in inventory]
 with tarfile.open(archive_path, "r:gz") as archive:
     members = archive.getmembers()
 
-actual = sorted(member.name for member in members)
-if actual != sorted(expected):
+actual = [member.name for member in members]
+if actual != expected:
     raise SystemExit(f"unexpected transfer inventory: {actual!r}")
 if any(not member.isfile() for member in members):
     raise SystemExit("transfer archive contains a non-regular entry")
@@ -105,7 +102,6 @@ if any(any("xattr" in key.lower() for key in member.pax_headers) for member in m
     raise SystemExit("transfer archive contains xattr headers")
 PY
 
-/usr/bin/tar -tzf "${candidate_path}" >/dev/null
 archive_sha256="$(/usr/bin/shasum -a 256 "${candidate_path}" | /usr/bin/awk '{ print $1 }')"
 archive_bytes="$(/usr/bin/wc -c < "${candidate_path}" | /usr/bin/tr -d '[:space:]')"
 
@@ -114,4 +110,4 @@ archive_bytes="$(/usr/bin/wc -c < "${candidate_path}" | /usr/bin/tr -d '[:space:
 printf 'Transfer archive: %s\n' "${OUTPUT_PATH}"
 printf 'SHA-256: %s\n' "${archive_sha256}"
 printf 'Bytes: %s\n' "${archive_bytes}"
-printf 'Entries: %s regular files\n' "${#INVENTORY[@]}"
+printf 'Entries: %s regular files\n' "${inventory_count}"

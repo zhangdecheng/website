@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readdir, readFile, stat } from "node:fs/promises";
+import { chmod, mkdir, mkdtemp, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { promisify } from "node:util";
 import test from "node:test";
 
@@ -202,7 +204,7 @@ test("Turnstile secret rotation is hidden, atomic, scoped, and rollback-safe", a
     "chmod 0640",
     "systemctl restart \"$SERVICE\"",
     "http://127.0.0.1:3101/api/contact/health",
-    "TARGET_REPLACED == 0",
+    "TARGET_REPLACED == 1",
     'mv -f -- "$ROLLBACK" "$TARGET"',
     "rollback",
   ]) {
@@ -212,6 +214,111 @@ test("Turnstile secret rotation is hidden, atomic, scoped, and rollback-safe", a
   assert.doesNotMatch(update, /(?:TURNSTILE_SECRET|CONTACT_TURNSTILE_SECRET).*(?:\$1|\$2)/);
   assert.doesNotMatch(update, /cat\s+.*flourish-contact\.env|source\s+.*flourish-contact\.env/);
   assert.doesNotMatch(update, /SMTP_PASSWORD=/);
+  assert.ok(
+    update.indexOf("TARGET_REPLACED=1") < update.indexOf('mv -f -- "$STAGE" "$TARGET"'),
+    "the rollback transaction must be armed before the atomic replacement",
+  );
+});
+
+test("Turnstile secret rotation restores the old environment on signal, restart, and health failures", async () => {
+  const fixture = await mkdtemp(join(tmpdir(), "flourish-turnstile-rotation-"));
+  const target = join(fixture, "flourish-contact.env");
+  const testScript = join(fixture, "rotate-contact-turnstile.sh");
+  const shimDir = join(fixture, "bin");
+  const signalMarker = join(fixture, "signal-sent");
+  const oldEnvironment = [
+    "CONTACT_PORT=3101",
+    "CONTACT_TURNSTILE_SITE_KEY=public-site-key",
+    "CONTACT_TURNSTILE_SECRET=old-secret-value-123456",
+    "CONTACT_SECURITY_SECRET=security-secret-value-123456",
+    "SMTP_HOST=smtp.example.test",
+    "SMTP_PORT=465",
+    "SMTP_USER=business@example.test",
+    "SMTP_PASSWORD=smtp-password-value-123456",
+    "",
+  ].join("\n");
+  const newSecret = "new-secret-value-123456";
+
+  await mkdir(shimDir);
+  await writeFile(target, oldEnvironment, { mode: 0o640 });
+  const source = await readFile(new URL("../scripts/rotate-contact-turnstile.sh", import.meta.url), "utf8");
+  const fixtureSource = source
+    .replace('TARGET="/etc/flourish-contact.env"', `TARGET="${target}"`)
+    .replace('GROUP="flourish-contact"', 'GROUP="test-group"')
+    .replace(/\[\[ \$EUID -eq 0 \]\] \|\| fail "Run this script as root from a private interactive terminal\."/, ":")
+    .replace(/\[\[ -t 0 \]\] \|\| fail "Standard input must be a private interactive terminal\."/, ":")
+    .replace(/\[\[ -t 1 \]\] \|\| fail "Standard output must be a private interactive terminal\."/, ":")
+    .replaceAll("/etc/.flourish-contact.env.", `${fixture}/.flourish-contact.env.`);
+  await writeFile(testScript, fixtureSource, { mode: 0o700 });
+
+  const shims = {
+    chown: "#!/bin/bash\nexit 0\n",
+    cp: '#!/bin/bash\nexec /bin/cp "$3" "$4"\n',
+    curl: "#!/bin/bash\nexit 0\n",
+    sleep: "#!/bin/bash\nexit 0\n",
+    stat: "#!/bin/bash\nprintf '%s\\n' 'root:test-group 640'\n",
+    sync: "#!/bin/bash\nexit 0\n",
+    systemctl: `#!/bin/bash
+set -eu
+if [[ "\${1:-}" == "restart" && ! -e "\${FLOURISH_TEST_SIGNAL_MARKER}" ]]; then
+  : >"\${FLOURISH_TEST_SIGNAL_MARKER}"
+  kill -TERM "\${PPID}"
+fi
+exit 0
+`,
+  };
+  for (const [name, contents] of Object.entries(shims)) {
+    const path = join(shimDir, name);
+    await writeFile(path, contents);
+    await chmod(path, 0o700);
+  }
+
+  const invokeRotation = () => runFile(
+    "/bin/bash",
+    ["-c", 'printf "%s\\n%s\\n" "$2" "$2" | /bin/bash "$1"', "--", testScript, newSecret],
+    {
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        FLOURISH_TEST_SIGNAL_MARKER: signalMarker,
+        PATH: `${shimDir}:${process.env.PATH}`,
+      },
+    },
+  );
+  const assertRestored = async () => {
+    assert.equal(await readFile(target, "utf8"), oldEnvironment);
+    assert.deepEqual(
+      (await readdir(fixture)).filter((name) => name.includes(".rollback.")),
+      [],
+    );
+  };
+
+  try {
+    await assert.rejects(
+      invokeRotation(),
+      (error) => error.code === 143,
+    );
+    await assertRestored();
+
+    await rm(signalMarker, { force: true });
+    await writeFile(join(shimDir, "systemctl"), `#!/bin/bash
+set -eu
+if [[ "\${1:-}" == "restart" && ! -e "\${FLOURISH_TEST_SIGNAL_MARKER}" ]]; then
+  : >"\${FLOURISH_TEST_SIGNAL_MARKER}"
+  exit 1
+fi
+exit 0
+`);
+    await assert.rejects(invokeRotation(), (error) => error.code === 1);
+    await assertRestored();
+
+    await writeFile(join(shimDir, "systemctl"), "#!/bin/bash\nexit 0\n");
+    await writeFile(join(shimDir, "curl"), "#!/bin/bash\nexit 1\n");
+    await assert.rejects(invokeRotation(), (error) => error.code === 1);
+    await assertRestored();
+  } finally {
+    await rm(fixture, { recursive: true, force: true });
+  }
 });
 
 test("systemd environment serializer preserves printable SMTP authorization-code characters", async () => {
@@ -253,6 +360,8 @@ test("production transfer builder strips macOS metadata and packages the exact a
   assert.match(builder, /isfile/);
   assert.match(builder, /mktemp/);
   assert.match(builder, /mv\s+--/);
+  assert.match(builder, /create-deterministic-tar\.py/);
+  assert.doesNotMatch(builder, /--(?:uid|gid|uname|gname|no-xattrs)\b/);
 
   for (const expected of [
     "release/SHA256SUMS",
@@ -293,9 +402,20 @@ def reject_xattrs(label, members):
         if keys:
             raise SystemExit(f"{label} xattr headers on {member.name}: {keys}")
 
+def verify_canonical_metadata(label, members):
+    for member in members:
+        if member.mtime != 315532800:
+            raise SystemExit(f"{label} non-canonical mtime on {member.name}: {member.mtime}")
+        if (member.uid, member.gid, member.uname, member.gname) != (0, 0, "root", "root"):
+            raise SystemExit(f"{label} non-canonical owner on {member.name}")
+
 with tarfile.open(outer_path, "r:gz") as outer:
     outer_members = outer.getmembers()
     reject_xattrs("outer", outer_members)
+    verify_canonical_metadata("outer", outer_members)
+    outer_names = [member.name for member in outer_members]
+    if outer_names != sorted(outer_names):
+        raise SystemExit(f"outer archive members are not canonically sorted: {outer_names}")
     nested_file = outer.extractfile("release/flourish-contact-service.tgz")
     if nested_file is None:
         raise SystemExit("contact archive missing from transfer")
@@ -304,6 +424,7 @@ with tarfile.open(outer_path, "r:gz") as outer:
 with tarfile.open(fileobj=io.BytesIO(nested_bytes), mode="r:gz") as contact:
     contact_members = contact.getmembers()
     reject_xattrs("contact", contact_members)
+    verify_canonical_metadata("contact", contact_members)
     names = [member.name for member in contact_members]
     if "." in names or "./" in names:
         raise SystemExit(f"contact archive contains a root marker: {names[:3]}")
@@ -318,25 +439,26 @@ with tarfile.open(fileobj=io.BytesIO(nested_bytes), mode="r:gz") as contact:
   assert.equal(stderr, "");
 });
 
-test("production artifacts and transfer archive are reproducible", async () => {
+test("production artifacts and transfer archive are reproducible across time zones", async () => {
   const projectRoot = new URL("../", import.meta.url);
   const outputs = [
     "release/flourishculturekol-homepage.zip",
     "release/flourish-contact-service.tgz",
     "release/flourish-production-transfer-v1.2.0.tgz",
   ];
-  const build = () => runFile("npm", ["run", "build:transfer"], {
+  const build = (timezone) => runFile("npm", ["run", "build:transfer"], {
     cwd: projectRoot,
     encoding: "utf8",
+    env: { ...process.env, TZ: timezone },
   });
   const hashes = async () => Promise.all(outputs.map(async (relative) => (
     createHash("sha256").update(await readFile(new URL(relative, projectRoot))).digest("hex")
   )));
 
-  await build();
+  await build("Asia/Shanghai");
   const first = await hashes();
   await new Promise((resolve) => setTimeout(resolve, 1_100));
-  await build();
+  await build("UTC");
   const second = await hashes();
 
   assert.deepEqual(second, first);

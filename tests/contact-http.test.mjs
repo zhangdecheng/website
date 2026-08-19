@@ -85,7 +85,11 @@ test("service failures map to stable public status, schema and retry header", as
   const cases = [
     [{ code: "validation_error", errors: { email: "Enter a valid email address." } }, 400],
     [{ code: "bot_rejected", reason: "honeypot" }, 403],
-    [{ code: "verification_failed", reason: "turnstile_rejected" }, 403],
+    [{
+      code: "verification_failed",
+      reason: "turnstile_rejected",
+      diagnostic: "invalid-input-secret",
+    }, 403],
     [{ code: "rate_limited", retryAfter: 90 }, 429],
     [{ code: "delivery_failed" }, 502],
     [{ code: "dependency_unavailable", reason: "turnstile_unavailable" }, 503],
@@ -107,6 +111,7 @@ test("service failures map to stable public status, schema and retry header", as
       assert.equal("errors" in body, false);
     }
     if (result.code === "rate_limited") assert.equal(response.headers.get("retry-after"), "90");
+    assert.equal("diagnostic" in body, false);
   }
 });
 

@@ -157,7 +157,7 @@ assert_status 200 "$home_status" "www homepage"
 assert_contains "$WORK_DIR/index.html" '<link rel="canonical" href="https://www.flourishculturekol.com/" />' "www homepage"
 assert_header "$WORK_DIR/home.headers" "Content-Type" "text/html" "www homepage"
 assert_page_headers "$WORK_DIR/home.headers" "www homepage"
-assert_sha256 "$WORK_DIR/index.html" "37b42852eb54b4ca5c065fea48c912d95e7296149e7b62c512e5b38f136aeacb" "www homepage"
+assert_sha256 "$WORK_DIR/index.html" "7339fe4e6d004739f0f2b86de92af0c86038502e0dc6b985bee738f860d533f2" "www homepage"
 
 privacy_status="$(fetch GET \
   "https://www.flourishculturekol.com/privacy.html" \

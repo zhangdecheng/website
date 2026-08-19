@@ -17,6 +17,7 @@ readonly -a INVENTORY=(
   "release/flourish-contact-service.tgz"
   "release/flourishculturekol-homepage.zip"
   "scripts/configure-contact-env.sh"
+  "scripts/systemd-env.sh"
   "scripts/deploy-contact-service.sh"
 )
 

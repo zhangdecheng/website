@@ -162,6 +162,33 @@ test("contact environment setup is interactive, atomic, and never accepts secret
   assert.doesNotMatch(setup, /mv\s+-f/);
 });
 
+test("systemd environment serializer preserves printable SMTP authorization-code characters", async () => {
+  const helperUrl = new URL("../scripts/systemd-env.sh", import.meta.url);
+  const value = "ab c#;\"'$\\`?()[]{}|<>";
+  const expected = [
+    'SMTP_PASSWORD="ab c#;',
+    '\\"',
+    "'",
+    '\\$',
+    '\\\\',
+    '\\`',
+    '?()[]{}|<>"\n',
+  ].join("");
+
+  const { stdout, stderr } = await runFile(
+    "/bin/bash",
+    ["-c", 'source "$1"; systemd_env_assignment SMTP_PASSWORD "$2"', "--", helperUrl.pathname, value],
+    { encoding: "utf8" },
+  );
+
+  assert.equal(stderr, "");
+  assert.equal(stdout, expected);
+
+  const setup = await readFile(new URL("../scripts/configure-contact-env.sh", import.meta.url), "utf8");
+  assert.match(setup, /systemd_env_assignment SMTP_PASSWORD/);
+  assert.doesNotMatch(setup, /ENV_VALUE_PATTERN/);
+});
+
 test("production transfer builder strips macOS metadata and packages the exact allow-list", async () => {
   const builderUrl = new URL("../scripts/build-production-transfer.sh", import.meta.url);
   const builder = await readFile(builderUrl, "utf8");
@@ -180,6 +207,7 @@ test("production transfer builder strips macOS metadata and packages the exact a
     "release/flourish-contact-service.tgz",
     "release/flourishculturekol-homepage.zip",
     "scripts/configure-contact-env.sh",
+    "scripts/systemd-env.sh",
     "scripts/deploy-contact-service.sh",
     "deploy-cloud-assistant.sh",
     "ops/flourish-contact.service",

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+SYSTEMD_ENV_HELPER="${SCRIPT_DIR}/systemd-env.sh"
 TARGET="/etc/flourish-contact.env"
 GROUP="flourish-contact"
 STAGE=""
@@ -9,6 +11,7 @@ TURNSTILE_SECRET=""
 TURNSTILE_SECRET_CONFIRM=""
 SMTP_PASSWORD=""
 SMTP_PASSWORD_CONFIRM=""
+SMTP_PASSWORD_ASSIGNMENT=""
 CONTACT_SECURITY_SECRET=""
 
 fail() {
@@ -23,6 +26,7 @@ cleanup() {
     TURNSTILE_SECRET_CONFIRM \
     SMTP_PASSWORD \
     SMTP_PASSWORD_CONFIRM \
+    SMTP_PASSWORD_ASSIGNMENT \
     CONTACT_SECURITY_SECRET
   if [[ -n "$STAGE" && -e "$STAGE" ]]; then
     rm -f -- "$STAGE"
@@ -58,6 +62,13 @@ trap 'exit 129' HUP
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
+[[ -f "$SYSTEMD_ENV_HELPER" && ! -L "$SYSTEMD_ENV_HELPER" ]] ||
+  fail "Required systemd environment serializer is missing or unsafe."
+# shellcheck source=systemd-env.sh
+source "$SYSTEMD_ENV_HELPER"
+declare -F systemd_env_assignment >/dev/null ||
+  fail "Required systemd environment serializer is unavailable."
+
 [[ $# -eq 0 ]] || fail "Usage: sudo bash scripts/configure-contact-env.sh"
 [[ $EUID -eq 0 ]] || fail "Run this script as root from a private interactive terminal."
 [[ -t 0 ]] || fail "Standard input must be a private interactive terminal."
@@ -92,10 +103,10 @@ validate_length "Turnstile Secret Key" "$TURNSTILE_SECRET" 16 512
 validate_length "SMTP authorization code" "$SMTP_PASSWORD" 8 512
 
 TOKEN_PATTERN='^[A-Za-z0-9._-]+$'
-ENV_VALUE_PATTERN='^[A-Za-z0-9._~!$%^&*+=,:@/-]+$'
 [[ "$SITE_KEY" =~ $TOKEN_PATTERN ]] || fail "Turnstile Site Key contains unsupported characters."
 [[ "$TURNSTILE_SECRET" =~ $TOKEN_PATTERN ]] || fail "Turnstile Secret Key contains unsupported characters."
-[[ "$SMTP_PASSWORD" =~ $ENV_VALUE_PATTERN ]] || fail "SMTP authorization code contains characters unsafe for a systemd environment file."
+SMTP_PASSWORD_ASSIGNMENT="$(systemd_env_assignment SMTP_PASSWORD "$SMTP_PASSWORD")" ||
+  fail "SMTP authorization code contains unsupported control characters."
 
 CONTACT_SECURITY_SECRET="$(openssl rand -hex 48)"
 [[ "$CONTACT_SECURITY_SECRET" =~ ^[a-f0-9]{96}$ ]] || fail "Unable to generate the Contact security secret."
@@ -111,7 +122,7 @@ STAGE="$(mktemp /etc/.flourish-contact.env.XXXXXX)"
     "SMTP_HOST=smtp.yunyou.top" \
     "SMTP_PORT=465" \
     "SMTP_USER=business@flourish-culture.com" \
-    "SMTP_PASSWORD=$SMTP_PASSWORD"
+    "$SMTP_PASSWORD_ASSIGNMENT"
 } >"$STAGE"
 
 chown root:"$GROUP" "$STAGE"

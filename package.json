@@ -11,6 +11,7 @@
     "test:contact": "node --test tests/contact-*.test.mjs",
     "check:smtp": "node server/smtp-check.js",
     "build:contact": "node scripts/build-contact-release.mjs",
+    "build:transfer": "bash scripts/build-production-transfer.sh",
     "test:release": "node --test tests/release.test.mjs"
   },
   "dependencies": {

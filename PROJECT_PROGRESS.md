@@ -166,6 +166,26 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 - The release suite passed 7/7 and the complete suite passed 71/71 when permitted to bind loopback test sockets. The first sandboxed run's five `listen EPERM` results were environment restrictions, and the unchanged test command passed outside that restriction.
 - Rotated and read back the temporary forced-command SSH public key, but strict SSH authentication still failed before upload. No v1.2.0 package, Contact secret, service, Nginx change or static file has been deployed.
 
+## 2026-08-20 — Portable Transfer Package Fix
+
+- Temporarily published the audited transfer archive to the user-authorized
+  GitHub transfer branch so the ECS could download it over HTTPS.
+- ECS Cloud Assistant invocation `ivk-yet7exqc7p8nthe4sitj` downloaded the
+  archive but stopped before extraction or production writes: GNU tar exposed
+  nine macOS `._` metadata entries that the earlier local tar listing had
+  hidden, so the strict 9-entry gate correctly rejected the 18-entry archive.
+- Added `scripts/build-production-transfer.sh` and `npm run build:transfer` to
+  disable AppleDouble metadata, verify the exact nine-regular-file allow-list
+  with an independent parser, verify the inner checksum manifest and omit the
+  gzip timestamp. Two consecutive builds are byte-identical.
+- The corrected transfer archive is `1,020,966` bytes with SHA-256
+  `4b000bdd6d2b1aab7354fe6c1d63e19650d669280949271914330e51ff0d65d1`.
+  All eight inner hashes, both inner archive readers, unsafe-filename scan and
+  private-key-header scan pass; the complete local test suite passes 72/72.
+- Production remains **未完成** until the corrected archive is staged and the
+  protected environment, server deployment and public/mail acceptance gates
+  all pass.
+
 ## 2026-06-24 — Feishu Whiteboard 3 Local Implementation
 
 - Applied whiteboard 3 annotations locally only; no production deploy, Nginx, certificate, server, or `/review/` changes were made.

@@ -34,8 +34,8 @@
 | systemd unit SHA-256 | `245f763ea8dc04a795f6fdf3b908f00baa2138b28b261a5e51dcc38b27a98e50` |
 | Nginx API 模板 SHA-256 | `a826fe31820b6095d18cd7a9cfde8965d70338cd6267305f64afa4ea157911cf` |
 | 公开验收脚本 SHA-256 | `e1f56cc05a89d69d912a3a0c85480184a46e57ead5f57146dd33cf820182b852` |
-| 单文件传输包 | `release/flourish-production-transfer-v1.2.0.tgz`（`1,020,965` 字节） |
-| 单文件传输包 SHA-256 | `c4e135440da8857546a00620fe62f36f66ee3e1a56aa6c367356047ba9220bdd` |
+| 单文件传输包 | `release/flourish-production-transfer-v1.2.0.tgz`（`1,020,966` 字节） |
+| 单文件传输包 SHA-256 | `4b000bdd6d2b1aab7354fe6c1d63e19650d669280949271914330e51ff0d65d1` |
 
 生成包位于被 Git 忽略的 `release/` 目录，不包含 `.env`、凭据、日志、测试或
 `node_modules`。传输后必须在服务器再次核对 SHA-256，任何不一致都应停止发布。
@@ -207,6 +207,11 @@ df -h /var /opt
 - `ops/flourish-contact.service`
 - `ops/nginx/flourish-contact-api.conf`
 - `check-https-cloud-assistant.sh`
+
+外层包必须通过 `npm run build:transfer` 生成。构建器显式设置
+`COPYFILE_DISABLE=1`，并使用独立 tar 解析器确认真实成员恰好为上述九个普通文件，
+以防 macOS `._`/AppleDouble 元数据被本机 tar 隐藏、却在 GNU/Linux 上暴露；gzip
+使用无时间戳模式，连续构建必须得到相同 SHA-256。
 
 在服务器暂存根目录执行内层复核：
 

@@ -162,10 +162,41 @@ test("contact environment setup is interactive, atomic, and never accepts secret
   assert.doesNotMatch(setup, /mv\s+-f/);
 });
 
+test("production transfer builder strips macOS metadata and packages the exact allow-list", async () => {
+  const builderUrl = new URL("../scripts/build-production-transfer.sh", import.meta.url);
+  const builder = await readFile(builderUrl, "utf8");
+
+  await runFile("/bin/bash", ["-n", builderUrl.pathname]);
+  assert.match(builder, /COPYFILE_DISABLE=1/);
+  assert.match(builder, /gzip\s+-n/);
+  assert.match(builder, /python3/);
+  assert.match(builder, /getmembers/);
+  assert.match(builder, /isfile/);
+  assert.match(builder, /mktemp/);
+  assert.match(builder, /mv\s+--/);
+
+  for (const expected of [
+    "release/SHA256SUMS",
+    "release/flourish-contact-service.tgz",
+    "release/flourishculturekol-homepage.zip",
+    "scripts/configure-contact-env.sh",
+    "scripts/deploy-contact-service.sh",
+    "deploy-cloud-assistant.sh",
+    "ops/flourish-contact.service",
+    "ops/nginx/flourish-contact-api.conf",
+    "check-https-cloud-assistant.sh",
+  ]) {
+    assert.match(builder, new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+
+  assert.doesNotMatch(builder, /(?:^|[\s"'])release\/(?:\*|\.)(?:[\s"']|$)/m);
+});
+
 test("package scripts and ignore rules keep generated releases out of Git", async () => {
   const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
   const ignore = await readFile(new URL("../.gitignore", import.meta.url), "utf8");
   assert.equal(packageJson.scripts?.["build:contact"], "node scripts/build-contact-release.mjs");
+  assert.equal(packageJson.scripts?.["build:transfer"], "bash scripts/build-production-transfer.sh");
   assert.equal(packageJson.scripts?.["test:release"], "node --test tests/release.test.mjs");
   assert.match(ignore, /# Generated release artifacts and staging directories\nrelease\//);
   assert.doesNotMatch(ignore, /^release\/\*\.zip$/m);

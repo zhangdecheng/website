@@ -32,7 +32,13 @@ npm run build:contact
 node scripts/browser-qa.cjs
 cd dist && zip -qr ../release/flourishculturekol-homepage.zip .
 cd .. && tar -C release/contact-service -czf release/flourish-contact-service.tgz .
+npm run build:transfer
 ```
+
+`build:transfer` packages the fixed nine-file production allow-list and disables
+macOS AppleDouble metadata so the archive has the same inventory on macOS and
+GNU/Linux. It also verifies the inner checksum manifest before atomically
+replacing the generated transfer archive.
 
 Final Chrome evidence and the pass report are stored in `qa/` and
 `design-qa.md`. The approved mockup and its section crops are stored in

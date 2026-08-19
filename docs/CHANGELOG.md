@@ -18,7 +18,8 @@ Current source version: `v1.2.0` local release candidate
 - Adapted the Contact unit and deploy script to an atomic `/opt/flourish-contact/runtime` symlink targeting the server's separate Node 24 installation.
 - Added release-contract coverage for explicit runtime validation and rollback of both release and runtime symlinks; production deployment remains incomplete pending protected secrets and live acceptance.
 - Fixed stale server field errors so correcting an invalid field cannot leave native validation blocking a retry; the four-viewport browser gate and complete 71/71 test suite pass.
-- Repinned the audited nine-file transfer archive at SHA-256 `c4e135440da8857546a00620fe62f36f66ee3e1a56aa6c367356047ba9220bdd`; it has not been uploaded or deployed.
+- Added a reproducible transfer builder that strips macOS AppleDouble metadata and independently enforces the exact nine-regular-file allow-list. The first ECS staging attempt rejected the earlier archive before extraction because GNU tar exposed nine hidden `._` entries; production was not modified.
+- Repinned the corrected, byte-reproducible nine-file transfer archive at SHA-256 `4b000bdd6d2b1aab7354fe6c1d63e19650d669280949271914330e51ff0d65d1`; production deployment remains incomplete.
 
 ## 2026-08-18
 

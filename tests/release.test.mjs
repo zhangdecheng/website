@@ -182,6 +182,38 @@ test("contact environment setup is interactive, atomic, and never accepts secret
   assert.doesNotMatch(setup, /mv\s+-f/);
 });
 
+test("Turnstile secret rotation is hidden, atomic, scoped, and rollback-safe", async () => {
+  const updateUrl = new URL("../scripts/rotate-contact-turnstile.sh", import.meta.url);
+  const update = await readFile(updateUrl, "utf8").catch(() => "");
+
+  assert.notEqual(update, "", "Turnstile secret updater should exist");
+  await runFile("/bin/bash", ["-n", updateUrl.pathname]);
+  for (const expected of [
+    "set -euo pipefail",
+    'TARGET="/etc/flourish-contact.env"',
+    'SERVICE="flourish-contact.service"',
+    "[[ $# -eq 0 ]]",
+    "[[ -t 0 ]]",
+    "read -r -s",
+    "Turnstile Secret Key entries do not match",
+    "CONTACT_TURNSTILE_SECRET=",
+    "mktemp",
+    "chown root:\"$GROUP\"",
+    "chmod 0640",
+    "systemctl restart \"$SERVICE\"",
+    "http://127.0.0.1:3101/api/contact/health",
+    "TARGET_REPLACED == 0",
+    'mv -f -- "$ROLLBACK" "$TARGET"',
+    "rollback",
+  ]) {
+    assert.match(update, new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+
+  assert.doesNotMatch(update, /(?:TURNSTILE_SECRET|CONTACT_TURNSTILE_SECRET).*(?:\$1|\$2)/);
+  assert.doesNotMatch(update, /cat\s+.*flourish-contact\.env|source\s+.*flourish-contact\.env/);
+  assert.doesNotMatch(update, /SMTP_PASSWORD=/);
+});
+
 test("systemd environment serializer preserves printable SMTP authorization-code characters", async () => {
   const helperUrl = new URL("../scripts/systemd-env.sh", import.meta.url);
   const value = "ab c#;\"'$\\`?()[]{}|<>";
@@ -228,6 +260,7 @@ test("production transfer builder strips macOS metadata and packages the exact a
     "release/flourishculturekol-homepage.zip",
     "scripts/archive-safety.sh",
     "scripts/configure-contact-env.sh",
+    "scripts/rotate-contact-turnstile.sh",
     "scripts/systemd-env.sh",
     "scripts/deploy-contact-service.sh",
     "deploy-cloud-assistant.sh",
@@ -283,6 +316,30 @@ with tarfile.open(fileobj=io.BytesIO(nested_bytes), mode="r:gz") as contact:
   );
   assert.equal(stdout, "");
   assert.equal(stderr, "");
+});
+
+test("production artifacts and transfer archive are reproducible", async () => {
+  const projectRoot = new URL("../", import.meta.url);
+  const outputs = [
+    "release/flourishculturekol-homepage.zip",
+    "release/flourish-contact-service.tgz",
+    "release/flourish-production-transfer-v1.2.0.tgz",
+  ];
+  const build = () => runFile("npm", ["run", "build:transfer"], {
+    cwd: projectRoot,
+    encoding: "utf8",
+  });
+  const hashes = async () => Promise.all(outputs.map(async (relative) => (
+    createHash("sha256").update(await readFile(new URL(relative, projectRoot))).digest("hex")
+  )));
+
+  await build();
+  const first = await hashes();
+  await new Promise((resolve) => setTimeout(resolve, 1_100));
+  await build();
+  const second = await hashes();
+
+  assert.deepEqual(second, first);
 });
 
 test("package scripts and ignore rules keep generated releases out of Git", async () => {

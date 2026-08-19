@@ -152,6 +152,27 @@ test("Turnstile rejection and outage map to distinct results", async () => {
   }
 });
 
+test("Turnstile rejection diagnostics are preserved for the security log", async () => {
+  const challenge = {
+    ok: false,
+    unavailable: false,
+    reason: "turnstile_rejected",
+    diagnostic: "invalid-input-secret",
+  };
+  const { service, state } = harness({ verifyChallenge: async () => challenge });
+
+  assert.deepEqual(
+    await service.submit(brand(), { ip: "203.0.113.10", requestId: "turnstile-diagnostic" }),
+    {
+      code: "verification_failed",
+      reason: "turnstile_rejected",
+      diagnostic: "invalid-input-secret",
+    },
+  );
+  assert.equal(state.logs[0].diagnostic, "invalid-input-secret");
+  assert.equal(state.mail.length, 0);
+});
+
 test("duplicate submissions do not consume email quota or call SMTP", async () => {
   const { service, state } = harness({
     duplicates: {

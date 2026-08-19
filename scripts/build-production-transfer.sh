@@ -17,6 +17,7 @@ readonly -a PAYLOAD=(
   "release/flourishculturekol-homepage.zip"
   "scripts/archive-safety.sh"
   "scripts/configure-contact-env.sh"
+  "scripts/rotate-contact-turnstile.sh"
   "scripts/systemd-env.sh"
   "scripts/deploy-contact-service.sh"
 )
@@ -42,7 +43,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-for required_command in /usr/bin/find /usr/bin/gzip /usr/bin/python3 /usr/bin/shasum /usr/bin/tar; do
+for required_command in /bin/cp /bin/mkdir /usr/bin/dirname /usr/bin/find /usr/bin/gzip /usr/bin/python3 /usr/bin/shasum /usr/bin/tar /usr/bin/touch; do
   [[ -x "${required_command}" ]] || fail "missing required command: ${required_command}"
 done
 
@@ -63,10 +64,27 @@ done
 build_dir="$(/usr/bin/mktemp -d "${RELEASE_DIR}/.transfer-build.XXXXXX")"
 candidate_path="${build_dir}/${ARCHIVE_NAME}"
 candidate_tar_path="${build_dir}/flourish-production-transfer-v1.2.0.tar"
+payload_root="${build_dir}/payload"
+
+/bin/mkdir -p "${payload_root}"
+for relative_file in "${INVENTORY[@]}"; do
+  target_file="${payload_root}/${relative_file}"
+  /bin/mkdir -p "$(/usr/bin/dirname "${target_file}")"
+  /bin/cp -p -- "${PROJECT_ROOT}/${relative_file}" "${target_file}"
+done
+/usr/bin/find "${payload_root}" -exec /usr/bin/touch -t 198001010000 {} +
 
 (
-  cd "${PROJECT_ROOT}"
-  COPYFILE_DISABLE=1 /usr/bin/tar --format ustar --no-xattrs -cf "${candidate_tar_path}" -- "${INVENTORY[@]}"
+  cd "${payload_root}"
+  COPYFILE_DISABLE=1 /usr/bin/tar \
+    --format ustar \
+    --no-xattrs \
+    --uid 0 \
+    --gid 0 \
+    --uname root \
+    --gname root \
+    -cf "${candidate_tar_path}" \
+    -- "${INVENTORY[@]}"
 )
 /usr/bin/gzip -n -9 < "${candidate_tar_path}" > "${candidate_path}"
 

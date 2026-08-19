@@ -15,6 +15,7 @@ export function createSecurityLogger({ write = console.log } = {}) {
     role,
     outcome,
     reason,
+    diagnostic,
     ipHash,
     emailHash,
   }) {
@@ -25,6 +26,7 @@ export function createSecurityLogger({ write = console.log } = {}) {
       role,
       outcome,
       reason,
+      diagnostic,
       ipHash,
       emailHash,
     }));

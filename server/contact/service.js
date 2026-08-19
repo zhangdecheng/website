@@ -51,6 +51,7 @@ export function createContactService({
           role: submission?.role,
           outcome: result.code,
           reason: result.reason ?? result.code,
+          diagnostic: result.diagnostic,
           ipHash,
           emailHash: submission?.email
             ? hashIdentifier(submission.email, securitySecret)
@@ -81,10 +82,12 @@ export function createContactService({
 
       const challenge = await verifyChallenge(submission.turnstileToken, ip);
       if (!challenge.ok) {
-        return finish({
+        const result = {
           code: challenge.unavailable ? "dependency_unavailable" : "verification_failed",
           reason: challenge.reason,
-        }, submission);
+          ...(challenge.diagnostic ? { diagnostic: challenge.diagnostic } : {}),
+        };
+        return finish(result, submission);
       }
 
       const fingerprint = submissionFingerprint(submission, securitySecret);

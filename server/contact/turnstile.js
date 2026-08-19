@@ -1,4 +1,20 @@
 const VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+const SAFE_ERROR_CODES = new Set([
+  "missing-input-secret",
+  "invalid-input-secret",
+  "missing-input-response",
+  "invalid-input-response",
+  "bad-request",
+  "timeout-or-duplicate",
+  "internal-error",
+]);
+
+function rejectedDiagnostic(result) {
+  if (!Array.isArray(result?.["error-codes"])) return undefined;
+  const codes = [...new Set(result["error-codes"])]
+    .filter((code) => typeof code === "string" && SAFE_ERROR_CODES.has(code));
+  return codes.length ? codes.join(",") : undefined;
+}
 
 export async function verifyTurnstile({
   token,
@@ -20,7 +36,13 @@ export async function verifyTurnstile({
     if (!response.ok) return { ok: false, unavailable: true, reason: "turnstile_http" };
     const result = await response.json();
     if (!result.success) {
-      return { ok: false, unavailable: false, reason: "turnstile_rejected" };
+      const diagnostic = rejectedDiagnostic(result);
+      return {
+        ok: false,
+        unavailable: false,
+        reason: "turnstile_rejected",
+        ...(diagnostic ? { diagnostic } : {}),
+      };
     }
     if (!allowedHostnames.includes(result.hostname) || result.action !== "contact_submit") {
       return { ok: false, unavailable: false, reason: "turnstile_context" };

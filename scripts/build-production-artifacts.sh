@@ -30,7 +30,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-for command in /usr/bin/find /usr/bin/gzip /usr/bin/mktemp /usr/bin/python3 /usr/bin/shasum /usr/bin/tar /usr/bin/zip; do
+for command in /usr/bin/find /usr/bin/gzip /usr/bin/mktemp /usr/bin/python3 /usr/bin/sed /usr/bin/shasum /usr/bin/tar /usr/bin/touch /usr/bin/zip; do
   [[ -x "$command" ]] || die "missing required command: $command"
 done
 command -v node >/dev/null 2>&1 || die "node is unavailable"
@@ -54,10 +54,14 @@ static_candidate="${build_dir}/flourishculturekol-homepage.zip"
 contact_tar="${build_dir}/flourish-contact-service.tar"
 contact_candidate="${build_dir}/flourish-contact-service.tgz"
 contact_list="${build_dir}/contact-files.txt"
+static_list="${build_dir}/static-files.txt"
+
+/usr/bin/find "$DIST_DIR" "$CONTACT_DIR" -exec /usr/bin/touch -t 198001010000 {} +
 
 (
   cd "$DIST_DIR"
-  COPYFILE_DISABLE=1 /usr/bin/zip -X -q -r "$static_candidate" .
+  /usr/bin/find . -type f -print | /usr/bin/sed 's#^\./##' | LC_ALL=C /usr/bin/sort >"$static_list"
+  COPYFILE_DISABLE=1 /usr/bin/zip -X -q "$static_candidate" -@ <"$static_list"
 )
 
 (
@@ -66,7 +70,15 @@ contact_list="${build_dir}/contact-files.txt"
     printf '%s\n' package-lock.json package.json
     /usr/bin/find ops server -type f -print
   } | LC_ALL=C /usr/bin/sort >"$contact_list"
-  COPYFILE_DISABLE=1 /usr/bin/tar --format ustar --no-xattrs -cf "$contact_tar" -T "$contact_list"
+  COPYFILE_DISABLE=1 /usr/bin/tar \
+    --format ustar \
+    --no-xattrs \
+    --uid 0 \
+    --gid 0 \
+    --uname root \
+    --gname root \
+    -cf "$contact_tar" \
+    -T "$contact_list"
 )
 /usr/bin/gzip -n -9 <"$contact_tar" >"$contact_candidate"
 

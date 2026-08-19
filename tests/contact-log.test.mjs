@@ -13,6 +13,7 @@ test("security logs include only allow-listed metadata and protected identifiers
     role: "brand",
     outcome: "rejected",
     reason: "rate_limited",
+    diagnostic: "invalid-input-secret",
     ipHash: hashIdentifier("203.0.113.10", secret),
     emailHash: hashIdentifier("visitor@example.com", secret),
     SMTP_PASSWORD: "smtp-password-must-not-appear",
@@ -38,9 +39,11 @@ test("security logs include only allow-listed metadata and protected identifiers
   const parsed = JSON.parse(output);
   assert.equal(parsed.requestId, "request-123");
   assert.equal(parsed.outcome, "rejected");
+  assert.equal(parsed.diagnostic, "invalid-input-secret");
   assert.equal(parsed.ipHash, fixture.ipHash);
   assert.equal(parsed.emailHash, fixture.emailHash);
   assert.deepEqual(Object.keys(parsed).sort(), [
+    "diagnostic",
     "durationMs",
     "emailHash",
     "ipHash",

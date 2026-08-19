@@ -1,6 +1,6 @@
 # FLOURISH CULTURE Website — Project Progress
 
-Last updated: 2026-08-19
+Last updated: 2026-08-20
 
 ## Goal
 
@@ -18,7 +18,7 @@ requirements document.
 
 ## Current Phase
 
-Phase 7 — v1.2.0 local release candidate complete; production rollout in progress.
+Phase 8 — v1.2.0 core production release live; real-mail and source-hosting closure in progress.
 
 ## Completed
 
@@ -74,15 +74,16 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 
 ## In Progress
 
-- Confirm the ECS-observed SSH source address and restore the temporary, forced-command transfer channel without broadening access unnecessarily.
-- Upload and server-side verify the rebuilt immutable transfer package, then re-verify `/opt/node-v24.17.0-linux-x64` immediately before production write.
-- Install the already-created Turnstile widget Secret plus the SMTP authorization code through a private server session, then create the v1.2.0 production backup.
+- Complete one real Brand and one real Creator Turnstile submission from the public form.
+- Read back both target inboxes and confirm visitor Reply-To without recording message bodies or credentials.
+- Reconcile the feature branch with remote `main`; decide GitHub Pages only after all live gates pass.
 
 ## Pending
 
-- Protected Contact service, minimal Nginx patch and static-package production deployment.
-- Public desktop/mobile checks plus one real Brand and one real Creator inbox/Reply-To acceptance test.
+- Real Brand/Creator inbox and Reply-To acceptance evidence.
+- Authenticated `/review/` content regression if Review credentials are made available; health and login protection already pass.
 - Remote source synchronization and GitHub Pages closure only after every live gate passes.
+- Remove only the exact temporary ECS transfer files after final acceptance; retain versioned releases and backups.
 
 ## Locked Decisions
 
@@ -113,11 +114,37 @@ Phase 7 — v1.2.0 local release candidate complete; production rollout in progr
 
 ## Blockers
 
-- GitHub CLI authentication is currently invalid and must be restored before source synchronization, PR/API evidence or Pages closure; ordinary Git push authentication passed a no-write dry run and remains available for a temporary artifact transfer.
-- Any further Cloud Assistant `RunCommand`, including read-only shell content, requires explicit command-level confirmation.
-- The rotated temporary SSH key was read back successfully, but strict SSH still exits 255. A bounded read-only ECS log diagnostic is pending explicit confirmation to identify the actual source address before changing the key restriction.
-- The Turnstile widget exists with the approved two hostnames and Managed mode, but its Site/Secret values and the SMTP authorization code have not been installed on the ECS.
-- Historical backup contents, the v1.2.0 deployment backup and real inbox delivery remain unconfirmed.
+- Real Turnstile success requires an actual challenge token. Browser policy requires action-time user confirmation before solving a CAPTCHA and before two representational form submissions.
+- Hannah and Irisa inbox delivery/Reply-To cannot be confirmed without corresponding inbox read access or user readback.
+- GitHub CLI authentication remains invalid; remote `main` and Pages must be read before any source push or Pages deletion.
+- The in-app browser control channel timed out on production navigation. System Chrome QA against release-identical `dist/` passed, but it does not replace the real Turnstile success gate.
+
+## 2026-08-20 — v1.2.0 Core Production Release
+
+- Created protected `/etc/flourish-contact.env` with exactly eight set keys and
+  `root:flourish-contact 0640`; no values were printed or stored in Git.
+- Built and server-verified the portable 11-file transfer archive at SHA-256
+  `2374bf4a652b93e459108366ba560836b3b577c2497dcea8bece2faffa093661`.
+- Created predeploy backup
+  `/var/backups/flourishculturekol.com/20260819T190447Z-v1.2.0-predeploy` and
+  static snapshot `20260819T192328Z-v1.2.0-static-d8389ae`; both contain 47 web
+  files, and the static snapshot checksum manifest reads back `OK`.
+- Deployed Contact release `/opt/flourish-contact/releases/20260819T191356Z`
+  through isolated Node 24. Service is active/enabled, listens only on
+  `127.0.0.1:3101`, reports configured v1.2.0, exposes only three public config
+  fields, and passed SMTP authentication preflight.
+- The first Nginx cutover hit an old worker immediately after reload and failed
+  its canonical redirect assertion; automatic rollback restored the old config
+  and verified Review. The second cutover waited for the new generation and
+  passed all local TLS/SNI gates.
+- Deployed the static release. Server-side full production checks and an
+  independent external check both passed for canonical routing, API, Privacy,
+  five security headers, MIME, exact hashes, AI images and `/review/`.
+- Fresh `npm test` passed 75/75. System Chrome QA passed all recorded checks at
+  1440×1024, 1024×1366, 390×844 and 360×800 with no unexpected console errors.
+- A synthetic invalid Turnstile token returned 403 and the redacted server log
+  recorded `turnstile_rejected`; SMTP was not reached. Real Turnstile success,
+  inbox delivery and Reply-To remain **未完成**.
 
 ## 2026-08-18 — v1.2.0 Local Release Candidate
 

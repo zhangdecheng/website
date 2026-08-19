@@ -2,13 +2,15 @@
 
 ## 当前结论
 
-状态：**未完成**。
+状态：**未完成（v1.2.0 核心生产发布已完成；真实邮件与代码托管收尾尚未完成）**。
 
-本地代码、静态包、Contact 服务包和浏览器回归已通过；公开网络基线与服务器内只读
-预检也已留证。目标为香港实例 `i-yeo9geadc0plsv0abgv0`。系统 Node.js 虽为
-`v12.22.9`，但 Review 已确认使用独立 Node 22，服务器另有 Contact 可用的独立 Node
-24 路径。Contact 通过 `/opt/flourish-contact/runtime` 稳定 symlink 使用该运行时，
-不会替换系统 Node 或 Review 运行时。私密环境与发布备份完成前仍不得启动生产服务。
+本地代码、发布包、四视口 Chrome 回归、Contact 服务、Nginx 与静态站点已实测上线到
+香港实例 `i-yeo9geadc0plsv0abgv0`。Contact 通过
+`/opt/flourish-contact/runtime` 指向独立 Node 24，不替换系统 Node 12 或 Review 的
+运行时。公开 www/apex/API/Privacy/安全头/文件哈希及 `/review/` 健康与登录跳转均已
+通过服务器内和站外两轮检查。当前仍缺真实 Turnstile 成功提交、Brand/Creator 两个
+收件箱投递与 Reply-To 读回，以及远端 `main`/GitHub Pages 收尾，所以不得声称项目
+已经全部完成。
 
 本手册遵循以下停止条件：目标 IP 不匹配、`/review/` 不健康、Node.js 低于 20、
 无法读取 `nginx -T`、磁盘或备份权限不足、私密凭据无法安全写入时，立即停止并将
@@ -19,23 +21,25 @@
 | 项目 | 已确认值 |
 | --- | --- |
 | 版本 | `1.2.0` |
-| 当前已通过完整本地门禁的提交 | `cdc2e971546d4b2ab8476dd4115f8d41dbdc49a5` |
+| 当前已通过完整本地门禁并用于发布的提交 | `d8389aefde9ac684bdee8e9beb1a30cc1a04731b` |
 | 功能与基础发布脚本提交 | `f0f121c184bef4be024673ba6b5a81ac31e67049` |
 | 独立 Contact 运行时提交 | `fda47ab67282c7b4cd39c5180001136ca7475cd0` |
 | 静态包 | `release/flourishculturekol-homepage.zip` |
-| 静态包字节数 | `1,004,008` |
-| 静态包 SHA-256 | `2e811afbbd388260f6e54813fdf3319e13704838aeb49fccb853331333ef734f` |
+| 静态包字节数 | `1,002,344` |
+| 静态包 SHA-256 | `e047d270ff8cf7ec5b9ff70da8c63109225dd07ba23b992975bbe25dfb82dc77` |
 | Contact 服务包 | `release/flourish-contact-service.tgz` |
-| Contact 服务包字节数 | `10,175` |
-| Contact 服务包 SHA-256 | `b95ff6fc13d3f2c58fdf64f06a4f1fe4c736597d30e1fefd33c4bdbd4175edc1` |
-| Contact 部署脚本 SHA-256 | `da85d4340c7ad1216b19da15292b54cf1b999204aac1d3baf75eb2b91dfa8cdb` |
-| 私密环境配置脚本 SHA-256 | `a7c6592bf986b8e555547df67ecc8c23a7dc808b0d0d9a4515f913354d451825` |
+| Contact 服务包字节数 | `8,787` |
+| Contact 服务包 SHA-256 | `e84e04121dda5cf7b0c0f4dc42257fedda6fcdf5f3412a158751a79fc3ff5880` |
+| Contact 部署脚本 SHA-256 | `dfbb5a7e0d8bc2ba81504735b0a3becf731a9dd6f193f80a9f132bd921060eac` |
+| 私密环境配置脚本 SHA-256 | `de51036271e182c99e2efd0a20ea458d0b6519edc4a72aa918d200d69fde6c03` |
+| systemd 环境值序列化脚本 SHA-256 | `e30f524dd696fa0a9122ea6720bf6bd092d5c04d9f6da76af9a1f94d50584791` |
+| 压缩包安全检查脚本 SHA-256 | `d08024fb43a812e538728baec11942e600e835e77edf6774caaf135d8cbb15c0` |
 | 静态部署脚本 SHA-256 | `30b34b4da2973432d226ec4490297e934517036a4e587ea81dfca0f94191753c` |
 | systemd unit SHA-256 | `245f763ea8dc04a795f6fdf3b908f00baa2138b28b261a5e51dcc38b27a98e50` |
 | Nginx API 模板 SHA-256 | `a826fe31820b6095d18cd7a9cfde8965d70338cd6267305f64afa4ea157911cf` |
-| 公开验收脚本 SHA-256 | `e1f56cc05a89d69d912a3a0c85480184a46e57ead5f57146dd33cf820182b852` |
-| 单文件传输包 | `release/flourish-production-transfer-v1.2.0.tgz`（`1,020,966` 字节） |
-| 单文件传输包 SHA-256 | `4b000bdd6d2b1aab7354fe6c1d63e19650d669280949271914330e51ff0d65d1` |
+| 公开验收脚本 SHA-256 | `15a6394f38f62e7b5819b4cdbcef7ae1080dc512e711bcb8e63d73ed557673ce` |
+| 单文件传输包 | `release/flourish-production-transfer-v1.2.0.tgz`（`1,019,207` 字节） |
+| 单文件传输包 SHA-256 | `2374bf4a652b93e459108366ba560836b3b577c2497dcea8bece2faffa093661` |
 
 生成包位于被 Git 忽略的 `release/` 目录，不包含 `.env`、凭据、日志、测试或
 `node_modules`。传输后必须在服务器再次核对 SHA-256，任何不一致都应停止发布。
@@ -195,13 +199,15 @@ df -h /var /opt
 ## 传输与校验
 
 首选只传输 `release/flourish-production-transfer-v1.2.0.tgz`。服务器必须先用上表固定
-哈希核对外层压缩包，再解压到本次新建的受限暂存目录；外层包内恰好包含下列九个
-普通文件（八个发布文件加一份内层校验清单），不得包含 symlink，也不得上传整个仓库：
+哈希核对外层压缩包，再解压到本次新建的受限暂存目录；外层包内恰好包含下列十一个
+普通文件（十个 payload 文件加一份内层校验清单），不得包含 symlink，也不得上传整个仓库：
 
 - `release/flourishculturekol-homepage.zip`
 - `release/flourish-contact-service.tgz`
 - `release/SHA256SUMS`
 - `scripts/configure-contact-env.sh`
+- `scripts/systemd-env.sh`
+- `scripts/archive-safety.sh`
 - `scripts/deploy-contact-service.sh`
 - `deploy-cloud-assistant.sh`
 - `ops/flourish-contact.service`
@@ -209,7 +215,7 @@ df -h /var /opt
 - `check-https-cloud-assistant.sh`
 
 外层包必须通过 `npm run build:transfer` 生成。构建器显式设置
-`COPYFILE_DISABLE=1`，并使用独立 tar 解析器确认真实成员恰好为上述九个普通文件，
+`COPYFILE_DISABLE=1`，并使用独立 tar 解析器确认真实成员恰好为上述十一个普通文件，
 以防 macOS `._`/AppleDouble 元数据被本机 tar 隐藏、却在 GNU/Linux 上暴露；gzip
 使用无时间戳模式，连续构建必须得到相同 SHA-256。
 
@@ -223,7 +229,7 @@ tar -tzf release/flourish-contact-service.tgz
 
 不要移动文件或改写清单路径。
 
-预期八个文件校验均为 `OK`。服务包顶层只能出现 `ops/`、`server/`、`package.json`、
+预期十个 payload 文件校验均为 `OK`。服务包顶层只能出现 `ops/`、`server/`、`package.json`、
 `package-lock.json`；静态包必须包含六个站点文件、Privacy 页面与两张新 WebP。
 
 ## 生产备份
@@ -239,9 +245,13 @@ tar -tzf release/flourish-contact-service.tgz
 - 已存在的 `/etc/systemd/system/flourish-contact.service`；
 - 已存在的 `/opt/flourish-contact/current` 链接目标记录。
 
-备份完成后记录实际目录、owner/mode、文件列表和 SHA-256。当前只确认四个历史目录名
-存在，内容与完整性尚未检查；本次 v1.2.0 发布备份尚未创建，因此本次实际备份路径为
-**未确认**。
+备份完成后记录实际目录、owner/mode、文件列表和 SHA-256。本次 v1.2.0 已创建两个
+独立回滚点：发布前控制面与 web root 备份
+`/var/backups/flourishculturekol.com/20260819T190447Z-v1.2.0-predeploy`（`root:root 0700`，
+47 个 web 文件），以及静态覆盖前精确快照
+`/var/backups/flourishculturekol.com/20260819T192328Z-v1.2.0-static-d8389ae`（47 个文件）。
+后者的独立 `0600` 校验清单已在发布后全量读回为 `OK`；两份备份均明确排除
+`/etc/flourish-contact.env`。
 
 ## Contact 服务发布
 
@@ -345,16 +355,16 @@ sudo bash deploy-cloud-assistant.sh /absolute/path/to/flourishculturekol-homepag
 
 | 项目 | 验收条件 | 当前状态 |
 | --- | --- | --- |
-| www 首页 | `200`，canonical 指向 www | 未确认（新版本未部署） |
-| apex HTTP/HTTPS | `301` 到 www，路径与查询参数不丢失 | 未确认（当前 HTTPS apex 为 200） |
-| Privacy | `200`，canonical 正确 | 未确认 |
-| Contact health/config | `200` JSON，无秘密值 | 未确认 |
-| 无 Origin 的 Contact POST | `403` | 未确认 |
-| 安全头 | 首页和 Privacy 包含五项约定头 | 未确认 |
-| 新图片 | 两张 WebP 均 `200`，哈希匹配本地 `dist/` | 未确认 |
-| JS/CSS/module | `200`、MIME 正确、浏览器无控制台错误 | 未确认 |
-| `/review/healthz` | `200` | 当前旧版公开检查为 200；发布后仍需复测 |
-| `/review/` | 跳转 `/review/login` | 当前旧版公开检查为 302；发布后仍需复测 |
+| www 首页 | `200`，canonical 指向 www | 已确认；正文 SHA-256 `37b428…aeacb` |
+| apex HTTP/HTTPS | `301` 到 www，路径与查询参数不丢失 | 已确认；www HTTP 同样规范化 |
+| Privacy | `200`，canonical 正确 | 已确认；正文 SHA-256 `ea1be3…77f5a` |
+| Contact health/config | `200` JSON，无秘密值 | 已确认；config 恰好三个公开字段 |
+| 无 Origin 的 Contact POST | `403` | 已确认 |
+| 安全头 | 首页和 Privacy 包含五项约定头 | 已确认 |
+| 新图片 | 两张 WebP 均 `200`，哈希匹配本地 `dist/` | 已确认 |
+| JS/CSS/module | `200`、MIME 正确、浏览器无控制台错误 | 已确认；四视口 Chrome QA 无失败 |
+| `/review/healthz` | `200` | 已确认；服务器内与站外均通过 |
+| `/review/` | 跳转 `/review/login` | 已确认；`302` 到 `/review/login` |
 
 至少在桌面和移动端浏览器完成 Brand/Creator 切换、验证、校验错误与成功状态检查。
 
@@ -404,21 +414,22 @@ Creator 测试。服务返回 `201` 或重复请求 `202` 仅代表接口接受�
 非 force push。GitHub Pages 删除是独立、可见的外部变更，必须先读状态、删除、再
 读回 404，并确认 Git 仓库本身仍可访问。
 
-## 实际发布证据（待填写）
+## 实际发布证据
 
 | 证据 | 结果 |
 | --- | --- |
 | 火山引擎账号/区域/实例 ID | 已确认：`2103632597` / `cn-hongkong` / `i-yeo9geadc0plsv0abgv0` |
 | 服务器公网 IP 读回 | 已确认：唯一目标实例绑定 `150.5.135.196` |
-| Node.js/npm/Nginx 版本 | 系统 Node `v12.22.9` / npm `8.5.1`（不用于 Contact）；隔离 Node 24 路径已确认，直接版本复核待执行；Nginx `1.18.0 (Ubuntu)` |
-| Nginx 来源文件及备份 | 来源已确认：`/etc/nginx/conf.d/00-flourishculturekol.com.conf`；本次备份未创建 |
-| web root 备份路径 | 根目录与四个历史目录已确认；本次发布备份未创建 |
-| Contact 前一版本与当前 release 路径 | 当前未找到 Contact 目录、unit 或环境文件；新 release 未安装 |
-| systemd active 与 loopback health | Nginx、Review production/staging active；本机 TLS/SNI Review health 200、root 302 到登录 |
-| SMTP 身份验证 | 未确认 |
-| 公开静态/API/安全头/哈希 | 未确认 |
+| Node.js/npm/Nginx 版本 | 系统 Node `v12.22.9` / npm `8.5.1`（不用于 Contact）；Contact 使用 `/opt/node-v24.17.0-linux-x64`；Nginx `1.18.0 (Ubuntu)` |
+| Nginx 来源文件及备份 | 当前来源 SHA-256 `22efa5…d3e`；旧配置保存在 `20260819T190447Z-v1.2.0-predeploy/00-flourishculturekol.com.conf`，SHA-256 `77688b…a1c8` |
+| web root 备份路径 | 发布前备份 `20260819T190447Z-v1.2.0-predeploy/web-root`；静态覆盖前精确快照 `20260819T192328Z-v1.2.0-static-d8389ae`，47 个文件且全量校验 `OK` |
+| Contact 前一版本与当前 release 路径 | 当前 `/opt/flourish-contact/releases/20260819T191356Z`；保留前一次 release `20260819T191206Z` |
+| systemd active 与 loopback health | Nginx、Contact、Review production/staging 均 active/enabled；Contact 仅监听 `127.0.0.1:3101`；本机 TLS/SNI www/API/Review 为 `200/200/200`，Review root `302` |
+| SMTP 身份验证 | 已确认；启动预检日志为 `smtp_authentication_accepted`，未回显凭据 |
+| Turnstile 失败边界 | 已确认；合成无效令牌返回 `403`，审计结果 `verification_failed / turnstile_rejected`，未进入 SMTP |
+| 公开静态/API/安全头/哈希 | 已确认；服务器内完整发布脚本与本机独立外部检查均通过，75/75 Node 测试和四视口 Chrome QA 通过 |
 | Brand 收件箱及 Reply-To | 未确认 |
 | Creator 收件箱及 Reply-To | 未确认 |
-| `/review/` 发布后回归 | 未确认 |
+| `/review/` 发布后回归 | 已确认 health `200` 与 root `302`；未使用登录凭据做受保护页面内容验收 |
 | 远端 `main` 读回 | 未确认 |
 | GitHub Pages 删除读回 | 未确认 |

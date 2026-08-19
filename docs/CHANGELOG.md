@@ -2,13 +2,39 @@
 
 ## Project version records
 
-Current source version: `v1.2.0` local release candidate
+Current source version: `v1.2.0` core production release; final live-mail and
+remote-source acceptance remains incomplete.
 
 | Version | Date | Status | Notes |
 | --- | --- | --- | --- |
-| `v1.2.0` | 2026-08-18 | Locally verified; production incomplete | Unified Contact flow, privacy, abuse controls, approved AI images and deterministic production tooling. |
+| `v1.2.0` | 2026-08-20 | Core production live; final acceptance incomplete | Unified Contact flow, privacy, abuse controls, approved AI images, portable production tooling and canonical public routing. |
 | `v1.1.0` | 2026-06-26 | Historical production record | Static homepage release. |
 | `v1.0.0` | 2026-06-26 | Historical record | Baseline project version record for documentation and handoff tracking. |
+
+## 2026-08-20
+
+### v1.2.0 core production release
+
+- Installed the protected eight-key Contact environment without printing or
+  committing secret values; deployed the loopback-only Contact service through
+  isolated Node 24 and confirmed active/enabled state, public field boundary and
+  SMTP authentication preflight.
+- Staged and verified the portable 11-file release transfer, then created exact
+  predeploy and pre-static rollback snapshots with read-back checksum evidence.
+- Added archive portability/safety fixes for GNU tar and systemd-safe SMTP
+  authorization-code serialization. The full local suite now passes 75/75.
+- Replaced the production Nginx source with canonical apex/www routing, scoped
+  Contact proxy and static-page security headers while preserving Review
+  production/staging blocks. The first immediate post-reload probe exercised and
+  verified automatic rollback; the second cutover waited for worker convergence
+  and passed.
+- Published the v1.2.0 static site. Server-side and independent external checks
+  passed for DNS, redirects, TLS, homepage/Privacy, API, MIME, exact hashes, two
+  approved AI images and `/review/` health/login protection.
+- Re-ran system Chrome QA at four viewports with no recorded failures. A
+  synthetic invalid Turnstile token was correctly rejected before SMTP.
+- Real Turnstile success, Brand/Creator inbox delivery, Reply-To, remote `main`
+  reconciliation and GitHub Pages disposition remain **未完成**.
 
 ## 2026-08-19
 

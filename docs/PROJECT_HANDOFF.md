@@ -1,6 +1,6 @@
 # FLOURISH CULTURE Website Project Handoff
 
-Last updated: 2026-08-19
+Last updated: 2026-08-20
 
 ## Project background
 
@@ -37,13 +37,18 @@ certificate directives and all `/review/` locations, files, data and services.
 
 ## Project version records
 
-Current source version: `v1.2.0` local release candidate
+Current source version: `v1.2.0` core production release at local commit
+`d8389aefde9ac684bdee8e9beb1a30cc1a04731b`; remote source synchronization and
+real-mail acceptance are still pending.
 
-The authoritative current source commit, archive byte counts and SHA-256 values are pinned in `docs/PRODUCTION_RUNBOOK.md`. Production is still serving the historical site; do not infer deployment from a local build or archive.
+The authoritative current source commit, archive byte counts and SHA-256 values
+are pinned in `docs/PRODUCTION_RUNBOOK.md`. Production file hashes have been
+read back against that release; real inbox acceptance and remote Git
+synchronization remain separate, incomplete gates.
 
 | Version | Date | Status | Notes |
 | --- | --- | --- | --- |
-| `v1.2.0` | 2026-08-18 | Locally verified; production incomplete | Unified Contact API, privacy notice, risk controls, two approved AI images, deterministic release and strict production checks. |
+| `v1.2.0` | 2026-08-20 | Core production live; final acceptance incomplete | Unified Contact API, privacy notice, risk controls, two approved AI images, portable release, canonical routing and public checks. Real inbox/Reply-To and remote source closure remain. |
 | `v1.1.0` | 2026-06-26 | Historical production record | Static homepage release; exact commit currently serving production is not confirmed. |
 | `v1.0.0` | 2026-06-26 | Historical record | Baseline project version record for documentation and handoff tracking. |
 
@@ -146,6 +151,26 @@ Public production baseline observed on 2026-08-18:
   own stable symlink.
 - Do not use `AI-OpenClaw-b6uN-000` / `118.196.85.61` for homepage releases unless DNS and server routing are intentionally changed. On 2026-06-26, that candidate host redirected the FLOURISH host to `/todolist/`.
 
+2026-08-20 v1.2.0 core production release:
+
+- Current Contact release is
+  `/opt/flourish-contact/releases/20260819T191356Z`, with runtime symlink to
+  `/opt/node-v24.17.0-linux-x64`; the unit is active/enabled and listens only on
+  `127.0.0.1:3101`.
+- Current Nginx source SHA-256 is
+  `22efa58a328b5855999638133acc13a9472fa27132b1cba675479adbe2904d3e`.
+- Predeploy backup:
+  `/var/backups/flourishculturekol.com/20260819T190447Z-v1.2.0-predeploy`.
+- Static pre-copy snapshot:
+  `/var/backups/flourishculturekol.com/20260819T192328Z-v1.2.0-static-d8389ae`;
+  its 47-file checksum manifest reads back `OK`.
+- www/apex canonical behavior, Contact public boundary, Privacy/security headers,
+  exact release hashes, SMTP authentication preflight and `/review/` health/login
+  redirect all pass. Real Brand/Creator inbox delivery and Reply-To are not yet
+  confirmed.
+- Full evidence and the one successfully exercised automatic Nginx rollback are
+  recorded in `qa/production-release-2026-08-20.md`.
+
 Historical release backup records (current existence not yet re-verified):
 
 - Initial release backup: `/var/backups/flourishculturekol.com/20260625-114135`
@@ -178,13 +203,22 @@ Lessons from the release:
 
 ## Recovery
 
-If the homepage needs rollback:
+If the v1.2.0 homepage needs rollback:
 
 1. SSH to the production server.
-2. Identify the desired backup under `/var/backups/flourishculturekol.com/`.
-3. Restore the backup to `/var/www/flourishculturekol.com`.
+2. Confirm the exact target snapshot is
+   `/var/backups/flourishculturekol.com/20260819T192328Z-v1.2.0-static-d8389ae`
+   and re-run its `.SHA256SUMS` check; do not guess a “latest” directory.
+3. Restore that snapshot to `/var/www/flourishculturekol.com` with an exact
+   mirroring operation that removes v1.2.0-only files.
 4. Reapply web-readable permissions if needed.
 5. Run `nginx -t`.
 6. Verify homepage, key assets, and `/review/healthz`.
+
+To restore pre-v1.2.0 routing, use only the Nginx copy inside
+`20260819T190447Z-v1.2.0-predeploy`, verify its pinned SHA-256 `77688b…a1c8`, run
+`nginx -t`, reload and recheck Review. Contact rollback must point both
+`/opt/flourish-contact/current` and `/opt/flourish-contact/runtime` to explicitly
+recorded targets; never infer the previous release by directory sorting.
 
 Do not patch production files piecemeal unless the root cause is understood and the change is minimal.

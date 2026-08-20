@@ -13,9 +13,11 @@ readonly CHECK_SCRIPT="$2"
 readonly BACKUP_ROOT="/var/backups/flourishculturekol.com"
 readonly STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 readonly BACKUP="${BACKUP_ROOT}/${STAMP}-v1.2.0-static-6087ae5"
+readonly BACKUP_TREE="${BACKUP}/tree"
 readonly BACKUP_MANIFEST="${BACKUP}.SHA256SUMS"
 readonly NGINX_CONFIG="/etc/nginx/conf.d/00-flourishculturekol.com.conf"
 readonly EXPECTED_ARCHIVE_SHA="af10b1f4888bc848afeafa0055e55f5a480736940148f5ced26b5ec5e6707253"
+readonly EXPECTED_CHECK_SCRIPT_SHA="dba3ae7de17beada857e07750e6d1e13eb715cdaf68e10d7366e7e28d7eb5ad8"
 readonly EXPECTED_OLD_HOME_SHA="37b42852eb54b4ca5c065fea48c912d95e7296149e7b62c512e5b38f136aeacb"
 readonly EXPECTED_OLD_STYLES_SHA="4e6903e9161f309c0aaa5d33e697d29798e6108e3eb5a54ffded0a4d96ea25d9"
 readonly EXPECTED_NGINX_SHA="22efa58a328b5855999638133acc13a9472fa27132b1cba675479adbe2904d3e"
@@ -63,29 +65,33 @@ verify_release_files() {
 }
 
 verify_runtime_invariants() {
-  assert_sha "$NGINX_CONFIG" "$EXPECTED_NGINX_SHA" "Unchanged Nginx configuration"
-  nginx -t
-  systemctl is-active --quiet nginx
-  systemctl is-active --quiet flourish-contact
+  assert_sha "$NGINX_CONFIG" "$EXPECTED_NGINX_SHA" "Unchanged Nginx configuration" || return 1
+  nginx -t || return 1
+  systemctl is-active --quiet nginx || return 1
+  systemctl is-active --quiet flourish-contact || return 1
   curl --silent --show-error --fail --noproxy '*' --max-time 15 \
     --resolve 'www.flourishculturekol.com:443:127.0.0.1' \
     'https://www.flourishculturekol.com/api/contact/health' \
-    >/dev/null
+    >/dev/null || return 1
   curl --silent --show-error --fail --noproxy '*' --max-time 15 \
     --resolve 'www.flourishculturekol.com:443:127.0.0.1' \
     'https://www.flourishculturekol.com/review/healthz' \
-    >/dev/null
+    >/dev/null || return 1
 }
 
 rollback_release() {
   local status=0
 
   printf 'ROLLBACK: restoring the exact pre-static web snapshot\n' >&2
-  rsync -a --delete "$BACKUP/" "$WEB_ROOT/" || status=1
+  rsync -a --delete "$BACKUP_TREE/" "$WEB_ROOT/" || status=1
   find "$WEB_ROOT" -xdev -type d -exec chmod 0755 {} + || status=1
   find "$WEB_ROOT" -xdev -type f -exec chmod 0644 {} + || status=1
   [[ "$(sha256_file "$WEB_ROOT/index.html")" == "$EXPECTED_OLD_HOME_SHA" ]] || status=1
   [[ "$(sha256_file "$WEB_ROOT/styles.css")" == "$EXPECTED_OLD_STYLES_SHA" ]] || status=1
+  (
+    cd "$WEB_ROOT"
+    sha256sum -c "$BACKUP_MANIFEST" >/dev/null
+  ) || status=1
   verify_runtime_invariants || status=1
 
   if [[ "$status" -eq 0 ]]; then
@@ -129,6 +135,7 @@ done
 [[ ! -e "$BACKUP" && ! -e "$BACKUP_MANIFEST" ]] || fail "static backup target already exists"
 
 assert_sha "$ARCHIVE" "$EXPECTED_ARCHIVE_SHA" "Static release archive"
+assert_sha "$CHECK_SCRIPT" "$EXPECTED_CHECK_SCRIPT_SHA" "Production validation script"
 assert_sha "$WEB_ROOT/index.html" "$EXPECTED_OLD_HOME_SHA" "Pre-release homepage"
 assert_sha "$WEB_ROOT/styles.css" "$EXPECTED_OLD_STYLES_SHA" "Pre-release styles.css"
 verify_runtime_invariants
@@ -146,16 +153,16 @@ for required in index.html privacy.html styles.css script.js contact-form.js sit
 done
 verify_release_files "$WORK_DIR/release"
 
-install -d -o root -g root -m 0700 "$BACKUP"
-rsync -a "$WEB_ROOT/" "$BACKUP/"
+install -d -o root -g root -m 0700 "$BACKUP" "$BACKUP_TREE"
+rsync -a "$WEB_ROOT/" "$BACKUP_TREE/"
 chmod 0700 "$BACKUP"
 (
-  cd "$BACKUP"
+  cd "$BACKUP_TREE"
   find . -xdev -type f -print0 | sort -z | xargs -0 sha256sum
 ) >"$BACKUP_MANIFEST"
 chmod 0600 "$BACKUP_MANIFEST"
 (
-  cd "$BACKUP"
+  cd "$BACKUP_TREE"
   sha256sum -c "$BACKUP_MANIFEST" >/dev/null
 )
 printf 'OK: exact pre-static snapshot created at %s\n' "$BACKUP"

@@ -543,9 +543,289 @@ test("final static rollout pins the audited candidate and never rolls Nginx back
   const script = await readFile(new URL("../deploy-cloud-assistant.sh", import.meta.url), "utf8");
 
   assert.match(script, /af10b1f4888bc848afeafa0055e55f5a480736940148f5ced26b5ec5e6707253/u);
+  assert.match(script, /dba3ae7de17beada857e07750e6d1e13eb715cdaf68e10d7366e7e28d7eb5ad8/u);
   assert.match(script, /7339fe4e6d004739f0f2b86de92af0c86038502e0dc6b985bee738f860d533f2/u);
   assert.match(script, /61afde1b48e96219fb39db0f4930d0b7e5e9d76716f9d2cc9fea7bd8a54b2824/u);
-  assert.match(script, /rsync -a --delete "\$BACKUP\/" "\$WEB_ROOT\/"/u);
-  assert.match(script, /rsync -a "\$WEB_ROOT\/" "\$BACKUP\/"[\s\S]*chmod 0700 "\$BACKUP"/u);
+  assert.match(script, /BACKUP_TREE="\$\{BACKUP\}\/tree"/u);
+  assert.match(script, /rsync -a --delete "\$BACKUP_TREE\/" "\$WEB_ROOT\/"/u);
+  assert.match(script, /rsync -a "\$WEB_ROOT\/" "\$BACKUP_TREE\/"[\s\S]*chmod 0700 "\$BACKUP"/u);
   assert.doesNotMatch(script, /NGINX_ROLLBACK|static-rollback|restoring the predeploy Nginx/u);
+});
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+async function fileSha256(path) {
+  return sha256(await readFile(path));
+}
+
+async function pathExists(path) {
+  try {
+    await stat(path);
+    return true;
+  } catch (error) {
+    if (error?.code === "ENOENT") return false;
+    throw error;
+  }
+}
+
+async function snapshotTree(root, prefix = "") {
+  const entries = await readdir(root, { withFileTypes: true });
+  const snapshot = [];
+  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+    const absolute = join(root, entry.name);
+    const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+    const info = await stat(absolute);
+    const mode = (info.mode & 0o777).toString(8).padStart(3, "0");
+    if (entry.isDirectory()) {
+      snapshot.push(`directory ${mode} ${relative}`);
+      snapshot.push(...await snapshotTree(absolute, relative));
+    } else {
+      snapshot.push(`file ${mode} ${sha256(await readFile(absolute))} ${relative}`);
+    }
+  }
+  return snapshot;
+}
+
+function replaceReadonly(script, name, value, { optional = false } = {}) {
+  const pattern = new RegExp(`readonly ${name}="[^"]*"`, "u");
+  if (!pattern.test(script)) {
+    if (optional) return script;
+    throw new Error(`missing readonly rollout constant: ${name}`);
+  }
+  return script.replace(pattern, `readonly ${name}="${value}"`);
+}
+
+async function writeExecutable(path, contents) {
+  await writeFile(path, contents, "utf8");
+  await chmod(path, 0o755);
+}
+
+async function runStaticRolloutHarness({ checkerBody, expectedCheckerBody = checkerBody }) {
+  const root = await mkdtemp(join(tmpdir(), "flourish-static-rollout-"));
+  const webRoot = join(root, "web-root");
+  const backupRoot = join(root, "backups");
+  const releaseRoot = join(root, "release");
+  const fakeBin = join(root, "fake-bin");
+  const archive = join(root, "release.zip");
+  const nginxConfig = join(root, "nginx.conf");
+  const checker = join(root, "check.sh");
+  const deploy = join(root, "deploy.sh");
+  const exposureMarker = join(root, "backup-was-world-readable");
+  const runtimeFailureMarker = join(root, "runtime-must-fail");
+  const checkerExecutionMarker = join(root, "checker-executed");
+
+  await mkdir(join(webRoot, "legacy"), { recursive: true, mode: 0o755 });
+  await mkdir(join(releaseRoot, "assets"), { recursive: true, mode: 0o755 });
+  await mkdir(backupRoot, { recursive: true, mode: 0o700 });
+  await mkdir(fakeBin, { recursive: true, mode: 0o755 });
+
+  const oldFiles = {
+    "index.html": "old homepage\n",
+    "styles.css": "old styles\n",
+    "legacy/retain.txt": "retain this exact legacy file\n",
+  };
+  for (const [relative, contents] of Object.entries(oldFiles)) {
+    const path = join(webRoot, relative);
+    await writeFile(path, contents, "utf8");
+    await chmod(path, 0o644);
+  }
+  await chmod(webRoot, 0o755);
+  await chmod(join(webRoot, "legacy"), 0o755);
+
+  const releaseFiles = {
+    "index.html": "brand-new homepage bytes\n",
+    "privacy.html": "privacy\n",
+    "styles.css": "brand-new styles bytes\n",
+    "script.js": "console.log('release');\n",
+    "contact-form.js": "console.log('contact');\n",
+    "site-core.js": "console.log('core');\n",
+    "assets/service-creative-localization-meetup.webp": "service image fixture\n",
+    "assets/talent-creator-growth-studio.webp": "talent image fixture\n",
+  };
+  for (const [relative, contents] of Object.entries(releaseFiles)) {
+    const path = join(releaseRoot, relative);
+    await writeFile(path, contents, "utf8");
+    await chmod(path, 0o644);
+  }
+  await writeFile(nginxConfig, "fixture nginx config\n", "utf8");
+  await chmod(nginxConfig, 0o644);
+  await writeFile(checker, checkerBody, "utf8");
+  await runFile("/usr/bin/zip", ["-q", "-X", "-r", archive, "."], {
+    cwd: releaseRoot,
+    encoding: "utf8",
+  });
+
+  await writeExecutable(join(fakeBin, "id"), "#!/usr/bin/env bash\nprintf '0\\n'\n");
+  await writeExecutable(join(fakeBin, "hostname"), "#!/usr/bin/env bash\nprintf 'webhkhome\\n'\n");
+  await writeExecutable(join(fakeBin, "systemctl"), "#!/usr/bin/env bash\nexit 0\n");
+  await writeExecutable(join(fakeBin, "curl"), "#!/usr/bin/env bash\nexit 0\n");
+  await writeExecutable(join(fakeBin, "nginx"), `#!/usr/bin/env bash
+if [[ -f "$TEST_RUNTIME_FAILURE_MARKER" ]]; then
+  exit 41
+fi
+exit 0
+`);
+  await writeExecutable(join(fakeBin, "rsync"), `#!/usr/bin/env bash
+set -eu
+destination=""
+for argument in "$@"; do
+  destination="$argument"
+done
+/usr/bin/rsync "$@"
+if [[ "$destination" == "$TEST_BACKUP_ROOT"/*/ ]]; then
+  target="\${destination%/}"
+  protected_root="$target"
+  if [[ "$(basename "$target")" == "tree" ]]; then
+    protected_root="$(dirname "$target")"
+  fi
+  mode="$(stat -f '%Lp' "$protected_root")"
+  if [[ "$mode" != "700" ]]; then
+    printf '%s\n' "$mode" > "$TEST_BACKUP_EXPOSURE_MARKER"
+  fi
+fi
+exit 0
+`);
+
+  let script = await readFile(new URL("../deploy-cloud-assistant.sh", import.meta.url), "utf8");
+  const replacements = {
+    WEB_ROOT: webRoot,
+    BACKUP_ROOT: backupRoot,
+    NGINX_CONFIG: nginxConfig,
+    EXPECTED_ARCHIVE_SHA: await fileSha256(archive),
+    EXPECTED_OLD_HOME_SHA: await fileSha256(join(webRoot, "index.html")),
+    EXPECTED_OLD_STYLES_SHA: await fileSha256(join(webRoot, "styles.css")),
+    EXPECTED_NGINX_SHA: await fileSha256(nginxConfig),
+    EXPECTED_NEW_HOME_SHA: await fileSha256(join(releaseRoot, "index.html")),
+    EXPECTED_PRIVACY_SHA: await fileSha256(join(releaseRoot, "privacy.html")),
+    EXPECTED_STYLES_SHA: await fileSha256(join(releaseRoot, "styles.css")),
+    EXPECTED_SCRIPT_SHA: await fileSha256(join(releaseRoot, "script.js")),
+    EXPECTED_CONTACT_FORM_SHA: await fileSha256(join(releaseRoot, "contact-form.js")),
+    EXPECTED_SITE_CORE_SHA: await fileSha256(join(releaseRoot, "site-core.js")),
+    EXPECTED_SERVICE_IMAGE_SHA: await fileSha256(join(releaseRoot, "assets/service-creative-localization-meetup.webp")),
+    EXPECTED_TALENT_IMAGE_SHA: await fileSha256(join(releaseRoot, "assets/talent-creator-growth-studio.webp")),
+  };
+  for (const [name, value] of Object.entries(replacements)) {
+    script = replaceReadonly(script, name, value);
+  }
+  script = replaceReadonly(script, "EXPECTED_CHECK_SCRIPT_SHA", sha256(expectedCheckerBody), { optional: true });
+  script = script.replaceAll("/var/tmp/flourish-static-deploy", `${root}/flourish-static-deploy`);
+  script = script.replace(
+    'install -d -o root -g root -m 0700 "$BACKUP" "$BACKUP_TREE"',
+    'install -d -m 0700 "$BACKUP" "$BACKUP_TREE"',
+  );
+  script = script.replace(
+    'install -d -o root -g root -m 0700 "$BACKUP"',
+    'install -d -m 0700 "$BACKUP"',
+  );
+  await writeExecutable(deploy, script);
+
+  const initialTree = await snapshotTree(webRoot);
+  let result;
+  try {
+    const completed = await runFile("/bin/bash", [deploy, archive, checker], {
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        PATH: `${fakeBin}:/usr/bin:/bin:/usr/sbin:/sbin`,
+        TEST_BACKUP_EXPOSURE_MARKER: exposureMarker,
+        TEST_BACKUP_ROOT: backupRoot,
+        TEST_CHECKER_EXEC_MARKER: checkerExecutionMarker,
+        TEST_RUNTIME_FAILURE_MARKER: runtimeFailureMarker,
+        TEST_WEB_ROOT: webRoot,
+      },
+    });
+    result = { ...completed, code: 0 };
+  } catch (error) {
+    result = {
+      code: error?.code,
+      stderr: error?.stderr ?? "",
+      stdout: error?.stdout ?? "",
+    };
+  }
+
+  return {
+    backupRoot,
+    checkerExecutionMarker,
+    exposureMarker,
+    initialTree,
+    result,
+    root,
+    runtimeFailureMarker,
+    webRoot,
+  };
+}
+
+test("static rollout fault injection restores the complete tree without relaxing backup privacy", async () => {
+  const harness = await runStaticRolloutHarness({
+    checkerBody: `#!/usr/bin/env bash
+set -eu
+rm -f "$TEST_WEB_ROOT/legacy/retain.txt"
+printf 'intruder\n' > "$TEST_WEB_ROOT/intruder.txt"
+exit 23
+`,
+  });
+  try {
+    assert.notEqual(harness.result.code, 0);
+    assert.deepEqual(await snapshotTree(harness.webRoot), harness.initialTree);
+    assert.equal(await pathExists(harness.exposureMarker), false, "backup root became non-private during rsync");
+    assert.match(harness.result.stderr, /web root restored/u);
+  } finally {
+    await rm(harness.root, { recursive: true, force: true });
+  }
+});
+
+test("static rollout rejects a checker whose bytes differ from the audited checker", async () => {
+  const expectedCheckerBody = "#!/usr/bin/env bash\nexit 0\n";
+  const harness = await runStaticRolloutHarness({
+    expectedCheckerBody,
+    checkerBody: `#!/usr/bin/env bash
+touch "$TEST_CHECKER_EXEC_MARKER"
+exit 0
+`,
+  });
+  try {
+    assert.notEqual(harness.result.code, 0);
+    assert.equal(await pathExists(harness.checkerExecutionMarker), false);
+    assert.match(harness.result.stderr, /validation script SHA-256/u);
+  } finally {
+    await rm(harness.root, { recursive: true, force: true });
+  }
+});
+
+test("rollback cannot report healthy when an early runtime invariant fails", async () => {
+  const harness = await runStaticRolloutHarness({
+    checkerBody: `#!/usr/bin/env bash
+touch "$TEST_RUNTIME_FAILURE_MARKER"
+exit 29
+`,
+  });
+  try {
+    assert.notEqual(harness.result.code, 0);
+    assert.match(harness.result.stderr, /CRITICAL: automatic static rollback verification failed/u);
+    assert.doesNotMatch(harness.result.stderr, /Nginx, Contact, and Review remain healthy/u);
+  } finally {
+    await rm(harness.root, { recursive: true, force: true });
+  }
+});
+
+test("rollback verifies every backed-up file against the generated manifest", async () => {
+  const harness = await runStaticRolloutHarness({
+    checkerBody: `#!/usr/bin/env bash
+set -eu
+backup_dir="$(find "$TEST_BACKUP_ROOT" -mindepth 1 -maxdepth 1 -type d -print -quit)"
+retain_file="$(find "$backup_dir" -type f -path '*/legacy/retain.txt' -print -quit)"
+printf 'corrupted backup\n' > "$retain_file"
+rm -f "$TEST_WEB_ROOT/legacy/retain.txt"
+exit 31
+`,
+  });
+  try {
+    assert.notEqual(harness.result.code, 0);
+    assert.match(harness.result.stderr, /CRITICAL: automatic static rollback verification failed/u);
+    assert.doesNotMatch(harness.result.stderr, /Nginx, Contact, and Review remain healthy/u);
+  } finally {
+    await rm(harness.root, { recursive: true, force: true });
+  }
 });

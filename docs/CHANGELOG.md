@@ -44,7 +44,7 @@ remote-source acceptance remains incomplete.
   explicitly reports a failed rollback restart/health recovery. All tar layers now use
   a portable deterministic ustar writer with canonical UTC metadata and member order;
   Shanghai/UTC builds are byte-identical, the transfer has 12 regular files, and the
-  complete suite passes 82/82.
+  complete suite passes 86/86.
 - Reconciled GitHub `main` history without changing the reviewed tree, preserved
   image loading dimensions/priorities, and fixed the 1024px Hero CTA clipping.
 - Published the final static ZIP (`af10b1f4…07253`) to ECS with production
@@ -55,6 +55,10 @@ remote-source acceptance remains incomplete.
   leaves Nginx untouched, and verifies Contact/Review. Commit `474bd69` also fixes
   the backup root to `0700`; the deployed 51-file snapshot was corrected and read
   back at `root:root 0700` with its `0600` manifest fully valid.
+- Added review hardening in `ef61222`: the public validation script is pinned by SHA-256,
+  backup contents live behind a continuously private `0700` wrapper, rollback checks the
+  full generated manifest, and executable fault injection proves exact restore plus failure
+  propagation. The complete suite passes 86/86.
 - Both Temu query systemd units are now `disabled/inactive`; the Compose-managed
   query container/network were removed by the unit's declared stop action, both
   named data volumes remain, and the bridge container remains exited.

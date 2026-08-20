@@ -6,7 +6,7 @@
 
 生产主机 `webhkhome` / `150.5.135.196` 已运行 v1.2.0 静态站点、规范化 Nginx
 路由和 loopback-only Contact 服务。服务器内完整发布检查、本机站外独立检查、TLS
-链读取、82/82 Node 测试和四视口系统 Chrome QA 均通过。历史真实 Turnstile 请求曾
+链读取、86/86 Node 测试和四视口系统 Chrome QA 均通过。历史真实 Turnstile 请求曾
 定位到旧 Secret 错配；用户随后在私密 TTY 中重建了受保护配置，但尚未用新配置完成
 成功 token；也没有
 Hannah/Irisa 收件箱与 Reply-To 读回，因此不能
@@ -21,11 +21,11 @@ Hannah/Irisa 收件箱与 Reply-To 读回，因此不能
 | 轮换事务与跨平台归档审查修复 | `ac8f54ee930eb5c6e1b1c8984a55b6ab68542800` |
 | 回滚恢复失败显式告警 | `d3f4d059a8fca1738b176360a259dd750c584395` |
 | GitHub 历史 / 性能 / 平板修复 | `94cb2ab` / `a32f9d9` / `6087ae5` |
-| 安全静态发布脚本 | `474bd69` |
+| 安全静态发布脚本 | `474bd69`（生产实际执行版本）；`ef61222`（审查加固版本） |
 | 当前生产静态 ZIP | 1,001,919 bytes；SHA-256 `af10b1f4888bc848afeafa0055e55f5a480736940148f5ced26b5ec5e6707253` |
 | 当前 Contact TGZ | 9,010 bytes；SHA-256 `bab01f95865410715a947cc29993d7c3a568f2dd1fd7d66455159743aa4c0628`；生产源码逐文件匹配 |
 | 实际最终发布传输 TGZ | 1,022,097 bytes；SHA-256 `d90c795cba9d494eecfaf6cbd17fe52cc6d0268cd353da41b9ee3113c4188022` |
-| 当前仓库可复现传输 TGZ | 1,022,094 bytes；SHA-256 `c94368abe566a8bc82bd97e1625cd8fd0f1ad17b8b59e2e4df7a61dcc32b369b`；上海/UTC 构建逐字节一致 |
+| 当前仓库可复现传输 TGZ | 1,022,168 bytes；SHA-256 `027dc4e42d7f8e543264707ebc524d3051e8e6d7f0cb6e61ef32ace9a1f39066`；上海/UTC 构建逐字节一致 |
 | 传输成员 | 12 个普通文件；11/11 payload 校验 `OK`；无 AppleDouble/xattr 警告 |
 | 最终服务器暂存 | `/root/flourish-transfer-v1.2.0-6087ae5-final` |
 
@@ -83,9 +83,11 @@ f9187abb6213fdd05725f0db3cf45551619465cea9b3758dfe8863b3e4fceed2  talent-creator
 ea1be315e5d0137d918d21a1fb7fff8ac0724057cb3c72ec7b0d1d5b40277f5a  privacy.html
 ```
 
-首次读回发现 `rsync -a` 将备份根模式继承为 `0755`。未发生内容或凭据泄露，清单仍为
-`0600`；随后将备份根收紧到 `root:root 0700` 并再次全量校验 `OK`。提交 `474bd69`
-增加回归门禁，确保以后在 `rsync` 后显式恢复 `0700`，且失败回滚只处理 web root。
+首次读回发现 `rsync -a` 将备份根模式继承为 `0755`。该备份明确不含
+`/etc/flourish-contact.env`，清单仍为 `0600`；但没有该时间窗的完整访问审计，因此无法
+确认期间是否曾被其他本机主体读取。随后将备份根收紧到 `root:root 0700` 并再次全量
+校验 `OK`。提交 `474bd69` 先补充事后收紧；审查加固提交 `ef61222` 改为始终保留
+`0700` 保护外壳，并增加验收脚本哈希固定、完整清单回滚复核与四个故障注入测试。
 
 ## 公开与浏览器验证
 
@@ -97,7 +99,7 @@ ea1be315e5d0137d918d21a1fb7fff8ac0724057cb3c72ec7b0d1d5b40277f5a  privacy.html
 - `/review/healthz` 为 `200` JSON；`/review/` 为 `302` 到 `/review/login`。
 - TLS 链逐级 `verify return:1`；证书 issuer 为 Let's Encrypt YE2，SAN 覆盖 apex/www，
   有效期 `2026-08-10T17:37:15Z` 至 `2026-11-08T17:37:14Z`。
-- `npm test`：82/82。
+- `npm test`：86/86。
 - `qa/browser-results.json`：系统 Chrome / Playwright Core 1.62.1；1440×1024、
   1024×1366、390×844、360×800 四个视口 failure list 为空；角色切换、键盘顺序、
   错误恢复、成功重置、无横向溢出、reduced motion、Privacy 可读性及移动菜单均通过；

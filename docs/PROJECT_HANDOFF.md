@@ -38,7 +38,8 @@ certificate directives and all `/review/` locations, files, data and services.
 ## Project version records
 
 Current source version: `v1.2.0` final static production refresh at local commit
-`474bd69` (static content commit `6087ae5`); authenticated remote push and
+`ef61222` (production-executed rollout base `474bd69`, static content commit `6087ae5`);
+authenticated remote push and
 real-mail acceptance are still pending.
 
 The authoritative current source commit, archive byte counts and SHA-256 values
@@ -188,14 +189,16 @@ Public production baseline observed on 2026-08-18:
   coverage and portable cross-time-zone archives; `d3f4d059a8fca1738b176360a259dd750c584395`
   adds explicit rollback recovery failure reporting. Current Contact source files
   match the final `bab01f95…0628` service archive byte-for-byte. The full local
-  suite passes 82/82.
+  suite passes 86/86.
 - Final static ZIP `af10b1f4…07253` is live. Production `index.html`, `styles.css`
   and `privacy.html` read back as `7339fe4e…33f2`, `61afde1b…2824` and
   `ea1be315…77f5` from ECS and an independent direct HTTPS client. Nginx remains
   unchanged at `22efa58a…4d3e`; Contact and both Review services remain active.
 - GitHub main history was reconciled locally in `94cb2ab`; source performance
   reconciliation is `a32f9d9`, tablet containment is `6087ae5`, and transactional
-  static rollout hardening is `474bd69`. The final authenticated push and Pages
+  production-executed static rollout hardening is `474bd69`; follow-up checker-hash,
+  private-backup-wrapper and full-manifest fault-injection hardening is `ef61222`.
+  The final authenticated push and Pages
   deletion/readback remain pending.
 - Both Temu query units are `disabled/inactive`. The query unit's declared Compose
   stop removed its container/network; two named data volumes remain. The bridge

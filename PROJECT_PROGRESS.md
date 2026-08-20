@@ -146,7 +146,7 @@ Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closu
 - Deployed the static release. Server-side full production checks and an
   independent external check both passed for canonical routing, API, Privacy,
   five security headers, MIME, exact hashes, AI images and `/review/`.
-- Fresh `npm test` now passes 82/82. System Chrome QA passed all recorded checks at
+- Fresh `npm test` now passes 86/86. System Chrome QA passed all recorded checks at
   1440×1024, 1024×1366, 390×844 and 360×800 with no unexpected console errors.
 - A synthetic invalid Turnstile token returned 403 and the redacted server log
   recorded `turnstile_rejected`; SMTP was not reached. Real Turnstile success,
@@ -171,7 +171,7 @@ Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closu
   restore the old protected environment. Replaced platform-specific tar flags with a portable
   deterministic ustar writer; Shanghai/UTC builds now produce identical static, Contact and
   transfer hashes. Review-fix commits are `ac8f54e` and `d3f4d05`; the complete suite
-  now passes 82/82.
+  now passes 86/86.
 - Reconciled GitHub history (`94cb2ab`), preserved source image priorities (`a32f9d9`),
   fixed the 1024px Hero CTA clipping (`6087ae5`), and deployed the resulting static ZIP
   SHA-256 `af10b1f4888bc848afeafa0055e55f5a480736940148f5ced26b5ec5e6707253`.
@@ -182,6 +182,10 @@ Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closu
   its root is `root:root 0700`, manifest is `0600`, and full checksum readback is `OK`.
 - Hardened `deploy-cloud-assistant.sh` in commit `474bd69` so a failed static rollout
   restores only the web root, never downgrades Nginx, and re-verifies Contact/Review.
+- Follow-up review hardening `ef61222` pins the exact production validation script,
+  keeps a `0700` backup wrapper throughout `rsync`, verifies the full generated manifest
+  after rollback, and adds four executable fault-injection regressions. The complete suite
+  passes 86/86.
 
 ## 2026-08-18 — v1.2.0 Local Release Candidate
 

@@ -37,11 +37,11 @@
 
 | 项目 | 已确认值 |
 | --- | --- |
-| 当前源码提交 | `474bd69`（静态发布脚本事务化与 root-only 备份修复） |
+| 当前源码提交 | `ef61222`（静态发布脚本事务化、验收脚本哈希固定、完整回滚故障注入） |
 | 静态包 | `release/flourishculturekol-homepage.zip`；`1,001,919` bytes；SHA-256 `af10b1f4888bc848afeafa0055e55f5a480736940148f5ced26b5ec5e6707253` |
 | Contact 服务包 | `release/flourish-contact-service.tgz`；`9,010` bytes；SHA-256 `bab01f95865410715a947cc29993d7c3a568f2dd1fd7d66455159743aa4c0628` |
-| 单文件传输包 | `release/flourish-production-transfer-v1.2.0.tgz`；`1,022,094` bytes；SHA-256 `c94368abe566a8bc82bd97e1625cd8fd0f1ad17b8b59e2e4df7a61dcc32b369b`；12 个普通文件 |
-| 静态部署脚本 SHA-256 | `ce16528e43ba600bf09806271cd7efd25008d33242c09a410e14594ccea797f0` |
+| 单文件传输包 | `release/flourish-production-transfer-v1.2.0.tgz`；`1,022,168` bytes；SHA-256 `027dc4e42d7f8e543264707ebc524d3051e8e6d7f0cb6e61ef32ace9a1f39066`；12 个普通文件 |
+| 静态部署脚本 SHA-256 | `21879d5009bf19aa9f8b27f5ffc241f77dd247039d04b307a20cdb8f2fdf17f1` |
 | Contact 部署脚本 SHA-256 | `dfbb5a7e0d8bc2ba81504735b0a3becf731a9dd6f193f80a9f132bd921060eac` |
 | 私密环境配置脚本 SHA-256 | `de51036271e182c99e2efd0a20ea458d0b6519edc4a72aa918d200d69fde6c03` |
 | systemd 环境值序列化脚本 SHA-256 | `e30f524dd696fa0a9122ea6720bf6bd092d5c04d9f6da76af9a1f94d50584791` |
@@ -52,9 +52,10 @@
 | Turnstile 轮换脚本 SHA-256 | `6c3f621527edf15721406596908ce11aa23272194afff6de5c61f938d5f8653a` |
 | 确定性 ustar 构建器 SHA-256 | `151a1c507c1fbf6c92461decd5402c40b3fbd68a8300d32dc0fe9188949c2c8f` |
 
-实际发布包 `d90c79…8022` 与当前仓库包 `c94368…369b` 的静态/Contact 载荷完全相同；
-差异仅来自发布后发现并修复的备份目录 `chmod 0700`。生产备份已立即手工收紧到
-`root:root 0700` 并再次通过完整清单校验。上海与 UTC 时区构建后三项归档哈希逐字节一致。
+实际发布包 `d90c79…8022` 与当前仓库包 `027dc4…9066` 的静态/Contact 载荷完全相同；
+外层差异来自发布后的部署脚本加固：root-only 备份外壳、验收脚本哈希固定、完整清单
+回滚复核及显式运行时失败传播。生产备份已手工收紧到 `root:root 0700` 并再次通过
+完整清单校验。上海与 UTC 时区构建后三项归档哈希逐字节一致。
 
 生成包位于被 Git 忽略的 `release/` 目录，不包含 `.env`、凭据、日志、测试或
 `node_modules`。传输后必须在服务器再次核对 SHA-256，任何不一致都应停止发布。
@@ -227,8 +228,8 @@ df -h /var /opt
 ## 传输与校验
 
 首选只传输 `release/flourish-production-transfer-v1.2.0.tgz`。当前仓库构建的外层包
-必须精确为 `1,022,094` bytes、SHA-256
-`c94368abe566a8bc82bd97e1625cd8fd0f1ad17b8b59e2e4df7a61dcc32b369b`；服务器必须先
+必须精确为 `1,022,168` bytes、SHA-256
+`027dc4e42d7f8e543264707ebc524d3051e8e6d7f0cb6e61ef32ace9a1f39066`；服务器必须先
 同时核对这两个值，再解压到本次新建的受限暂存目录。`d90c79…8022` 只用于说明
 2026-08-20 实际发布审计，不得冒充当前源码包。外层包内恰好包含下列十二个
 普通文件（十一个 payload 文件加一份内层校验清单），不得包含 symlink，也不得上传整个仓库：
@@ -386,10 +387,11 @@ sudo bash deploy-cloud-assistant.sh \
   /absolute/path/to/check-https-cloud-assistant.sh
 ```
 
-脚本会固定校验旧/新文件与 Nginx 哈希、创建精确 web-root 备份和 `0600` 清单、复制
-已审核的静态文件、修复可读权限并运行完整公开检查；备份根会在 `rsync` 后再次设为
-`0700`。任何发布后门禁失败都只用精确快照恢复 web root，不编辑或降级 Nginx，随后
-重新验证 Contact 与 `/review/`。必须保存脚本打印的实际备份和清单路径。
+脚本会固定校验旧/新文件、Nginx 哈希以及公开验收脚本哈希，先创建 `0700` 保护外壳，
+再把精确 web-root 树和 `0600` 清单写入其中；因此内部树即使保留网站原权限，也始终
+不能被非 root 用户穿透。任何发布后门禁失败都只用精确快照恢复 web root，不编辑或
+降级 Nginx；随后逐文件校验完整清单，并重新验证 Nginx、Contact 与 `/review/`。
+必须保存脚本打印的实际备份和清单路径。
 
 ## 公开验收
 
@@ -469,7 +471,7 @@ Creator 测试。服务返回 `201` 或重复请求 `202` 仅代表接口接受�
 | systemd active 与 loopback health | Nginx、Contact、Review production/staging 均 active/enabled；Contact 仅监听 `127.0.0.1:3101`；本机 TLS/SNI www/API/Review 为 `200/200/200`，Review root `302` |
 | SMTP 身份验证 | 已确认；启动预检日志为 `smtp_authentication_accepted`，未回显凭据 |
 | Turnstile 失败边界 | 已确认；合成无效令牌返回 `403`；历史真实 widget 请求 `471c2340-0dab-4269-bb4e-7124a7a1e5ee` 返回 `invalid-input-secret`，均未进入 SMTP；用户重建配置后的成功路径仍未确认 |
-| 公开静态/API/安全头/哈希 | 已确认；服务器内完整发布脚本与本机独立直连检查均通过，82/82 Node 测试和四视口 Chrome QA 通过 |
+| 公开静态/API/安全头/哈希 | 已确认；服务器内完整发布脚本与本机独立直连检查均通过，86/86 Node 测试和四视口 Chrome QA 通过 |
 | Brand 收件箱及 Reply-To | 未确认 |
 | Creator 收件箱及 Reply-To | 未确认 |
 | `/review/` 发布后回归 | 已确认 health `200` 与 root `302`；未使用登录凭据做受保护页面内容验收 |

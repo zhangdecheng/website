@@ -12,7 +12,7 @@ const ROUTES = Object.freeze({
     ],
   },
   creator: {
-    to: "irisa@flourishculture.com",
+    to: "irisa@flourish-culture.com",
     subject: "[Flourish Website] New Creator Application",
     fields: [
       ["Name", "name"],

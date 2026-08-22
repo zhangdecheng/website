@@ -1,6 +1,6 @@
 # FLOURISH CULTURE Website — Project Progress
 
-Last updated: 2026-08-20
+Last updated: 2026-08-22
 
 ## Goal
 
@@ -18,9 +18,25 @@ requirements document.
 
 ## Current Phase
 
-Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closure in progress.
+Phase 8 — v1.2.0 static Logo release archived and live; inbox readback and source-hosting closure remain in progress.
 
 ## Completed
+
+- Archived the current source snapshot as local tag `v1.2.0-logo-rail-20260822`.
+  The package/API version remains `1.2.0`; the archive records the static Logo rail
+  revision separately from the Contact service version.
+- Removed the Atoms light background while preserving the supplied source fallback,
+  cropped TRIPO transparent pixels, synchronized the eight-logo duplicated loop in
+  both homepage files, and locked the desktop/mobile optical sizing rules.
+- Built static ZIP `release/flourishculturekol-homepage.zip` at `6,744,747` bytes
+  with SHA-256 `c8007cdcc75d11f3d07d8c6f2b32351cd459c8ce5fc3f7d5c0d01fe7caa674ab`.
+- Published candidate `08646fc` to ECS `i-yeo9geadc0plsv0abgv0` / `webhkhome` and
+  read back public homepage, CSS, Atoms, TRIPO, API and `/review/` health evidence.
+  The protected rollback snapshot is
+  `/var/backups/flourishculturekol.com/20260822T115118Z-v1.2.0-static-08646fc`.
+- Local Logo/source tests passed 26/26 and release-contract tests passed 20/20;
+  the server-side production checker passed after the final cutover. Temporary
+  GitHub transfer branches were removed after ECS download.
 
 - Located the existing static site and deployment scripts.
 - Confirmed the original site was a single temporary `index.html`.
@@ -74,16 +90,14 @@ Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closu
 
 ## In Progress
 
-- Verify the Turnstile Secret that the user re-entered through the protected TTY;
-  health/config are normal, but only a fresh real widget token can prove the Secret matches.
-- Complete one real Brand and one real Creator Turnstile submission from the public form.
 - Read back both target inboxes and confirm visitor Reply-To without recording message bodies or credentials.
-- Push the already reconciled feature history to remote `main`; close GitHub Pages
-  only after all live and inbox gates pass.
+- Re-authenticate GitHub, then push the already reconciled feature history only after a separate explicit
+  Git write authorization; close GitHub Pages only after its own explicit authorization.
 
 ## Pending
 
-- Real Brand/Creator inbox and Reply-To acceptance evidence.
+- Real Brand/Creator inbox and Reply-To acceptance evidence. Both production submissions reached
+  `outcome=accepted`, but SMTP acceptance is not inbox-delivery proof.
 - Authenticated `/review/` content regression if Review credentials are made available; health and login protection already pass.
 - Remote source synchronization and GitHub Pages closure only after every live gate passes.
 - Remove only the exact temporary ECS transfer files after final acceptance; retain versioned releases and backups.
@@ -98,7 +112,7 @@ Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closu
 - Credentials and tokens must never be stored in project files.
 - Selected direction: Option 1 — Neon Culture Bridge.
 - SMTP From is fixed to `business@flourish-culture.com`.
-- Creator recipient is fixed to `irisa@flourishculture.com`.
+- Creator recipient is fixed to `irisa@flourish-culture.com`.
 - Brand recipient is fixed to `hannah@flourish-culture.com`.
 - Visitor email appears only in Reply-To; no mailto submission flow remains.
 - Production deployment was explicitly approved and completed on 2026-06-25;
@@ -117,13 +131,10 @@ Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closu
 
 ## Blockers
 
-- Historical real widget request `471c2340-0dab-4269-bb4e-7124a7a1e5ee` proved the former
-  value returned `invalid-input-secret`. The user has since recreated the protected eight-key
-  environment without exposing values, but the replacement still requires a fresh real token.
 - Hannah and Irisa inbox delivery/Reply-To cannot be confirmed without corresponding inbox read access or user readback.
 - GitHub `main` was fetched and reconciled locally through merge commit `94cb2ab`; a final
-  authenticated non-force push and Pages deletion readback remain pending.
-- The in-app browser control channel timed out on production navigation. System Chrome QA against release-identical `dist/` passed, but it does not replace the real Turnstile success gate.
+  authenticated non-force push and Pages deletion readback remain pending. `gh auth status` on
+  2026-08-20 reports the saved GitHub token is invalid.
 
 ## 2026-08-20 — v1.2.0 Core Production Release
 
@@ -149,8 +160,9 @@ Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closu
 - Fresh `npm test` now passes 86/86. System Chrome QA passed all recorded checks at
   1440×1024, 1024×1366, 390×844 and 360×800 with no unexpected console errors.
 - A synthetic invalid Turnstile token returned 403 and the redacted server log
-  recorded `turnstile_rejected`; SMTP was not reached. Real Turnstile success,
-  inbox delivery and Reply-To remain **未完成**.
+  recorded `turnstile_rejected`; SMTP was not reached. At this core-release stage,
+  real Turnstile success was still pending; it was completed in the follow-up below.
+  Inbox delivery and Reply-To remain **未完成**.
 - Disabled and stopped `temu-feishu-bridge.service` and
   `temu-query-existing-ecs.service`; both now read `disabled/inactive`. The query
   unit's declared `docker compose down` removed its stopped container/network,
@@ -187,10 +199,28 @@ Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closu
   after rollback, and adds four executable fault-injection regressions. The complete suite
   passes 86/86.
 
+## 2026-08-20 — Live Contact Acceptance and Creator Route Correction
+
+- Fresh Brand and Creator submissions both completed the production Managed Turnstile flow,
+  showed the public success state and produced redacted Contact journal entries with
+  `outcome=accepted`.
+- Corrected the Creator fixed recipient from `irisa@flourishculture.com` to
+  `irisa@flourish-culture.com` after the user reported the first routed message failed.
+- Added regression assertions before changing the implementation, rebuilt the deterministic
+  Contact archive and deployed it as `/opt/flourish-contact/releases/20260820T110838Z`.
+- The running route file and local audited source both hash to
+  `47d40d2c61664b9b3000bc665f0f57ac0339d4a3ed5599f8d9d1a4c77030b235`; the running file contains
+  one corrected recipient and zero occurrences of the old recipient.
+- The corrected Creator retry used marker `E2E-CREATOR-ROUTE-FIX-20260820T111525Z`; request
+  `6129340b-43d5-4475-83c2-81362c178e8a` was accepted at `2026-08-20T11:28:05.017Z`.
+- Fresh verification passed 86/86 local tests, 19/19 release tests, a reproducible 12-file
+  transfer build and the complete production checker on ECS. Actual Hannah/Irisa inbox delivery
+  and Reply-To remain unconfirmed and are not inferred from SMTP acceptance.
+
 ## 2026-08-18 — v1.2.0 Local Release Candidate
 
 - Replaced the two mailto flows with one accessible Brand/Creator form backed by a same-origin Node.js Contact API.
-- Fixed immutable mail routing: Brand to `hannah@flourish-culture.com`, Creator to `irisa@flourishculture.com`, fixed SMTP From, validated visitor Reply-To.
+- Fixed immutable mail routing: Brand to `hannah@flourish-culture.com`, Creator to `irisa@flourish-culture.com`, fixed SMTP From, validated visitor Reply-To.
 - Added Turnstile server verification, signed one-hour form sessions, honeypot, strict validation, body/origin limits, IP/email rate limits, duplicate suppression and redacted security logs.
 - Added a generic Privacy Notice and two approved AI-generated WebP images for Service 03 and Our Talent without changing the prior 35 image assets.
 - Added a hardened systemd unit, allow-listed service package, atomic service deploy/rollback script, minimal Nginx API template and protected eight-key environment schema.
@@ -266,7 +296,7 @@ Phase 8 — v1.2.0 final static refresh live; real-mail and source-hosting closu
 
 - Updated `index.html` and `review-editable.html` locally only; no production deploy, Nginx, certificate, server, `/review/`, API, database, cookie, analytics, or new-page changes were made.
 - Rebuilt Services as three stronger blocks with exact Feishu `The Overview` and `What We Do` copy, plus local text chips for TikTok, YouTube, Instagram, Shorts, and Reels.
-- Reworked Our Talent with the exact creator headline, subheadline, benefits, application form labels, image-plus-text layout, and `irisa@flourishculture.com` mailto target.
+- Reworked Our Talent with the exact creator headline, subheadline, benefits, application form labels, image-plus-text layout, and `irisa@flourish-culture.com` mailto target.
 - Reworked About Us with exact `[Our Mission]` and `[The FLOURISH Advantage: Why HK & Why Us?]` copy in an image-plus-text composition.
 - Reworked Contact Us with exact project inquiry headline, subheadline, fields, budget options, image-plus-text layout, and `flourishculture@outlook.com` mailto target.
 - Updated tests to enforce the Feishu copy, separate recipients, field labels/options, image requirements, and mirrored editable-review content.

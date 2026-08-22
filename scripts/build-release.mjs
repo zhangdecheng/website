@@ -12,18 +12,6 @@ const files = [
   "contact-form.js",
   "site-core.js",
 ];
-const optimizedPhotoFallbacks = new Map([
-  ["assets/17bcea7b-424b-4593-9f31-697e7cbecd7d.jpeg", "assets/optimized/hero-global-talent.webp"],
-  ["assets/service-performance.jpg", "assets/optimized/hero-performance.webp"],
-  ["assets/fe872db7-ca7c-4423-9f5c-9dc109e60619.jpeg", "assets/optimized/hero-brand-partnership.webp"],
-  ["assets/hong-kong-harbour.jpg", "assets/optimized/hong-kong-harbour.webp"],
-  ["assets/service-localization.jpg", "assets/optimized/service-localization.webp"],
-  ["assets/service-influencer.jpg", "assets/optimized/service-influencer.webp"],
-  ["assets/creator-recruitment.jpg", "assets/optimized/creator-recruitment.webp"],
-  ["assets/hong-kong-culture.jpg", "assets/optimized/hong-kong-culture.webp"],
-  ["assets/about-hk-cross-border-bridge.png", "assets/optimized/about-hk-cross-border-bridge.webp"],
-  ["assets/talent-global-creator-network.png", "assets/optimized/talent-global-creator-network.webp"],
-]);
 const requiredAssets = new Set([
   "assets/fonts/archivo-variable.woff2",
   "assets/fonts/space-grotesk-variable.woff2",
@@ -41,13 +29,6 @@ for (const entry of await readdir(dist)) {
 for (const file of files) {
   const target = join(dist, basename(file));
   await cp(join(root, file), target);
-  if (file === "index.html") {
-    let html = await readFile(target, "utf8");
-    for (const [original, optimized] of optimizedPhotoFallbacks) {
-      html = html.replaceAll(original, optimized);
-    }
-    await writeFile(target, html);
-  }
 }
 
 for (const file of files) {

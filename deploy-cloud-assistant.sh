@@ -12,23 +12,25 @@ readonly ARCHIVE="$1"
 readonly CHECK_SCRIPT="$2"
 readonly BACKUP_ROOT="/var/backups/flourishculturekol.com"
 readonly STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
-readonly BACKUP="${BACKUP_ROOT}/${STAMP}-v1.2.0-static-6087ae5"
+readonly BACKUP="${BACKUP_ROOT}/${STAMP}-v1.2.0-static-08646fc"
 readonly BACKUP_TREE="${BACKUP}/tree"
 readonly BACKUP_MANIFEST="${BACKUP}.SHA256SUMS"
 readonly NGINX_CONFIG="/etc/nginx/conf.d/00-flourishculturekol.com.conf"
-readonly EXPECTED_ARCHIVE_SHA="af10b1f4888bc848afeafa0055e55f5a480736940148f5ced26b5ec5e6707253"
-readonly EXPECTED_CHECK_SCRIPT_SHA="dba3ae7de17beada857e07750e6d1e13eb715cdaf68e10d7366e7e28d7eb5ad8"
-readonly EXPECTED_OLD_HOME_SHA="37b42852eb54b4ca5c065fea48c912d95e7296149e7b62c512e5b38f136aeacb"
-readonly EXPECTED_OLD_STYLES_SHA="4e6903e9161f309c0aaa5d33e697d29798e6108e3eb5a54ffded0a4d96ea25d9"
+readonly EXPECTED_ARCHIVE_SHA="c8007cdcc75d11f3d07d8c6f2b32351cd459c8ce5fc3f7d5c0d01fe7caa674ab"
+readonly EXPECTED_CHECK_SCRIPT_SHA="b2220599ff7060c00c2e78efb78feb37e48a93ed837dbac71ae5626f1d02f1b4"
+readonly EXPECTED_OLD_HOME_SHA="5075e2b499d39121f4c2164b2a6478652b41494931c3d9aaf698ba4685a3da6f"
+readonly EXPECTED_OLD_STYLES_SHA="fc33dd693a38733fd5293c2e3d540f770a24181369e317a0b643dcf55b3221a9"
 readonly EXPECTED_NGINX_SHA="22efa58a328b5855999638133acc13a9472fa27132b1cba675479adbe2904d3e"
-readonly EXPECTED_NEW_HOME_SHA="7339fe4e6d004739f0f2b86de92af0c86038502e0dc6b985bee738f860d533f2"
+readonly EXPECTED_NEW_HOME_SHA="08646fc0748ace6e1c0aa62f646aef2cea68abbfb088fbe42918585e309b9f70"
 readonly EXPECTED_PRIVACY_SHA="ea1be315e5d0137d918d21a1fb7fff8ac0724057cb3c72ec7b0d1d5b40277f5a"
-readonly EXPECTED_STYLES_SHA="61afde1b48e96219fb39db0f4930d0b7e5e9d76716f9d2cc9fea7bd8a54b2824"
+readonly EXPECTED_STYLES_SHA="9c6b0b61bc18ae38d9d83af8ce27a9f3cd7f92c14292cb6bf8441766ed661c6e"
 readonly EXPECTED_SCRIPT_SHA="c6565c4b184b7a804ac3a882094de228faf45b9d50abfdb9070eebdb5b1368a7"
-readonly EXPECTED_CONTACT_FORM_SHA="469f839535c4b8fefcecf7b8de61b9502cd06556a1a5fb89e2a1804ba68c96b2"
+readonly EXPECTED_CONTACT_FORM_SHA="58c15bb2fae35b23a31bd5039b03aff7d423fb9d0a6f3cd6ab32deed8a57c568"
 readonly EXPECTED_SITE_CORE_SHA="b8fe43f1ed63cdd3a643db6bf9d11ca282601fb7c94d1d113f5f76a8c2f6d24e"
-readonly EXPECTED_SERVICE_IMAGE_SHA="995033f01f8c240270f1262760d61a43a3e57d2a13ca71ab6a5d048b465481ab"
+readonly EXPECTED_SERVICE_IMAGE_SHA="c4601f7a49a303e2bb5cca1b10390ea114bbacb411f41c5f99f29da63478db97"
 readonly EXPECTED_TALENT_IMAGE_SHA="f9187abb6213fdd05725f0db3cf45551619465cea9b3758dfe8863b3e4fceed2"
+readonly EXPECTED_ATOMS_LOGO_SHA="a24e629aa00be325844022f03043b4659bf9624fce617a7d52d66af93e3d26ea"
+readonly EXPECTED_TRIPO_LOGO_SHA="5ddece931f2369199b0251dc2bc4a2a288654ece32806c7c939c3a0221508912"
 
 WORK_DIR="$(mktemp -d /var/tmp/flourish-static-deploy.XXXXXX)"
 ROLLBACK_NEEDED=0
@@ -48,7 +50,10 @@ assert_sha() {
   local label="$3"
   local actual
   actual="$(sha256_file "$file")"
-  [[ "$actual" == "$expected" ]] || fail "$label SHA-256 was $actual; expected $expected"
+  if [[ "$actual" != "$expected" ]]; then
+    fail "$label SHA-256 was $actual; expected $expected"
+    return 1
+  fi
   printf 'OK: %s SHA-256 matches\n' "$label"
 }
 
@@ -60,8 +65,10 @@ verify_release_files() {
   assert_sha "$root/script.js" "$EXPECTED_SCRIPT_SHA" "script.js"
   assert_sha "$root/contact-form.js" "$EXPECTED_CONTACT_FORM_SHA" "contact-form.js"
   assert_sha "$root/site-core.js" "$EXPECTED_SITE_CORE_SHA" "site-core.js"
-  assert_sha "$root/assets/service-creative-localization-meetup.webp" "$EXPECTED_SERVICE_IMAGE_SHA" "Service 03 image"
+  assert_sha "$root/assets/service-creative-localization-camera-speaker.webp" "$EXPECTED_SERVICE_IMAGE_SHA" "Service 03 image"
   assert_sha "$root/assets/talent-creator-growth-studio.webp" "$EXPECTED_TALENT_IMAGE_SHA" "Our Talent image"
+  assert_sha "$root/assets/brand-logos/atoms-transparent.png" "$EXPECTED_ATOMS_LOGO_SHA" "Atoms logo"
+  assert_sha "$root/assets/brand-logos/tripo-transparent-cropped.png" "$EXPECTED_TRIPO_LOGO_SHA" "TRIPO logo"
 }
 
 verify_runtime_invariants() {
@@ -177,6 +184,6 @@ verify_runtime_invariants
 PATH="/opt/node-v24.17.0-linux-x64/bin:$PATH" bash "$CHECK_SCRIPT"
 
 ROLLBACK_NEEDED=0
-printf 'SUCCESS: static v1.2.0 candidate 6087ae5 deployed and all production checks passed\n'
+printf 'SUCCESS: static v1.2.0 logo-rail candidate 08646fc deployed and all production checks passed\n'
 printf 'BACKUP: %s\n' "$BACKUP"
 printf 'BACKUP_MANIFEST: %s\n' "$BACKUP_MANIFEST"

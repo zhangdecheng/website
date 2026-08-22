@@ -476,7 +476,7 @@ test("Creator mail routes only to Irisa and contains every creator field", () =>
     niche: "Travel",
     audienceDemographics: "US and UK, primarily ages 18–34",
   });
-  assert.equal(message.to, "irisa@flourishculture.com");
+  assert.equal(message.to, "irisa@flourish-culture.com");
   assert.equal(message.subject, "[Flourish Website] New Creator Application");
   assert.match(message.text, /TikTok @maya/);
   assert.match(message.text, /US and UK/);
@@ -508,7 +508,7 @@ const ROUTES = Object.freeze({
     ],
   },
   creator: {
-    to: "irisa@flourishculture.com",
+    to: "irisa@flourish-culture.com",
     subject: "[Flourish Website] New Creator Application",
     fields: [
       ["Name", "name"],

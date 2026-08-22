@@ -498,7 +498,7 @@ Open Reply and confirm the draft recipient is the controlled sender; sending the
 
 - [ ] **Step 4: Submit and verify one unique Creator application**
 
-Switch via `Join Our Roster →`, complete a fresh Turnstile challenge, put `E2E-CREATOR-` followed by the execution-time UTC basic ISO timestamp in Social Media Handles or demographics, and submit. In `irisa@flourishculture.com`, confirm fixed From/To/Subject, Reply-To and all Creator fields with no Brand fields. Open Reply and verify recipient.
+Switch via `Join Our Roster →`, complete a fresh Turnstile challenge, put `E2E-CREATOR-` followed by the execution-time UTC basic ISO timestamp in Social Media Handles or demographics, and submit. In `irisa@flourish-culture.com`, confirm fixed From/To/Subject, Reply-To and all Creator fields with no Brand fields. Open Reply and verify recipient.
 
 - [ ] **Step 5: Record evidence and check logs are redacted**
 

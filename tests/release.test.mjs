@@ -23,6 +23,18 @@ async function listFiles(directory, prefix = "") {
   return files;
 }
 
+test("static release build preserves the exact preview HTML", async () => {
+  await runFile(
+    process.execPath,
+    ["scripts/build-release.mjs"],
+    { cwd: new URL("../", import.meta.url), encoding: "utf8" },
+  );
+
+  const source = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const built = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
+  assert.equal(built, source);
+});
+
 test("systemd unit is loopback-service hardened and reads one protected env file", async () => {
   const unit = await readFile(new URL("../ops/flourish-contact.service", import.meta.url), "utf8");
   for (const line of [
@@ -530,7 +542,7 @@ test("public release check is strict about canonical routing, APIs, headers, ass
     "script.js",
     "contact-form.js",
     "site-core.js",
-    "assets/service-creative-localization-meetup.webp",
+    "assets/service-creative-localization-camera-speaker.webp",
     "assets/talent-creator-growth-studio.webp",
   ]) {
     const bytes = await readFile(new URL(`../dist/${path}`, import.meta.url));
@@ -542,10 +554,10 @@ test("public release check is strict about canonical routing, APIs, headers, ass
 test("final static rollout pins the audited candidate and never rolls Nginx back", async () => {
   const script = await readFile(new URL("../deploy-cloud-assistant.sh", import.meta.url), "utf8");
 
-  assert.match(script, /af10b1f4888bc848afeafa0055e55f5a480736940148f5ced26b5ec5e6707253/u);
-  assert.match(script, /dba3ae7de17beada857e07750e6d1e13eb715cdaf68e10d7366e7e28d7eb5ad8/u);
-  assert.match(script, /7339fe4e6d004739f0f2b86de92af0c86038502e0dc6b985bee738f860d533f2/u);
-  assert.match(script, /61afde1b48e96219fb39db0f4930d0b7e5e9d76716f9d2cc9fea7bd8a54b2824/u);
+  assert.match(script, /c8007cdcc75d11f3d07d8c6f2b32351cd459c8ce5fc3f7d5c0d01fe7caa674ab/u);
+  assert.match(script, /b2220599ff7060c00c2e78efb78feb37e48a93ed837dbac71ae5626f1d02f1b4/u);
+  assert.match(script, /5075e2b499d39121f4c2164b2a6478652b41494931c3d9aaf698ba4685a3da6f/u);
+  assert.match(script, /9c6b0b61bc18ae38d9d83af8ce27a9f3cd7f92c14292cb6bf8441766ed661c6e/u);
   assert.match(script, /BACKUP_TREE="\$\{BACKUP\}\/tree"/u);
   assert.match(script, /rsync -a --delete "\$BACKUP_TREE\/" "\$WEB_ROOT\/"/u);
   assert.match(script, /rsync -a "\$WEB_ROOT\/" "\$BACKUP_TREE\/"[\s\S]*chmod 0700 "\$BACKUP"/u);
@@ -618,6 +630,7 @@ async function runStaticRolloutHarness({ checkerBody, expectedCheckerBody = chec
 
   await mkdir(join(webRoot, "legacy"), { recursive: true, mode: 0o755 });
   await mkdir(join(releaseRoot, "assets"), { recursive: true, mode: 0o755 });
+  await mkdir(join(releaseRoot, "assets", "brand-logos"), { recursive: true, mode: 0o755 });
   await mkdir(backupRoot, { recursive: true, mode: 0o700 });
   await mkdir(fakeBin, { recursive: true, mode: 0o755 });
 
@@ -641,7 +654,9 @@ async function runStaticRolloutHarness({ checkerBody, expectedCheckerBody = chec
     "script.js": "console.log('release');\n",
     "contact-form.js": "console.log('contact');\n",
     "site-core.js": "console.log('core');\n",
-    "assets/service-creative-localization-meetup.webp": "service image fixture\n",
+    "assets/brand-logos/atoms-transparent.png": "atoms logo fixture\n",
+    "assets/brand-logos/tripo-transparent-cropped.png": "tripo logo fixture\n",
+    "assets/service-creative-localization-camera-speaker.webp": "service image fixture\n",
     "assets/talent-creator-growth-studio.webp": "talent image fixture\n",
   };
   for (const [relative, contents] of Object.entries(releaseFiles)) {
@@ -703,7 +718,9 @@ exit 0
     EXPECTED_SCRIPT_SHA: await fileSha256(join(releaseRoot, "script.js")),
     EXPECTED_CONTACT_FORM_SHA: await fileSha256(join(releaseRoot, "contact-form.js")),
     EXPECTED_SITE_CORE_SHA: await fileSha256(join(releaseRoot, "site-core.js")),
-    EXPECTED_SERVICE_IMAGE_SHA: await fileSha256(join(releaseRoot, "assets/service-creative-localization-meetup.webp")),
+    EXPECTED_ATOMS_LOGO_SHA: await fileSha256(join(releaseRoot, "assets/brand-logos/atoms-transparent.png")),
+    EXPECTED_TRIPO_LOGO_SHA: await fileSha256(join(releaseRoot, "assets/brand-logos/tripo-transparent-cropped.png")),
+    EXPECTED_SERVICE_IMAGE_SHA: await fileSha256(join(releaseRoot, "assets/service-creative-localization-camera-speaker.webp")),
     EXPECTED_TALENT_IMAGE_SHA: await fileSha256(join(releaseRoot, "assets/talent-creator-growth-studio.webp")),
   };
   for (const [name, value] of Object.entries(replacements)) {

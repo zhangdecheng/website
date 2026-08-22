@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T21:57:32.487Z",
+  "generatedAt": "2026-08-22T11:34:53.165Z",
   "browser": "System Google Chrome via playwright-core 1.62.1",
   "viewports": {
     "desktop-1440x1024": {
@@ -12,6 +12,13 @@
         "role": "brand",
         "brandVisible": true,
         "creatorHidden": true,
+        "verificationHidden": true,
+        "splitMediaWidths": {
+          "talent": 633.59,
+          "about": 633.59
+        },
+        "splitMediaAligned": true,
+        "serviceThreeObjectPosition": "88% 50%",
         "horizontalOverflow": false,
         "hiddenRevealCount": 12,
         "heroCtaFullyContained": true,
@@ -35,8 +42,8 @@
         "growthObjectives",
         "privacyAccepted",
         "privacy-link",
-        "turnstile",
         "submit",
+        "a",
         "a",
         "a",
         "a"
@@ -45,6 +52,7 @@
         "company": "QA North Star Revised",
         "validationMessage": ""
       },
+      "verificationShown": true,
       "failureState": {
         "name": "QA Brand Contact",
         "email": "qa@example.com",
@@ -83,11 +91,14 @@
       "checks": {
         "defaultBrand": true,
         "heroCtaContained": true,
+        "splitMediaAligned": true,
+        "serviceThreeImageFocus": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
         "failurePreservesValues": true,
         "serverValidationRecovery": true,
+        "verificationProgressive": true,
         "successResetsValues": true,
         "noHorizontalOverflow": true,
         "reducedMotion": true,
@@ -105,6 +116,13 @@
         "role": "brand",
         "brandVisible": true,
         "creatorHidden": true,
+        "verificationHidden": true,
+        "splitMediaWidths": {
+          "talent": 450.55,
+          "about": 450.55
+        },
+        "splitMediaAligned": true,
+        "serviceThreeObjectPosition": "88% 50%",
         "horizontalOverflow": false,
         "hiddenRevealCount": 9,
         "heroCtaFullyContained": true,
@@ -128,8 +146,8 @@
         "growthObjectives",
         "privacyAccepted",
         "privacy-link",
-        "turnstile",
         "submit",
+        "a",
         "a",
         "a",
         "a"
@@ -138,6 +156,7 @@
         "company": "QA North Star Revised",
         "validationMessage": ""
       },
+      "verificationShown": true,
       "failureState": {
         "name": "QA Brand Contact",
         "email": "qa@example.com",
@@ -176,11 +195,14 @@
       "checks": {
         "defaultBrand": true,
         "heroCtaContained": true,
+        "splitMediaAligned": true,
+        "serviceThreeImageFocus": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
         "failurePreservesValues": true,
         "serverValidationRecovery": true,
+        "verificationProgressive": true,
         "successResetsValues": true,
         "noHorizontalOverflow": true,
         "reducedMotion": true,
@@ -198,6 +220,13 @@
         "role": "brand",
         "brandVisible": true,
         "creatorHidden": true,
+        "verificationHidden": true,
+        "splitMediaWidths": {
+          "talent": 390,
+          "about": 390
+        },
+        "splitMediaAligned": true,
+        "serviceThreeObjectPosition": "88% 50%",
         "horizontalOverflow": false,
         "hiddenRevealCount": 12,
         "heroCtaFullyContained": true,
@@ -221,8 +250,8 @@
         "growthObjectives",
         "privacyAccepted",
         "privacy-link",
-        "turnstile",
         "submit",
+        "a",
         "a",
         "a",
         "a"
@@ -231,6 +260,7 @@
         "company": "QA North Star Revised",
         "validationMessage": ""
       },
+      "verificationShown": true,
       "failureState": {
         "name": "QA Brand Contact",
         "email": "qa@example.com",
@@ -272,11 +302,14 @@
       "checks": {
         "defaultBrand": true,
         "heroCtaContained": true,
+        "splitMediaAligned": true,
+        "serviceThreeImageFocus": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
         "failurePreservesValues": true,
         "serverValidationRecovery": true,
+        "verificationProgressive": true,
         "successResetsValues": true,
         "noHorizontalOverflow": true,
         "reducedMotion": true,
@@ -295,6 +328,13 @@
         "role": "brand",
         "brandVisible": true,
         "creatorHidden": true,
+        "verificationHidden": true,
+        "splitMediaWidths": {
+          "talent": 360,
+          "about": 360
+        },
+        "splitMediaAligned": true,
+        "serviceThreeObjectPosition": "88% 50%",
         "horizontalOverflow": false,
         "hiddenRevealCount": 12,
         "heroCtaFullyContained": true,
@@ -318,8 +358,8 @@
         "growthObjectives",
         "privacyAccepted",
         "privacy-link",
-        "turnstile",
         "submit",
+        "a",
         "a",
         "a",
         "a"
@@ -328,6 +368,7 @@
         "company": "QA North Star Revised",
         "validationMessage": ""
       },
+      "verificationShown": true,
       "failureState": {
         "name": "QA Brand Contact",
         "email": "qa@example.com",
@@ -369,11 +410,14 @@
       "checks": {
         "defaultBrand": true,
         "heroCtaContained": true,
+        "splitMediaAligned": true,
+        "serviceThreeImageFocus": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
         "failurePreservesValues": true,
         "serverValidationRecovery": true,
+        "verificationProgressive": true,
         "successResetsValues": true,
         "noHorizontalOverflow": true,
         "reducedMotion": true,

@@ -226,6 +226,6 @@ test("accepted Creator routes only to Irisa", async () => {
   const result = await service.submit(creator(), { ip: "203.0.113.11", requestId: "creator-ok" });
   assert.deepEqual(result, { code: "accepted" });
   assert.equal(state.mail.length, 1);
-  assert.equal(state.mail[0].to, "irisa@flourishculture.com");
+  assert.equal(state.mail[0].to, "irisa@flourish-culture.com");
   assert.equal(state.mail[0].replyTo, "maya@example.com");
 });

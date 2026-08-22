@@ -50,8 +50,14 @@ loopback-only Contact API. The browser validates the unified Brand/Creator form,
 uses Cloudflare Turnstile, and submits JSON without opening a mail client. The
 service authenticates as `business@flourish-culture.com`; Brand inquiries route
 to `hannah@flourish-culture.com`, Creator applications route to
-`irisa@flourishculture.com`, and the validated visitor address is used only as
+`irisa@flourish-culture.com`, and the validated visitor address is used only as
 Reply-To. There is no database or analytics integration.
+
+The latest archived source snapshot is the local Git tag
+`v1.2.0-logo-rail-20260822`. It keeps package/API version `1.2.0` and records the
+transparent Atoms/TRIPO Logo rail revision separately. Production static release
+evidence and rollback paths are recorded in `docs/PRODUCTION_RUNBOOK.md` and
+`qa/production-release-2026-08-22.md`.
 
 ## Project documentation
 

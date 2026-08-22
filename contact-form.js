@@ -77,44 +77,97 @@ export async function initContactForm({
   const status = form.querySelector("[data-form-status]");
   const submitButton = form.querySelector("[data-submit-button]");
   const turnstileSlot = form.querySelector("[data-turnstile-slot]");
+  const verificationDisclosure = form.querySelector("[data-verification-disclosure]");
   const contactSection = doc.querySelector("#contact");
   let formSessionToken = "";
   let sessionExpiresAt = 0;
   let turnstileToken = "";
   let turnstileApi;
   let widgetId;
+  let challengeRefresh;
+  let pendingSubmit = false;
+
+  function showVerification() {
+    if (!verificationDisclosure) return;
+    verificationDisclosure.hidden = false;
+    verificationDisclosure.open = true;
+  }
+
+  function hideVerification() {
+    if (!verificationDisclosure) return;
+    verificationDisclosure.open = false;
+    verificationDisclosure.hidden = true;
+  }
+
+  // The verification is progressive disclosure: keep the primary action
+  // available so a risk-triggered submission can reveal the challenge.
+  submitButton.disabled = false;
+  hideVerification();
 
   function onChallengeToken(token) {
     turnstileToken = token;
     submitButton.disabled = false;
+    hideVerification();
     if (status.dataset.state === "verification") setStatus(status, "");
+    if (pendingSubmit) {
+      pendingSubmit = false;
+      win.setTimeout(() => form.requestSubmit(), 0);
+    }
   }
 
-  async function refreshChallenge() {
-    const config = await getConfig(fetchImpl);
-    formSessionToken = config.formSessionToken;
-    sessionExpiresAt = Date.parse(config.expiresAt);
-    turnstileToken = "";
-    submitButton.disabled = true;
-    turnstileApi ??= await loadTurnstile(doc, win);
-    if (widgetId === undefined) {
-      widgetId = turnstileApi.render(turnstileSlot, {
-        sitekey: config.turnstileSiteKey,
-        action: "contact_submit",
-        callback: onChallengeToken,
-        "expired-callback": () => {
-          turnstileToken = "";
-          submitButton.disabled = true;
-          setStatus(status, "Verification expired. Please complete it again.", "verification");
-        },
-        "error-callback": () => {
-          turnstileToken = "";
-          submitButton.disabled = true;
-          setStatus(status, "Verification is temporarily unavailable. Please try again.", "error");
-        },
-      });
-    } else {
-      turnstileApi.reset(widgetId);
+  async function refreshChallenge({ reveal = false } = {}) {
+    if (challengeRefresh) return challengeRefresh;
+
+    challengeRefresh = (async () => {
+      if (!reveal) {
+        if (widgetId !== undefined && turnstileApi) turnstileApi.reset(widgetId);
+        formSessionToken = "";
+        sessionExpiresAt = 0;
+        turnstileToken = "";
+        hideVerification();
+        return;
+      }
+
+      showVerification();
+
+      const config = await getConfig(fetchImpl);
+      formSessionToken = config.formSessionToken;
+      sessionExpiresAt = Date.parse(config.expiresAt);
+      turnstileToken = "";
+      submitButton.disabled = false;
+
+      const firstMount = widgetId === undefined;
+      turnstileApi ??= await loadTurnstile(doc, win);
+      if (firstMount) {
+        widgetId = turnstileApi.render(turnstileSlot, {
+          sitekey: config.turnstileSiteKey,
+          action: "contact_submit",
+          appearance: "interaction-only",
+          execution: reveal ? "execute" : "render",
+          size: "flexible",
+          callback: onChallengeToken,
+          "expired-callback": () => {
+            turnstileToken = "";
+            submitButton.disabled = false;
+            setStatus(status, "Verification expired. Please complete it again.", "verification");
+          },
+          "error-callback": () => {
+            turnstileToken = "";
+            submitButton.disabled = false;
+            showVerification();
+            setStatus(status, "Verification is temporarily unavailable. Please try again.", "error");
+          },
+        });
+      } else {
+        turnstileApi.reset(widgetId);
+      }
+      if (typeof turnstileApi.execute === "function") turnstileApi.execute(widgetId);
+    })();
+
+    try {
+      return await challengeRefresh;
+    } finally {
+      challengeRefresh = undefined;
     }
   }
 
@@ -127,6 +180,13 @@ export async function initContactForm({
     if (typeof event.target?.setCustomValidity === "function") {
       event.target.setCustomValidity("");
     }
+  });
+
+  verificationDisclosure?.addEventListener("toggle", () => {
+    if (!verificationDisclosure.open || widgetId !== undefined) return;
+    refreshChallenge({ reveal: true }).catch(() => {
+      setStatus(status, messageForContactResult(503), "error");
+    });
   });
 
   for (const link of doc.querySelectorAll('[data-select-contact-role="creator"]')) {
@@ -156,7 +216,9 @@ export async function initContactForm({
     }
     if (!turnstileToken || !formSessionToken || Date.now() >= sessionExpiresAt) {
       setStatus(status, "Please complete the verification and try again.", "verification");
-      await refreshChallenge().catch(() => {
+      pendingSubmit = true;
+      await refreshChallenge({ reveal: true }).catch(() => {
+        pendingSubmit = false;
         setStatus(status, messageForContactResult(503), "error");
       });
       return;
@@ -174,6 +236,7 @@ export async function initContactForm({
     submitButton.disabled = true;
     setStatus(status, "Sending…");
     let accepted = false;
+    let revealChallenge = false;
 
     try {
       const response = await fetchImpl(CONTACT_SUBMIT_ENDPOINT, {
@@ -184,6 +247,7 @@ export async function initContactForm({
       });
       const body = await response.json().catch(() => ({}));
       accepted = response.status === 201 || response.status === 202;
+      revealChallenge = response.status === 403;
       if (accepted) {
         form.reset();
         roleSelect.value = "brand";
@@ -198,15 +262,14 @@ export async function initContactForm({
       setStatus(status, messageForContactResult(503), "error");
     } finally {
       form.removeAttribute("aria-busy");
-      await refreshChallenge().catch(() => {
-        submitButton.disabled = true;
+      if (!accepted && revealChallenge) pendingSubmit = true;
+      await refreshChallenge({ reveal: !accepted && revealChallenge }).catch(() => {
+        pendingSubmit = false;
+        submitButton.disabled = false;
         if (!accepted) setStatus(status, messageForContactResult(503), "error");
       });
     }
   });
 
-  await refreshChallenge().catch(() => {
-    submitButton.disabled = true;
-    setStatus(status, messageForContactResult(503), "error");
-  });
+  submitButton.disabled = false;
 }

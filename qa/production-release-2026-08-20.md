@@ -2,15 +2,14 @@
 
 ## 结论
 
-状态：**未完成（核心网站与 Contact 服务已上线；真实邮件和代码托管收尾未完成）**。
+状态：**部分完成（核心网站与真实表单提交已上线并通过；收件箱读回和代码托管收尾未完成）**。
 
 生产主机 `webhkhome` / `150.5.135.196` 已运行 v1.2.0 静态站点、规范化 Nginx
 路由和 loopback-only Contact 服务。服务器内完整发布检查、本机站外独立检查、TLS
-链读取、86/86 Node 测试和四视口系统 Chrome QA 均通过。历史真实 Turnstile 请求曾
-定位到旧 Secret 错配；用户随后在私密 TTY 中重建了受保护配置，但尚未用新配置完成
-成功 token；也没有
-Hannah/Irisa 收件箱与 Reply-To 读回，因此不能
-把 SMTP 登录成功或 API 健康等同于真实邮件验收完成。
+链读取、86/86 Node 测试和四视口系统 Chrome QA 均通过。用户在私密 TTY 中重建受
+保护配置后，新的 Brand 与 Creator Managed Turnstile 均成功，页面显示成功，Contact
+日志记录 `outcome=accepted`。Creator 收件地址修正后又完成一次唯一标记重试。但尚未
+读回 Hannah/Irisa 收件箱与 Reply-To，因此不能把 SMTP 接受等同于真实邮件送达。
 
 ## 发布身份
 
@@ -23,9 +22,9 @@ Hannah/Irisa 收件箱与 Reply-To 读回，因此不能
 | GitHub 历史 / 性能 / 平板修复 | `94cb2ab` / `a32f9d9` / `6087ae5` |
 | 安全静态发布脚本 | `474bd69`（生产实际执行版本）；`ef61222`（审查加固版本） |
 | 当前生产静态 ZIP | 1,001,919 bytes；SHA-256 `af10b1f4888bc848afeafa0055e55f5a480736940148f5ced26b5ec5e6707253` |
-| 当前 Contact TGZ | 9,010 bytes；SHA-256 `bab01f95865410715a947cc29993d7c3a568f2dd1fd7d66455159743aa4c0628`；生产源码逐文件匹配 |
+| 当前 Contact TGZ | 9,006 bytes；SHA-256 `ddb674d7d65ea3273009f293c2de8e70135da1749650b9651b556277aa72aa3b`；生产路由文件与本地源码哈希匹配 |
 | 实际最终发布传输 TGZ | 1,022,097 bytes；SHA-256 `d90c795cba9d494eecfaf6cbd17fe52cc6d0268cd353da41b9ee3113c4188022` |
-| 当前仓库可复现传输 TGZ | 1,022,168 bytes；SHA-256 `027dc4e42d7f8e543264707ebc524d3051e8e6d7f0cb6e61ef32ace9a1f39066`；上海/UTC 构建逐字节一致 |
+| 当前仓库可复现传输 TGZ | 1,022,160 bytes；SHA-256 `c8f53f5fcb3cb051a8db78c6b808b9fb783a0309c17464fc704120808741c3cb`；12 个普通文件 |
 | 传输成员 | 12 个普通文件；11/11 payload 校验 `OK`；无 AppleDouble/xattr 警告 |
 | 最终服务器暂存 | `/root/flourish-transfer-v1.2.0-6087ae5-final` |
 
@@ -34,8 +33,8 @@ Hannah/Irisa 收件箱与 Reply-To 读回，因此不能
 - `/etc/flourish-contact.env` 已由用户在受保护 TTY 中录入；读回仅显示八个键均为
   `set`，assignment count 为 8，权限为 `root:flourish-contact 0640`；未读取或记录值。
 - systemd unit 为 `root:root 0644`，`flourish-contact.service` 为 active/enabled。
-- 当前 release：`/opt/flourish-contact/releases/20260819T202836Z`；前一版本
-  `/opt/flourish-contact/releases/20260819T191356Z` 保留用于回滚。
+- 当前 release：`/opt/flourish-contact/releases/20260820T110838Z`；前一版本
+  `/opt/flourish-contact/releases/20260819T202836Z` 保留用于回滚。
 - 运行时：`/opt/node-v24.17.0-linux-x64`；未替换系统 Node 或 Review Node。
 - 端口 3101 只监听 `127.0.0.1`。
 - loopback health 返回 `{"ok":true,"configured":true,"version":"1.2.0"}`。
@@ -131,17 +130,32 @@ enabled，只监听 `127.0.0.1:3101`，本地和公网 health 均为 `200`。受
 回滚；ECS 副本为 `/root/flourish-turnstile-secret-update.sh`，`root:root 0700`，SHA-256
 `6c3f621527edf15721406596908ce11aa23272194afff6de5c61f938d5f8653a`。用户随后通过
 私密 TTY 重新创建了八键环境；当前文件为 `root:flourish-contact 0640`、362 bytes，
-服务 health/config 正常。任何值均未读取或写入记录，因此新 Secret 是否匹配仍只能
-由真实 widget token 证明。
+服务 health/config 正常。任何值均未读取或写入记录。
+
+## 新配置成功路径与 Creator 路由更正
+
+- 新配置下的 Brand 与 Creator 生产 Managed Turnstile 均显示成功；页面均显示
+  `Thank you—your message has been received.`，对应日志均为 `outcome=accepted`。
+- 初次 Creator 请求使用了错误固定地址 `irisa@flourishculture.com`。用户报告失败后，
+  本地先把两项回归断言改为正确地址并确认失败，再把实现改为
+  `irisa@flourish-culture.com`，目标测试和完整 86 项测试均通过。
+- 修正后的 Contact 包 SHA-256 为 `ddb674d7…72aa3b`，已部署至
+  `/opt/flourish-contact/releases/20260820T110838Z`；运行路由文件与本地源码 SHA-256
+  均为 `47d40d2c…30b235`，正确地址计数 1、旧地址计数 0。
+- 更正后 Creator 重试标记为 `E2E-CREATOR-ROUTE-FIX-20260820T111525Z`；请求
+  `6129340b-43d5-4475-83c2-81362c178e8a` 在 `2026-08-20T11:28:05.017Z` 被接受。
+- 2026-08-20T12:00Z 后在 ECS 使用 Contact Node v24 重新执行受版本控制的正式生产
+  验收脚本，Nginx、loopback health、规范跳转、首页/Privacy、安全头、精确哈希、
+  Contact API、静态资源与 `/review/` 全部通过。被 Git 忽略的旧
+  `release/verify-public-v1.2.0.sh` 固定了历史首页哈希，不作为验收证据。
 
 ## 仍未确认 / 硬门槛
 
-- 用当前私密配置完成真实 Managed Turnstile 成功 token 与 action `contact_submit`。
-- Brand 表单送达 `hannah@flourish-culture.com`，且 Reply-To 为受控测试邮箱。
-- Creator 表单送达 `irisa@flourishculture.com`，且 Reply-To 为受控测试邮箱。
+- 从 Hannah 收件箱读回 Brand 邮件，并确认 Reply-To 为受控测试邮箱。
+- 从 Irisa 收件箱读回更正后的 Creator 邮件，并确认 Reply-To 为受控测试邮箱。
 - `/review/` 受保护页面内的登录后内容（本次未取得 Review 登录凭据；仅确认代理、健康
   和登录保护未回归）。
 - 本地已通过 `94cb2ab` 合并远端 `main` 独有历史；最终非 force push 与 GitHub Pages
-  删除/readback 仍未完成。
+  删除/readback 仍未完成。当前 `gh auth status` 显示保存的 token 无效。
 
-在这些门槛完成前，状态保持**未完成**。
+在这些门槛完成前，状态保持**部分完成**。

@@ -1,6 +1,10 @@
 # FLOURISH CULTURE Asset Manifest
 
-Last updated: 2026-08-18
+Last updated: 2026-08-22
+
+The `v1.2.0-logo-rail-20260822` source archive and production release use the
+transparent Atoms/TRIPO derivatives listed below; the original supplied files are
+retained only as rollback/reference inputs.
 
 ## Production homepage assets
 
@@ -16,10 +20,13 @@ These files are copied into `dist/assets/` and served by the production homepage
 - `assets/brand-logos/dreame.png`
 - `assets/brand-logos/aliexpress.png`
 - `assets/brand-logos/lovart.png`
-- `assets/brand-logos/aiper.png`
+- `assets/brand-logos/atoms.jpg` — original supplied Atoms source retained as a fallback
+- `assets/brand-logos/atoms-transparent.png` — Atoms logo with the light source background removed and the foreground converted to white for the dark rail
+- `assets/brand-logos/tripo-transparent.png` — source TRIPO logo with the source dark rectangle removed to transparent pixels
+- `assets/brand-logos/tripo-transparent-cropped.png` — TRIPO logo cropped to its visible transparent-pixel bounds for optical sizing
 - `assets/brand-logos/ksp.png`
 
-Only these approved brand logos should be used for the endorsement/logo rail.
+Only these approved brand logos should be used for the endorsement/logo rail. The AIPER logo was removed from the rail on 2026-08-22.
 
 ### Main visual assets
 
@@ -32,7 +39,9 @@ Only these approved brand logos should be used for the endorsement/logo rail.
 - `assets/creator-recruitment.jpg` — earlier creator recruitment reference
 - `assets/hero-creator-collage.jpg` — earlier hero collage reference
 - `assets/hong-kong-culture.jpg` — earlier Hong Kong culture reference
-- `assets/service-creative-localization-meetup.webp` — AI-generated generic Service 03 workshop scene
+- `assets/service-creative-localization-camera-speaker.webp` — Service 03 original workshop scene with the photographer capturing the black speaker
+- `assets/service-creative-localization-product.webp` — retained historical Service 03 product still life
+- `assets/service-creative-localization-meetup.webp` — retained historical Service 03 workshop scene
 - `assets/talent-creator-growth-studio.webp` — AI-generated generic Our Talent studio scene
 
 ### AI-generated homepage imagery — 2026-08-18
@@ -83,6 +92,23 @@ Color palette: Charcoal black, natural skin, muted coral red, warm neutral and s
 Constraints: Generic recruitment illustration only; no claim that the person is a real FLOURISH creator; no readable dashboard text, logos, platform marks, brand products, captions, badges or watermark.
 Avoid: malformed hands, impossible cameras, floating equipment, fake readable analytics, split-screen collage, duplicated person, over-retouched skin, celebrity likeness, luxury cliché, excessive neon, obvious AI glow.
 ```
+
+### Service 03 product still life — 2026-08-21
+
+- Production derivative: `assets/service-creative-localization-product.webp`
+- Dimensions: 1536 × 1024 WebP.
+- Art direction: one unbranded physical product on a dark studio tabletop with
+  restrained coral and warm-gold edge lighting; no people, hands, faces,
+  readable text, logos, or sponsor marks.
+
+### Service 03 camera-speaker scene — 2026-08-21
+
+- Production derivative: `assets/service-creative-localization-camera-speaker.webp`
+- Dimensions: 1536 × 1024 WebP.
+- Selected image draft: the second generated variation, preserving the original
+  five-person creative-planning scene while making the photographer visibly
+  capture the same black cylindrical speaker on the table.
+- No logos, readable text, watermarks, or unrelated branded products are present.
 
 ### SVG support visuals
 

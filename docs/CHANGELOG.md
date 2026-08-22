@@ -2,14 +2,40 @@
 
 ## Project version records
 
-Current source version: `v1.2.0` core production release; final live-mail and
-remote-source acceptance remains incomplete.
+Current source version: `v1.2.0-logo-rail-20260822` archived locally and live in production.
+The package/API version remains `v1.2.0`; actual inbox/Reply-To and remote-source
+acceptance remain incomplete.
 
 | Version | Date | Status | Notes |
 | --- | --- | --- | --- |
-| `v1.2.0` | 2026-08-20 | Core production live; final acceptance incomplete | Unified Contact flow, privacy, abuse controls, approved AI images, portable production tooling and canonical public routing. |
+| `v1.2.0-logo-rail-20260822` | 2026-08-22 | Archived locally and production live | Transparent Atoms/TRIPO assets, optical sizing, deterministic static package, production backup and public read-back. |
+| `v1.2.0` | 2026-08-20 | Production URL ready; final closure incomplete | Unified Contact flow, privacy, abuse controls, approved AI images, portable production tooling, canonical routing and accepted real submissions. |
 | `v1.1.0` | 2026-06-26 | Historical production record | Static homepage release. |
 | `v1.0.0` | 2026-06-26 | Historical record | Baseline project version record for documentation and handoff tracking. |
+
+## 2026-08-22
+
+### v1.2.0-logo-rail-20260822 source archive and static release
+
+- Preserved the supplied Atoms source as `assets/brand-logos/atoms.jpg` and added
+  the transparent white production asset `atoms-transparent.png`.
+- Cropped TRIPO to its visible transparent-pixel bounds as
+  `tripo-transparent-cropped.png`; the source asset remains available for rollback/reference.
+- Synchronized the eight-logo rail and its duplicated accessible loop in both
+  `index.html` and `review-editable.html`, including desktop/mobile optical sizing.
+- Built the deterministic static ZIP: `6,744,747` bytes,
+  SHA-256 `c8007cdcc75d11f3d07d8c6f2b32351cd459c8ce5fc3f7d5c0d01fe7caa674ab`.
+- Published candidate `08646fc` to ECS and read back homepage hash
+  `08646fc0748ace6e1c0aa62f646aef2cea68abbfb088fbe42918585e309b9f70`, CSS hash
+  `9c6b0b61bc18ae38d9d83af8ce27a9f3cd7f92c14292cb6bf8441766ed661c6e`, and both
+  Logo PNG hashes from the public site.
+- Created the protected rollback snapshot
+  `/var/backups/flourishculturekol.com/20260822T115118Z-v1.2.0-static-08646fc`.
+- Local `site.test.mjs` passed 26/26; `release.test.mjs` passed 20/20; the ECS
+  production checker passed all canonical, API, security-header, MIME, Logo and
+  `/review/` checks. Temporary GitHub transfer branches were deleted after use.
+- Inbox/Reply-To readback and authenticated remote source synchronization remain
+  separate, incomplete gates.
 
 ## 2026-08-20
 
@@ -59,11 +85,20 @@ remote-source acceptance remains incomplete.
   backup contents live behind a continuously private `0700` wrapper, rollback checks the
   full generated manifest, and executable fault injection proves exact restore plus failure
   propagation. The complete suite passes 86/86.
+- Recreated the protected Turnstile configuration and completed real Brand and Creator
+  Managed Turnstile submissions; both showed the public success state and logged
+  `outcome=accepted` without exposing form content or credentials.
+- Corrected the Creator recipient to `irisa@flourish-culture.com`, added regression coverage,
+  rebuilt the Contact artifact (`ddb674d7…72aa3b`) and deployed release
+  `/opt/flourish-contact/releases/20260820T110838Z`. The corrected Creator retry request
+  `6129340b-43d5-4475-83c2-81362c178e8a` was accepted.
+- Re-ran the full 86-test suite, 19 release tests and the canonical production checker on
+  ECS with Node 24; all passed. Actual Hannah/Irisa inbox arrival and Reply-To remain unconfirmed.
 - Both Temu query systemd units are now `disabled/inactive`; the Compose-managed
   query container/network were removed by the unit's declared stop action, both
   named data volumes remain, and the bridge container remains exited.
-- Real Turnstile success, Brand/Creator inbox delivery, Reply-To, authenticated
-  remote push and GitHub Pages deletion/readback remain **未完成**; remote `main`
+- Brand/Creator inbox delivery, Reply-To, authenticated remote push and GitHub Pages
+  deletion/readback remain **未完成**; remote `main`
   history itself is already reconciled locally by merge commit `94cb2ab`.
 
 ## 2026-08-19
@@ -82,7 +117,7 @@ remote-source acceptance remains incomplete.
 ### v1.2.0 local release candidate
 
 - Replaced mailto submission with one same-origin Brand/Creator form and a loopback-only Node.js Contact service.
-- Fixed Brand routing to `hannah@flourish-culture.com`, Creator routing to `irisa@flourishculture.com`, SMTP From to `business@flourish-culture.com`, and visitor email to Reply-To only.
+- Fixed Brand routing to `hannah@flourish-culture.com`, Creator routing to `irisa@flourish-culture.com`, SMTP From to `business@flourish-culture.com`, and visitor email to Reply-To only.
 - Added Cloudflare Turnstile server verification, signed form sessions, honeypot, input/origin/body controls, rate limits, duplicate suppression and privacy-safe logs.
 - Added a generic Privacy Notice plus approved Service 03 and Our Talent AI images while preserving the earlier image inventory.
 - Added deterministic service packaging, hardened systemd/Nginx templates, safe service rollback, immutable release hashes and strict public acceptance checks.

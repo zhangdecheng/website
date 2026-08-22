@@ -27,7 +27,7 @@
 - 按已确认需求更新英文首页内容，继续以 Brand 获客为第一主线、Creator 招募为第二路径。
 - 仅为 Service 03 和 Our Talent 生成两张与现有站点一致的 AI 图片，其余已有图片不修改。
 - 将两个 `mailto:` 表单合并为 Contact 区域中的一个动态表单，在页面内真实提交。
-- Brand 线索发送到 `hannah@flourish-culture.com`；Creator 线索发送到 `irisa@flourishculture.com`。
+- Brand 线索发送到 `hannah@flourish-culture.com`；Creator 线索发送到 `irisa@flourish-culture.com`。
 - 邮件固定使用 `business@flourish-culture.com` 作为发件人，把访客邮箱仅放入 `Reply-To`。
 - 增加通用英文隐私告知、必选确认、Turnstile、蜜罐、最短填写时间、限流、去重和安全日志。
 - 将生产规范为 `www` 域名，根域名永久跳转到 `www`，并为页面增加 canonical。
@@ -223,7 +223,7 @@ Creator 必填字段：
 | 身份 | To | From | Reply-To | 固定 Subject |
 | --- | --- | --- | --- | --- |
 | Brand | `hannah@flourish-culture.com` | `business@flourish-culture.com` | 已校验的访客邮箱 | `[Flourish Website] New Brand Inquiry` |
-| Creator | `irisa@flourishculture.com` | `business@flourish-culture.com` | 已校验的访客邮箱 | `[Flourish Website] New Creator Application` |
+| Creator | `irisa@flourish-culture.com` | `business@flourish-culture.com` | 已校验的访客邮箱 | `[Flourish Website] New Creator Application` |
 
 SMTP 默认配置为 `smtp.yunyou.top:465`，使用 TLS。登录用户名、客户端独立密码/授权码仅存在生产服务器权限受限的环境文件中。页面传入的数据不得影响 From、To、Subject 或其他邮件头；访客邮箱只作为 Reply-To。邮件同时提供纯文本和经过 HTML 转义的 HTML 版本，无附件、无访客指定收件人、无远程图片。
 

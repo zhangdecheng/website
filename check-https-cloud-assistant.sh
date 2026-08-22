@@ -157,7 +157,7 @@ assert_status 200 "$home_status" "www homepage"
 assert_contains "$WORK_DIR/index.html" '<link rel="canonical" href="https://www.flourishculturekol.com/" />' "www homepage"
 assert_header "$WORK_DIR/home.headers" "Content-Type" "text/html" "www homepage"
 assert_page_headers "$WORK_DIR/home.headers" "www homepage"
-assert_sha256 "$WORK_DIR/index.html" "7339fe4e6d004739f0f2b86de92af0c86038502e0dc6b985bee738f860d533f2" "www homepage"
+assert_sha256 "$WORK_DIR/index.html" "08646fc0748ace6e1c0aa62f646aef2cea68abbfb088fbe42918585e309b9f70" "www homepage"
 
 privacy_status="$(fetch GET \
   "https://www.flourishculturekol.com/privacy.html" \
@@ -209,7 +209,7 @@ printf '\n== Release files and MIME ==\n'
 styles_status="$(fetch GET "$WWW_ORIGIN/styles.css" "$WORK_DIR/styles.headers" "$WORK_DIR/styles.css")"
 assert_status 200 "$styles_status" "styles.css"
 assert_header "$WORK_DIR/styles.headers" "Content-Type" "text/css" "styles.css"
-assert_sha256 "$WORK_DIR/styles.css" "61afde1b48e96219fb39db0f4930d0b7e5e9d76716f9d2cc9fea7bd8a54b2824" "styles.css"
+assert_sha256 "$WORK_DIR/styles.css" "9c6b0b61bc18ae38d9d83af8ce27a9f3cd7f92c14292cb6bf8441766ed661c6e" "styles.css"
 
 script_status="$(fetch GET "$WWW_ORIGIN/script.js" "$WORK_DIR/script.headers" "$WORK_DIR/script.js")"
 assert_status 200 "$script_status" "script.js"
@@ -219,20 +219,36 @@ assert_sha256 "$WORK_DIR/script.js" "c6565c4b184b7a804ac3a882094de228faf45b9d50a
 contact_form_status="$(fetch GET "$WWW_ORIGIN/contact-form.js" "$WORK_DIR/contact-form.headers" "$WORK_DIR/contact-form.js")"
 assert_status 200 "$contact_form_status" "contact-form.js"
 assert_header "$WORK_DIR/contact-form.headers" "Content-Type" "javascript" "contact-form.js"
-assert_sha256 "$WORK_DIR/contact-form.js" "469f839535c4b8fefcecf7b8de61b9502cd06556a1a5fb89e2a1804ba68c96b2" "contact-form.js"
+assert_sha256 "$WORK_DIR/contact-form.js" "58c15bb2fae35b23a31bd5039b03aff7d423fb9d0a6f3cd6ab32deed8a57c568" "contact-form.js"
 
 site_core_status="$(fetch GET "$WWW_ORIGIN/site-core.js" "$WORK_DIR/site-core.headers" "$WORK_DIR/site-core.js")"
 assert_status 200 "$site_core_status" "site-core.js"
 assert_header "$WORK_DIR/site-core.headers" "Content-Type" "javascript" "site-core.js"
 assert_sha256 "$WORK_DIR/site-core.js" "b8fe43f1ed63cdd3a643db6bf9d11ca282601fb7c94d1d113f5f76a8c2f6d24e" "site-core.js"
 
+atoms_status="$(fetch GET \
+  "$WWW_ORIGIN/assets/brand-logos/atoms-transparent.png" \
+  "$WORK_DIR/atoms.headers" \
+  "$WORK_DIR/atoms.png")"
+assert_status 200 "$atoms_status" "Atoms logo"
+assert_header "$WORK_DIR/atoms.headers" "Content-Type" "image/png" "Atoms logo"
+assert_sha256 "$WORK_DIR/atoms.png" "a24e629aa00be325844022f03043b4659bf9624fce617a7d52d66af93e3d26ea" "Atoms logo"
+
+tripo_status="$(fetch GET \
+  "$WWW_ORIGIN/assets/brand-logos/tripo-transparent-cropped.png" \
+  "$WORK_DIR/tripo.headers" \
+  "$WORK_DIR/tripo.png")"
+assert_status 200 "$tripo_status" "TRIPO logo"
+assert_header "$WORK_DIR/tripo.headers" "Content-Type" "image/png" "TRIPO logo"
+assert_sha256 "$WORK_DIR/tripo.png" "5ddece931f2369199b0251dc2bc4a2a288654ece32806c7c939c3a0221508912" "TRIPO logo"
+
 service_image_status="$(fetch GET \
-  "$WWW_ORIGIN/assets/service-creative-localization-meetup.webp" \
+  "$WWW_ORIGIN/assets/service-creative-localization-camera-speaker.webp" \
   "$WORK_DIR/service-image.headers" \
   "$WORK_DIR/service-image.webp")"
 assert_status 200 "$service_image_status" "Service 03 image"
 assert_header "$WORK_DIR/service-image.headers" "Content-Type" "image/webp" "Service 03 image"
-assert_sha256 "$WORK_DIR/service-image.webp" "995033f01f8c240270f1262760d61a43a3e57d2a13ca71ab6a5d048b465481ab" "Service 03 image"
+assert_sha256 "$WORK_DIR/service-image.webp" "c4601f7a49a303e2bb5cca1b10390ea114bbacb411f41c5f99f29da63478db97" "Service 03 image"
 
 talent_image_status="$(fetch GET \
   "$WWW_ORIGIN/assets/talent-creator-growth-studio.webp" \

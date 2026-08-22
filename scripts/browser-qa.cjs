@@ -65,6 +65,7 @@ function closeServer(server) {
 async function installContactStubs(context, baseUrl, postState) {
   await context.addInitScript(() => {
     window.__qaScrollCalls = [];
+    window.__qaVerificationSnapshots = [];
     const nativeScrollIntoView = Element.prototype.scrollIntoView;
     Element.prototype.scrollIntoView = function scrollIntoView(options) {
       window.__qaScrollCalls.push(options || {});
@@ -89,6 +90,22 @@ async function installContactStubs(context, baseUrl, postState) {
         window.setTimeout(() => options?.callback(`qa-token-reset-${id}`), 0);
       },
     };
+
+    const watchVerification = () => {
+      const disclosure = document.querySelector("[data-verification-disclosure]");
+      if (!disclosure) return;
+      const record = () => window.__qaVerificationSnapshots.push({
+        hidden: disclosure.hidden,
+        open: disclosure.open,
+      });
+      record();
+      new MutationObserver(record).observe(disclosure, {
+        attributes: true,
+        attributeFilter: ["hidden", "open"],
+      });
+    };
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", watchVerification);
+    else watchVerification();
   });
 
   await context.route(`${baseUrl}/api/contact/config`, async (route) => {
@@ -161,6 +178,7 @@ async function collectFocusOrder(page) {
     sequence.push(await page.evaluate(() => {
       const active = document.activeElement;
       if (active?.dataset.qaTurnstile !== undefined) return "turnstile";
+      if (active?.matches("[data-verification-disclosure] summary")) return "turnstile";
       if (active?.dataset.submitButton !== undefined) return "submit";
       if (active?.matches('.privacy-consent a')) return "privacy-link";
       return active?.getAttribute("name") || active?.tagName?.toLowerCase() || "unknown";
@@ -192,12 +210,30 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     const heroCta = hero?.querySelector(".hero-actions .button");
     const heroRect = hero?.getBoundingClientRect();
     const heroCtaRect = heroCta?.getBoundingClientRect();
+    const talentMedia = document.querySelector(".talent-media");
+    const aboutMedia = document.querySelector(".about-media");
+    const serviceThreeImage = document.querySelector(".service-block:nth-child(3) .service-media img");
+    const talentMediaRect = talentMedia?.getBoundingClientRect();
+    const aboutMediaRect = aboutMedia?.getBoundingClientRect();
     return {
       role: document.querySelector('[name="role"]')?.value,
       brandVisible: !brand.hidden && [...brand.querySelectorAll("input, select, textarea")]
         .every((control) => !control.disabled),
       creatorHidden: creator.hidden && [...creator.querySelectorAll("input, select, textarea")]
         .every((control) => control.disabled),
+      verificationHidden: document.querySelector("[data-verification-disclosure]")?.hidden === true,
+      splitMediaWidths: {
+        talent: talentMediaRect ? Math.round(talentMediaRect.width * 100) / 100 : null,
+        about: aboutMediaRect ? Math.round(aboutMediaRect.width * 100) / 100 : null,
+      },
+      splitMediaAligned: Boolean(
+        talentMediaRect
+          && aboutMediaRect
+          && Math.abs(talentMediaRect.width - aboutMediaRect.width) <= 1,
+      ),
+      serviceThreeObjectPosition: serviceThreeImage
+        ? getComputedStyle(serviceThreeImage).objectPosition
+        : null,
       horizontalOverflow:
         document.documentElement.scrollWidth > document.documentElement.clientWidth,
       hiddenRevealCount: [...document.querySelectorAll(".reveal")]
@@ -265,6 +301,9 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
   postState.errors = { company: "Enter a valid company." };
   await waitForFormReady(page);
   await page.locator("[data-submit-button]").click();
+  const verificationShown = await page.evaluate(() =>
+    window.__qaVerificationSnapshots?.some(({ hidden, open }) => hidden === false && open === true)
+  );
   await page.waitForFunction(() =>
     document.querySelector('[name="company"]')?.validationMessage === "Enter a valid company."
   );
@@ -353,6 +392,7 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     joinCta,
     focusOrder,
     validationRecovery,
+    verificationShown,
     failureState,
     successState,
     mobileMenu,
@@ -366,13 +406,26 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
   const prefix = viewport.name;
   report.checks.defaultBrand = check(
     results,
-    defaultState.role === "brand" && defaultState.brandVisible && defaultState.creatorHidden,
+    defaultState.role === "brand"
+      && defaultState.brandVisible
+      && defaultState.creatorHidden
+      && defaultState.verificationHidden,
     `${prefix}: Brand default field state is incorrect`,
   );
   report.checks.heroCtaContained = check(
     results,
     defaultState.heroCtaFullyContained && defaultState.heroCtaBottomGap >= 24,
     `${prefix}: Hero CTA is clipped or has insufficient bottom spacing (${defaultState.heroCtaBottomGap}px)`,
+  );
+  report.checks.splitMediaAligned = check(
+    results,
+    defaultState.splitMediaAligned,
+    `${prefix}: Talent and About image columns are not aligned (${defaultState.splitMediaWidths.talent}px vs ${defaultState.splitMediaWidths.about}px)`,
+  );
+  report.checks.serviceThreeImageFocus = check(
+    results,
+    defaultState.serviceThreeObjectPosition === "88% 50%",
+    `${prefix}: Service 03 image focus is not shifted right (${defaultState.serviceThreeObjectPosition})`,
   );
   report.checks.creatorSwitch = check(
     results,
@@ -394,7 +447,6 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
       "budget",
       "growthObjectives",
       "privacyAccepted",
-      "turnstile",
       "submit",
     ]),
     `${prefix}: form keyboard order is incorrect (${focusOrder.join(" → ")})`,
@@ -415,6 +467,11 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     validationRecovery.company === "QA North Star Revised"
       && validationRecovery.validationMessage === "",
     `${prefix}: corrected field retained a stale server validation error`,
+  );
+  report.checks.verificationProgressive = check(
+    results,
+    verificationShown,
+    `${prefix}: verification module did not reveal during a missing-token submit`,
   );
   report.checks.successResetsValues = check(
     results,

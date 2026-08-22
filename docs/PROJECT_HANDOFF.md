@@ -1,6 +1,6 @@
 # FLOURISH CULTURE Website Project Handoff
 
-Last updated: 2026-08-20
+Last updated: 2026-08-22
 
 ## Project background
 
@@ -37,19 +37,20 @@ certificate directives and all `/review/` locations, files, data and services.
 
 ## Project version records
 
-Current source version: `v1.2.0` final static production refresh at local commit
-`ef61222` (production-executed rollout base `474bd69`, static content commit `6087ae5`);
-authenticated remote push and
-real-mail acceptance are still pending.
+Current source version: local tag `v1.2.0-logo-rail-20260822` on branch
+`codex/flourish-site-refresh`. Package/API version remains `v1.2.0`; the static Logo
+revision is archived separately. Authenticated remote push and actual inbox/Reply-To
+readback are still pending.
 
-The authoritative current source commit, archive byte counts and SHA-256 values
-are pinned in `docs/PRODUCTION_RUNBOOK.md`. Production file hashes have been
-read back against that release; real inbox acceptance and remote Git
-synchronization remain separate, incomplete gates.
+The authoritative archive byte counts and SHA-256 values are pinned in
+`docs/PRODUCTION_RUNBOOK.md`. Production file hashes have been read back against that
+release; the route correction still needs a Git commit, while inbox acceptance and
+remote Git synchronization remain separate, incomplete gates.
 
 | Version | Date | Status | Notes |
 | --- | --- | --- | --- |
-| `v1.2.0` | 2026-08-20 | Core production live; final acceptance incomplete | Unified Contact API, privacy notice, risk controls, two approved AI images, portable release, canonical routing and public checks. Real inbox/Reply-To and remote source closure remain. |
+| `v1.2.0-logo-rail-20260822` | 2026-08-22 | Local source archive and production static release | Transparent Atoms/TRIPO assets, optical sizing, static ZIP `c8007cd…74ab`, backup `20260822T115118Z-v1.2.0-static-08646fc`. |
+| `v1.2.0` | 2026-08-20 | Production acceptance URL ready; final closure incomplete | Unified Contact API, privacy notice, risk controls, two approved AI images, portable release, canonical routing and real Brand/Creator submissions. Inbox/Reply-To and remote source closure remain. |
 | `v1.1.0` | 2026-06-26 | Historical production record | Static homepage release; exact commit currently serving production is not confirmed. |
 | `v1.0.0` | 2026-06-26 | Historical record | Baseline project version record for documentation and handoff tracking. |
 
@@ -77,7 +78,7 @@ Fixed anchors:
 Contact routing:
 
 - Brand: From `business@flourish-culture.com`, To `hannah@flourish-culture.com`
-- Creator: From `business@flourish-culture.com`, To `irisa@flourishculture.com`
+- Creator: From `business@flourish-culture.com`, To `irisa@flourish-culture.com`
 - visitor email is validated and used only as Reply-To
 - success is shown only after the API returns `201` or duplicate-safe `202`
 
@@ -155,10 +156,10 @@ Public production baseline observed on 2026-08-18:
 2026-08-20 v1.2.0 core production release:
 
 - Current Contact release is
-  `/opt/flourish-contact/releases/20260819T202836Z`, with runtime symlink to
+  `/opt/flourish-contact/releases/20260820T110838Z`, with runtime symlink to
   `/opt/node-v24.17.0-linux-x64`; the unit is active/enabled and listens only on
   `127.0.0.1:3101`.
-- The previous Contact release `/opt/flourish-contact/releases/20260819T191356Z`
+- The previous Contact release `/opt/flourish-contact/releases/20260819T202836Z`
   remains available for explicit rollback.
 - Current Nginx source SHA-256 is
   `22efa58a328b5855999638133acc13a9472fa27132b1cba675479adbe2904d3e`.
@@ -173,12 +174,11 @@ Public production baseline observed on 2026-08-18:
   reads back fully `OK`.
 - www/apex canonical behavior, Contact public boundary, Privacy/security headers,
   exact release hashes, SMTP authentication preflight and `/review/` health/login
-  redirect all pass. A real Brand widget submission reached Cloudflare Siteverify,
-  and request `471c2340-0dab-4269-bb4e-7124a7a1e5ee` proved the configured
-  former Turnstile Secret was invalid for the public Site Key
-  (`invalid-input-secret`). No SMTP send occurred. The user has since recreated
-  the protected environment without exposing its values; a fresh real widget
-  token, Brand/Creator inbox delivery and Reply-To are not yet confirmed.
+  redirect all pass. After the protected Turnstile configuration was recreated,
+  real Brand and Creator widget submissions both reached `outcome=accepted`.
+  Creator routing was corrected to `irisa@flourish-culture.com`; the corrected retry
+  is request `6129340b-43d5-4475-83c2-81362c178e8a`. Brand/Creator inbox delivery
+  and Reply-To are not yet confirmed.
 - Use tracked `scripts/rotate-contact-turnstile.sh` only from a private root TTY to
   correct this single assignment. It takes no arguments, hides and confirms input,
   preserves the other seven assignments and rolls back service/config on failure.
@@ -188,7 +188,7 @@ Public production baseline observed on 2026-08-18:
   `ac8f54ee930eb5c6e1b1c8984a55b6ab68542800` adds signal/restart/health rollback
   coverage and portable cross-time-zone archives; `d3f4d059a8fca1738b176360a259dd750c584395`
   adds explicit rollback recovery failure reporting. Current Contact source files
-  match the final `bab01f95…0628` service archive byte-for-byte. The full local
+  match the final `ddb674d7…72aa3b` service archive byte-for-byte. The full local
   suite passes 86/86.
 - Final static ZIP `af10b1f4…07253` is live. Production `index.html`, `styles.css`
   and `privacy.html` read back as `7339fe4e…33f2`, `61afde1b…2824` and

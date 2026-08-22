@@ -495,6 +495,10 @@ test("package scripts and ignore rules keep generated releases out of Git", asyn
   assert.equal(packageJson.scripts?.["build:artifacts"], "bash scripts/build-production-artifacts.sh");
   assert.equal(packageJson.scripts?.["build:transfer"], "npm run build:artifacts && bash scripts/build-production-transfer.sh");
   assert.equal(packageJson.scripts?.["test:release"], "node --test tests/release.test.mjs");
+  assert.equal(packageJson.scripts?.["release:verify"], "node scripts/release-gate.mjs");
+  const gate = await readFile(new URL("../scripts/release-gate.mjs", import.meta.url), "utf8");
+  assert.match(gate, /build:artifacts/);
+  assert.match(gate, /browser-qa\.cjs/);
   assert.match(ignore, /# Generated release artifacts and staging directories\nrelease\//);
   assert.doesNotMatch(ignore, /^release\/\*\.zip$/m);
 });

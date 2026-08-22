@@ -13,7 +13,8 @@
     "build:contact": "node scripts/build-contact-release.mjs",
     "build:artifacts": "bash scripts/build-production-artifacts.sh",
     "build:transfer": "npm run build:artifacts && bash scripts/build-production-transfer.sh",
-    "test:release": "node --test tests/release.test.mjs"
+    "test:release": "node --test tests/release.test.mjs",
+    "release:verify": "node scripts/release-gate.mjs"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.2.8",

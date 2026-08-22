@@ -37,6 +37,15 @@ acceptance remain incomplete.
 - Inbox/Reply-To readback and authenticated remote source synchronization remain
   separate, incomplete gates.
 
+### Coding workflow hardening
+
+- Added `docs/CODING_WORKFLOW.md` to freeze scope before implementation, separate
+  visual/functional/production acceptance, require archive-before-deploy, and
+  keep unconfirmed inbox/remote/Review gates explicit.
+- Added `npm run release:verify`, which rebuilds deterministic production artifacts,
+  runs the core static/release/Contact tests and performs four-viewport Chrome QA
+  without connecting to production.
+
 ## 2026-08-20
 
 ### v1.2.0 core production release

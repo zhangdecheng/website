@@ -29,6 +29,7 @@ certificate directives and all `/review/` locations, files, data and services.
 - Approved visual direction: `design-options/neon-culture-bridge.png`
 - Section visual references: `design-options/sections/`
 - Design brief: `docs/design-brief.md`
+- Coding and release workflow: `docs/CODING_WORKFLOW.md`
 - Progress and implementation log: `PROJECT_PROGRESS.md`
 - Visual QA result log: `design-qa.md`
 - Manual review/editing copy: `review-editable.html`
@@ -44,8 +45,8 @@ readback are still pending.
 
 The authoritative archive byte counts and SHA-256 values are pinned in
 `docs/PRODUCTION_RUNBOOK.md`. Production file hashes have been read back against that
-release; the route correction still needs a Git commit, while inbox acceptance and
-remote Git synchronization remain separate, incomplete gates.
+release. Inbox acceptance and remote Git synchronization remain separate,
+incomplete gates.
 
 | Version | Date | Status | Notes |
 | --- | --- | --- | --- |
@@ -119,7 +120,12 @@ npm run build
 npm run build:contact
 node scripts/browser-qa.cjs
 cd dist && zip -qr ../release/flourishculturekol-homepage.zip .
+npm run release:verify
 ```
+
+For a production candidate, use `npm run release:verify` as the single local
+gate, then create the commit/tag archive before following the deployment section
+of `docs/PRODUCTION_RUNBOOK.md`. The gate does not deploy anything.
 
 Local preview:
 

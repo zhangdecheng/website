@@ -33,12 +33,19 @@ node scripts/browser-qa.cjs
 cd dist && zip -qr ../release/flourishculturekol-homepage.zip .
 cd .. && tar -C release/contact-service -czf release/flourish-contact-service.tgz .
 npm run build:transfer
+npm run release:verify
 ```
 
 `build:transfer` packages the fixed nine-file production allow-list and disables
 macOS AppleDouble metadata so the archive has the same inventory on macOS and
 GNU/Linux. It also verifies the inner checksum manifest before atomically
 replacing the generated transfer archive.
+
+`release:verify` is the single local release gate. It checks patch formatting,
+rebuilds both production artifacts, runs the core static/release/Contact tests,
+and runs Chrome responsive QA. It never connects to ECS, GitHub or production.
+The scope-freeze, source/build parity, archive-before-deploy and evidence rules
+are recorded in `docs/CODING_WORKFLOW.md`.
 
 Final Chrome evidence and the pass report are stored in `qa/` and
 `design-qa.md`. The approved mockup and its section crops are stored in
@@ -66,6 +73,7 @@ evidence and rollback paths are recorded in `docs/PRODUCTION_RUNBOOK.md` and
 - Latest production preflight evidence: `qa/production-preflight-2026-08-18.md`
 - Asset inventory and handling rules: `docs/ASSET_MANIFEST.md`
 - Change history: `docs/CHANGELOG.md`
+- Coding and release workflow: `docs/CODING_WORKFLOW.md`
 - Detailed progress log: `PROJECT_PROGRESS.md`
 - Visual QA record: `design-qa.md`
 - Approved design source of truth: `design-options/neon-culture-bridge.png`
@@ -89,8 +97,9 @@ rollback evidence. Private Turnstile/SMTP values must be entered directly in a
 protected server session and must never be put in Git, chat, screenshots, or
 Cloud Assistant command output.
 
-As of 2026-08-18, the v1.2.0 release is locally verified but **not yet confirmed
-deployed to production**.
+The latest static release was published and read back on 2026-08-22. Current
+production evidence, package hashes and rollback paths are recorded in
+`docs/PRODUCTION_RUNBOOK.md` and `qa/production-release-2026-08-22.md`.
 
 ## Recovery
 

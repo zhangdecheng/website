@@ -37,6 +37,10 @@ Phase 8 — v1.2.0 static Logo release archived and live; inbox readback and sou
 - Local Logo/source tests passed 26/26 and release-contract tests passed 20/20;
   the server-side production checker passed after the final cutover. Temporary
   GitHub transfer branches were removed after ECS download.
+- Converted the project retrospective into `docs/CODING_WORKFLOW.md` and added
+  `npm run release:verify` as the local release gate. The gate checks patch format,
+  deterministic static/Contact artifacts, 60 core tests and four-viewport Chrome
+  QA; it never performs deployment or Git writes.
 
 - Located the existing static site and deployment scripts.
 - Confirmed the original site was a single temporary `index.html`.

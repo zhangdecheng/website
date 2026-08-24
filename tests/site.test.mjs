@@ -84,7 +84,7 @@ test("only Service 03 and Our Talent use the two approved new AI assets", async 
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const serviceThree =
     section(html, "services")
-      .match(/<article class="service-block reveal">[\s\S]*?<\/article>/g)
+      .match(/<article class="service-block(?: service-block-complete-media)? reveal">[\s\S]*?<\/article>/g)
       ?.find((article) => article.includes('<span class="service-number">03</span>')) ?? "";
   const talent = section(html, "talent");
 
@@ -119,7 +119,7 @@ test("homepage services use the approved three-block copy", async () => {
   const text = normalized(services);
 
   assert.match(services, /class="services-grid"/);
-  assert.equal(services.match(/class="service-block reveal"/g)?.length, 3);
+  assert.equal(services.match(/class="service-block(?: service-block-complete-media)? reveal"/g)?.length, 3);
   for (const title of [
     "Global Influencer Marketing",
     "Data-Driven Growth &amp; Performance Insights",
@@ -405,7 +405,7 @@ test("styles preserve social-first polish without changing locked content", asyn
   assert.match(css, /\.platform-chip:is\(:hover,\s*:focus-visible\)\s*{[\s\S]*background:\s*var\(--coral\)/);
   assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(280px,\s*0\.65fr\) minmax\(0,\s*1\.35fr\)/);
   assert.match(css, /\.service-media img\s*{[\s\S]*min-height:\s*clamp\(340px,\s*33vw,\s*420px\)/);
-  assert.match(css, /\.service-block:nth-child\(3\) \.service-media img\s*{[\s\S]*object-position:\s*88% center/);
+  assert.match(css, /\.service-block-complete-media \.service-media img\s*{[\s\S]*object-fit:\s*contain/);
   assert.match(css, /\.service-detail\s*{[\s\S]*grid-template-columns:\s*clamp\(128px,\s*13vw,\s*178px\) minmax\(0,\s*1fr\)/);
   assert.match(css, /--type-label:\s*clamp\(11px,\s*0\.78vw,\s*12px\)/);
   assert.match(css, /--type-body:\s*clamp\(14px,\s*1\.1vw,\s*17px\)/);
@@ -683,5 +683,22 @@ test("official partner badges retain full source bounds and the header logo has 
 
   assert.match(css, /\.official-partner-badges\s*{[\s\S]*padding:\s*clamp\(18px,\s*2vw,\s*30px\)/);
   assert.match(css, /\.official-partner-badges img\s*{[\s\S]*width:\s*min\(40%,\s*164px\)/);
-  assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(164px,\s*14vw,\s*204px\)/);
+  assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
+});
+
+test("partner proof keeps internal badge highlights and Services 02/03 show complete images", async () => {
+  const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+
+  for (const filename of ["index.html", "review-editable.html"]) {
+    const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
+    assert.equal(
+      html.match(/class="service-block service-block-complete-media reveal"/g)?.length,
+      2,
+      `${filename} must mark only Services 02 and 03 as complete-image media`,
+    );
+  }
+
+  assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
+  assert.match(css, /\.service-block-complete-media \.service-media img\s*{[\s\S]*object-fit:\s*contain/);
+  assert.match(css, /\.service-block-complete-media:hover \.service-media img\s*{[\s\S]*transform:\s*none/);
 });

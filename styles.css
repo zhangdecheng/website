@@ -179,7 +179,7 @@ textarea {
 }
 
 .wordmark-lockup img {
-  width: clamp(164px, 14vw, 204px);
+  width: clamp(132px, 11vw, 164px);
   height: auto;
 }
 
@@ -1087,17 +1087,31 @@ h1 {
   transition: filter 0.5s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.service-block:nth-child(2) .service-media img {
-  object-position: 0% center;
+.service-block-complete-media .service-media {
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 1.6vw, 22px);
 }
 
-.service-block:nth-child(3) .service-media img {
-  object-position: 88% center;
+.service-block-complete-media .service-media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.service-block-complete-media .service-media img {
+  min-height: 0;
+  object-fit: contain;
+  object-position: center;
 }
 
 .service-block:hover .service-media img {
   filter: saturate(1.02) contrast(1.05) brightness(0.97);
   transform: scale(1.04);
+}
+
+.service-block-complete-media:hover .service-media img {
+  transform: none;
 }
 
 .platform-chips {

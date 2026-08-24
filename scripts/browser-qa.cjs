@@ -422,10 +422,10 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     defaultState.splitMediaAligned,
     `${prefix}: Talent and About image columns are not aligned (${defaultState.splitMediaWidths.talent}px vs ${defaultState.splitMediaWidths.about}px)`,
   );
-  report.checks.serviceThreeImageFocus = check(
+  report.checks.serviceThreeImageComplete = check(
     results,
-    defaultState.serviceThreeObjectPosition === "88% 50%",
-    `${prefix}: Service 03 image focus is not shifted right (${defaultState.serviceThreeObjectPosition})`,
+    defaultState.serviceThreeObjectPosition === "50% 50%",
+    `${prefix}: Service 03 image is not centered for complete display (${defaultState.serviceThreeObjectPosition})`,
   );
   report.checks.creatorSwitch = check(
     results,

@@ -365,7 +365,7 @@ test("review editable mirrors remaining Feishu module copy", async () => {
   assert.match(html, /class="platform-chip"[\s\S]*aria-label="Shorts"[\s\S]*ri-play-circle-fill/);
 });
 
-test("annotated header and footer use dark-adapted HTML logo lockups", async () => {
+test("header and footer use the shared transparent FLOURISH lockup", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const header = html.match(/<header class="site-header"[\s\S]*?<\/header>/)?.[0] ?? "";
   const footer = html.match(/<footer class="site-footer">[\s\S]*?<\/footer>/)?.[0] ?? "";
@@ -373,10 +373,10 @@ test("annotated header and footer use dark-adapted HTML logo lockups", async () 
   assert.ok(header, "site header should exist");
   assert.ok(footer, "site footer should exist");
   assert.match(header, /class="wordmark wordmark-lockup"/);
-  assert.match(header, /class="wordmark-mark"/);
-  assert.match(header, /FLOURISH CULTURE/);
-  assert.match(header, /GLOBAL CREATOR GROWTH/);
+  assert.match(header, /src="assets\/flourish-logo-lockup\.png"/);
+  assert.match(header, /alt="FLOURISH CULTURE — Global Creator Growth"/);
   assert.match(footer, /class="wordmark wordmark-lockup wordmark-footer"/);
+  assert.match(footer, /src="assets\/flourish-logo-lockup\.png"/);
   assert.doesNotMatch(`${header}\n${footer}`, /flourish-logo-reference\.png/);
 
   for (const label of ["Services", "Our Talent", "About Us", "Contact Us"]) {
@@ -509,7 +509,7 @@ test("source reconciliation preserves image dimensions and loading priorities", 
     }
     assert.match(heroImages[0], /\bfetchpriority="high"/);
 
-    assert.equal(logoImages.length, 16, `${filename} should retain the seamless logo pair`);
+    assert.equal(logoImages.length, 9, `${filename} should retain one accessible logo source set`);
     for (const image of logoImages) {
       assert.match(image, /\bwidth="\d+"/);
       assert.match(image, /\bheight="\d+"/);
@@ -565,7 +565,7 @@ test("whiteboard 3 bridge section uses centered Who We Are double cards", async 
   assert.match(css, /--desktop-section-scale:/);
 });
 
-test("whiteboard 3 logo rail autoscrolls eight approved logos accessibly", async () => {
+test("logo rail autoscrolls the approved nine-logo source set accessibly", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
   const logoStrip = html.match(/<section class="logo-strip"[\s\S]*?<\/section>/)?.[0] ?? "";
@@ -573,17 +573,17 @@ test("whiteboard 3 logo rail autoscrolls eight approved logos accessibly", async
   assert.match(logoStrip, /<h2 id="trusted-heading">Trusted by Leading Global Brands &amp; Innovators<\/h2>/);
   assert.match(logoStrip, /class="brand-logo-viewport"/);
   assert.match(logoStrip, /class="brand-logo-track"/);
-  assert.match(logoStrip, /aria-hidden="true"/);
-  for (const asset of ["temu.png", "anker.png", "dreame.png", "aliexpress.png", "lovart.png", "atoms-transparent.png", "tripo-transparent-cropped.png", "ksp.png"]) {
+  assert.match(logoStrip, /data-brand-logo-set/);
+  for (const asset of ["tripo-transparent-cropped.png", "temu.png", "anker.png", "usmile.png", "dreame.png", "aliexpress.png", "lovart.png", "atoms-transparent.png", "ksp.png"]) {
     assert.match(logoStrip, new RegExp(`assets/brand-logos/${asset.replace(".", "\\.")}`));
   }
   assert.doesNotMatch(logoStrip, /assets\/brand-logos\/aiper\.png/);
-  assert.equal(logoStrip.match(/<img /g)?.length, 16);
+  assert.equal(logoStrip.match(/<img /g)?.length, 9);
   assert.match(css, /@keyframes logo-scroll/);
   assert.match(css, /\.hero::before\s*{[\s\S]*radial-gradient\(ellipse at 20% 30%/);
   assert.match(css, /\.logo-strip\s*{[\s\S]*padding:\s*clamp\(80px,\s*8\.5vw,\s*120px\) 0 clamp\(56px,\s*5\.5vw,\s*78px\)/);
   assert.match(css, /\.logo-strip h2\s*{[\s\S]*font-size:\s*clamp\(26px,\s*3vw,\s*42px\)/);
-  assert.match(css, /\.brand-logo-track\s*{[\s\S]*animation:\s*logo-scroll/);
+  assert.match(css, /\.brand-logo-track\.is-ready\s*{[\s\S]*animation:\s*logo-scroll/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)[\s\S]*\.brand-logo-track\s*{[\s\S]*animation:\s*none/);
   assert.match(css, /\.brand-logo-viewport\s*{[\s\S]*overflow:\s*hidden/);
 });
@@ -625,7 +625,7 @@ test("review editable page exists as a safe annotated editing copy", async () =>
 test("shared Canva-sourced FLOURISH lockup and mark are used across public and review pages", async () => {
   for (const filename of ["index.html", "privacy.html", "review-editable.html"]) {
     const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
-    assert.match(html, /rel="icon" href="assets\/flourish-mark\.png"/);
+    assert.match(html, /rel="icon"[^>]*href="assets\/flourish-mark\.png"/);
     assert.match(html, /src="assets\/flourish-logo-lockup\.png"/);
   }
 

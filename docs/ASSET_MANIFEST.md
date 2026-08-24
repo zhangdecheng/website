@@ -1,6 +1,6 @@
 # FLOURISH CULTURE Asset Manifest
 
-Last updated: 2026-08-22
+Last updated: 2026-08-24
 
 The `v1.2.0-logo-rail-20260822` source archive and production release use the
 transparent Atoms/TRIPO derivatives listed below; the original supplied files are
@@ -13,6 +13,8 @@ These files are copied into `dist/assets/` and served by the production homepage
 ### Brand and logo assets
 
 - `assets/flourish-logo-reference.png` — internal logo reference image
+- `assets/flourish-logo-lockup.png` — transparent FLOURISH CULTURE lockup derived from the approved Canva-sourced artwork; used in the header and footer
+- `assets/flourish-mark.png` — transparent square brand mark derived from the approved lockup; used as the favicon
 - `assets/brand-logo-strip.png` — earlier combined logo strip
 - `assets/brand-logo-strip-white.png` — white logo strip reference
 - `assets/brand-logos/temu.png`
@@ -25,8 +27,14 @@ These files are copied into `dist/assets/` and served by the production homepage
 - `assets/brand-logos/tripo-transparent.png` — source TRIPO logo with the source dark rectangle removed to transparent pixels
 - `assets/brand-logos/tripo-transparent-cropped.png` — TRIPO logo cropped to its visible transparent-pixel bounds for optical sizing
 - `assets/brand-logos/ksp.png`
+- `assets/brand-logos/usmile.png` — uSmile wordmark converted to a transparent dark-rail treatment from the supplied artwork
 
-Only these approved brand logos should be used for the endorsement/logo rail. The AIPER logo was removed from the rail on 2026-08-22.
+### Official partnership assets
+
+- `assets/partner-badges/tiktok-shop-tap.png` — transparent TAP certification badge cropped from the supplied official-partnership reference
+- `assets/partner-badges/tiktok-shop-cap.png` — transparent CAP certification badge cropped from the supplied official-partnership reference
+
+Only these approved brand logos should be used for the endorsement/logo rail. The approved first-set order is Tripo, Temu, Anker Innovations, uSmile, Dreame, AliExpress, Lovart, Atoms, and KSP Performance. The AIPER logo was removed from the rail on 2026-08-22.
 
 ### Main visual assets
 

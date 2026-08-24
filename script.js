@@ -36,6 +36,21 @@ window.addEventListener(
 
 initContactForm();
 
+function cloneBrandLogoSet() {
+  const source = document.querySelector("[data-brand-logo-set]");
+  const track = source?.parentElement;
+  if (!source || !track || track.querySelector('.brand-logo-set[aria-hidden="true"]')) return;
+
+  const duplicate = source.cloneNode(true);
+  duplicate.removeAttribute("data-brand-logo-set");
+  duplicate.setAttribute("aria-hidden", "true");
+  duplicate.querySelectorAll("img").forEach((image) => image.setAttribute("alt", ""));
+  track.append(duplicate);
+  track.classList.add("is-ready");
+}
+
+cloneBrandLogoSet();
+
 const reveals = document.querySelectorAll(".reveal");
 
 if (reducedMotion || !("IntersectionObserver" in window)) {

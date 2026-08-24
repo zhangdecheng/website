@@ -6,6 +6,16 @@ Current source version: `v1.2.0-logo-rail-20260822` archived locally and live in
 The package/API version remains `v1.2.0`; actual inbox/Reply-To and remote-source
 acceptance remain incomplete.
 
+## 2026-08-24
+
+### Unreleased homepage visual candidate
+
+- Added the approved transparent FLOURISH lockup and square favicon mark across the homepage, Privacy Notice and editable review copy.
+- Changed the logo rail to one accessible source set; `script.js` now creates the decorative duplicate for scrolling. The approved order is Tripo, Temu, Anker Innovations, uSmile, Dreame, AliExpress, Lovart, Atoms and KSP Performance.
+- Reworked the Hero media into a responsive two-landscape/one-portrait grid using `object-fit: contain`, so each supplied image remains fully visible.
+- Added the English “Official Partnership” proof section between Who We Are and Services, with transparent TAP and CAP badge derivatives on the left and partner copy on the right.
+- This is a local source candidate only: no archive, production deployment, rollback snapshot or public read-back has been performed.
+
 | Version | Date | Status | Notes |
 | --- | --- | --- | --- |
 | `v1.2.0-logo-rail-20260822` | 2026-08-22 | Archived locally and production live | Transparent Atoms/TRIPO assets, optical sizing, deterministic static package, production backup and public read-back. |

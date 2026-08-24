@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
+import { inflateSync } from "node:zlib";
 
 function section(html, className) {
   return html.match(new RegExp(`<section class="${className}"[\\s\\S]*?<\\/section>`))?.[0] ?? "";
@@ -12,6 +13,48 @@ function normalized(value) {
 
 function assertIncludesText(source, expected) {
   assert.ok(source.includes(expected), `Expected text not found: ${expected}`);
+}
+
+function decodeRgbaPng(bytes) {
+  assert.equal(bytes.toString("ascii", 1, 4), "PNG");
+  const width = bytes.readUInt32BE(16);
+  const height = bytes.readUInt32BE(20);
+  assert.equal(bytes[24], 8, "badge PNG must use 8-bit channels");
+  assert.equal(bytes[25], 6, "badge PNG must use RGBA pixels");
+  const idat = [];
+  for (let offset = 8; offset < bytes.length;) {
+    const length = bytes.readUInt32BE(offset);
+    const type = bytes.toString("ascii", offset + 4, offset + 8);
+    if (type === "IDAT") idat.push(bytes.subarray(offset + 8, offset + 8 + length));
+    offset += length + 12;
+  }
+  const compressed = inflateSync(Buffer.concat(idat));
+  const stride = width * 4;
+  const pixels = Buffer.alloc(stride * height);
+  let source = 0;
+  for (let row = 0; row < height; row += 1) {
+    const filter = compressed[source++];
+    const rowOffset = row * stride;
+    for (let column = 0; column < stride; column += 1) {
+      const raw = compressed[source++];
+      const left = column >= 4 ? pixels[rowOffset + column - 4] : 0;
+      const above = row > 0 ? pixels[rowOffset - stride + column] : 0;
+      const upperLeft = row > 0 && column >= 4 ? pixels[rowOffset - stride + column - 4] : 0;
+      let value = raw;
+      if (filter === 1) value = raw + left;
+      if (filter === 2) value = raw + above;
+      if (filter === 3) value = raw + Math.floor((left + above) / 2);
+      if (filter === 4) {
+        const estimate = left + above - upperLeft;
+        const leftDelta = Math.abs(estimate - left);
+        const aboveDelta = Math.abs(estimate - above);
+        const upperLeftDelta = Math.abs(estimate - upperLeft);
+        value = raw + (leftDelta <= aboveDelta && leftDelta <= upperLeftDelta ? left : aboveDelta <= upperLeftDelta ? above : upperLeft);
+      }
+      pixels[rowOffset + column] = value & 0xff;
+    }
+  }
+  return { width, height, pixels };
 }
 
 test("homepage exposes the locked English anchors and canonical metadata", async () => {
@@ -403,9 +446,9 @@ test("styles preserve social-first polish without changing locked content", asyn
   assert.match(css, /--card-line-dark:\s*rgba\(250,\s*249,\s*247,\s*0\.08\)/);
   assert.match(css, /\.platform-chip\s*{[\s\S]*width:\s*clamp\(36px,\s*3\.2vw,\s*46px\)/);
   assert.match(css, /\.platform-chip:is\(:hover,\s*:focus-visible\)\s*{[\s\S]*background:\s*var\(--coral\)/);
-  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(280px,\s*0\.65fr\) minmax\(0,\s*1\.35fr\)/);
+  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(288px,\s*0\.67fr\) minmax\(0,\s*1\.33fr\)/);
   assert.match(css, /\.service-media img\s*{[\s\S]*min-height:\s*clamp\(340px,\s*33vw,\s*420px\)/);
-  assert.match(css, /\.service-block-complete-media \.service-media img\s*{[\s\S]*object-fit:\s*contain/);
+  assert.match(css, /\.service-media img\s*{[\s\S]*object-fit:\s*cover/);
   assert.match(css, /\.service-detail\s*{[\s\S]*grid-template-columns:\s*clamp\(128px,\s*13vw,\s*178px\) minmax\(0,\s*1fr\)/);
   assert.match(css, /--type-label:\s*clamp\(11px,\s*0\.78vw,\s*12px\)/);
   assert.match(css, /--type-body:\s*clamp\(14px,\s*1\.1vw,\s*17px\)/);
@@ -686,19 +729,27 @@ test("official partner badges retain full source bounds and the header logo has 
   assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
 });
 
-test("partner proof keeps internal badge highlights and Services 02/03 show complete images", async () => {
+test("partner proof has a clean transparent exterior and Services 02/03 use widened focused crops", async () => {
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+
+  for (const asset of ["tiktok-shop-tap.png", "tiktok-shop-cap.png"]) {
+    const { width, height, pixels } = decodeRgbaPng(await readFile(new URL(`../assets/partner-badges/${asset}`, import.meta.url)));
+    for (let x = 0; x < 8; x += 1) {
+      for (let y = 0; y < height; y += 1) {
+        assert.equal(pixels[(y * width + x) * 4 + 3], 0, `${asset} left exterior must be transparent`);
+        assert.equal(pixels[(y * width + (width - 1 - x)) * 4 + 3], 0, `${asset} right exterior must be transparent`);
+      }
+    }
+  }
 
   for (const filename of ["index.html", "review-editable.html"]) {
     const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
-    assert.equal(
-      html.match(/class="service-block service-block-complete-media reveal"/g)?.length,
-      2,
-      `${filename} must mark only Services 02 and 03 as complete-image media`,
-    );
+    assert.match(html, /class="service-image-performance"/);
+    assert.match(html, /class="service-image-localization"/);
   }
 
   assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
-  assert.match(css, /\.service-block-complete-media \.service-media img\s*{[\s\S]*object-fit:\s*contain/);
-  assert.match(css, /\.service-block-complete-media:hover \.service-media img\s*{[\s\S]*transform:\s*none/);
+  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(288px,\s*0\.67fr\) minmax\(0,\s*1\.33fr\)/);
+  assert.match(css, /\.service-media img\.service-image-performance\s*{[\s\S]*object-position:\s*0% center/);
+  assert.match(css, /\.service-media img\.service-image-localization\s*{[\s\S]*object-position:\s*88% center/);
 });

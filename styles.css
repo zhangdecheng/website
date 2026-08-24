@@ -1043,7 +1043,7 @@ h1 {
 .service-block {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(280px, 0.65fr) minmax(0, 1.35fr);
+  grid-template-columns: minmax(288px, 0.67fr) minmax(0, 1.33fr);
   min-height: 0;
   overflow: hidden;
   border: 1px solid var(--line-dark);
@@ -1087,31 +1087,17 @@ h1 {
   transition: filter 0.5s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.service-block-complete-media .service-media {
-  display: grid;
-  place-items: center;
-  padding: clamp(12px, 1.6vw, 22px);
+.service-media img.service-image-performance {
+  object-position: 0% center;
 }
 
-.service-block-complete-media .service-media picture {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.service-block-complete-media .service-media img {
-  min-height: 0;
-  object-fit: contain;
-  object-position: center;
+.service-media img.service-image-localization {
+  object-position: 88% center;
 }
 
 .service-block:hover .service-media img {
   filter: saturate(1.02) contrast(1.05) brightness(0.97);
   transform: scale(1.04);
-}
-
-.service-block-complete-media:hover .service-media img {
-  transform: none;
 }
 
 .platform-chips {
@@ -2075,7 +2061,7 @@ textarea:user-invalid {
   }
 
   .service-block {
-    grid-template-columns: minmax(230px, 0.66fr) minmax(0, 1.34fr);
+    grid-template-columns: minmax(238px, 0.68fr) minmax(0, 1.32fr);
   }
 
   .service-detail {

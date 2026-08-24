@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-24T05:28:02.941Z",
+  "generatedAt": "2026-08-24T07:23:04.031Z",
   "browser": "System Google Chrome via playwright-core 1.62.1",
   "viewports": {
     "desktop-1440x1024": {
@@ -18,7 +18,10 @@
           "about": 633.59
         },
         "splitMediaAligned": true,
-        "serviceThreeObjectPosition": "50% 50%",
+        "serviceImagePositions": {
+          "performance": "0% 50%",
+          "localization": "88% 50%"
+        },
         "horizontalOverflow": false,
         "hiddenRevealCount": 14,
         "heroCtaFullyContained": true,
@@ -92,7 +95,7 @@
         "defaultBrand": true,
         "heroCtaContained": true,
         "splitMediaAligned": true,
-        "serviceThreeImageComplete": true,
+        "serviceMediaFocus": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
@@ -122,7 +125,10 @@
           "about": 450.55
         },
         "splitMediaAligned": true,
-        "serviceThreeObjectPosition": "50% 50%",
+        "serviceImagePositions": {
+          "performance": "0% 50%",
+          "localization": "88% 50%"
+        },
         "horizontalOverflow": false,
         "hiddenRevealCount": 11,
         "heroCtaFullyContained": true,
@@ -196,7 +202,7 @@
         "defaultBrand": true,
         "heroCtaContained": true,
         "splitMediaAligned": true,
-        "serviceThreeImageComplete": true,
+        "serviceMediaFocus": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
@@ -226,7 +232,10 @@
           "about": 390
         },
         "splitMediaAligned": true,
-        "serviceThreeObjectPosition": "50% 50%",
+        "serviceImagePositions": {
+          "performance": "0% 50%",
+          "localization": "88% 50%"
+        },
         "horizontalOverflow": false,
         "hiddenRevealCount": 14,
         "heroCtaFullyContained": true,
@@ -303,7 +312,7 @@
         "defaultBrand": true,
         "heroCtaContained": true,
         "splitMediaAligned": true,
-        "serviceThreeImageComplete": true,
+        "serviceMediaFocus": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
@@ -334,7 +343,10 @@
           "about": 360
         },
         "splitMediaAligned": true,
-        "serviceThreeObjectPosition": "50% 50%",
+        "serviceImagePositions": {
+          "performance": "0% 50%",
+          "localization": "88% 50%"
+        },
         "horizontalOverflow": false,
         "hiddenRevealCount": 14,
         "heroCtaFullyContained": true,
@@ -411,7 +423,7 @@
         "defaultBrand": true,
         "heroCtaContained": true,
         "splitMediaAligned": true,
-        "serviceThreeImageComplete": true,
+        "serviceMediaFocus": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,

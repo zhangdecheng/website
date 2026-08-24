@@ -46,7 +46,7 @@
 
 ### 2. 品牌 Logo 轨道
 
-- 首轮顺序固定为：Tripo、uSmile、Temu、Anker Innovations、Dreame、AliExpress、Lovart、Atoms、KSP Performance。
+- 首轮顺序固定为：Tripo、Temu、Anker Innovations、uSmile、Dreame、AliExpress、Lovart、Atoms、KSP Performance。
 - uSmile 使用用户提供的源图生成透明深色背景适配版本：移除白底，黑色字形转为白色，保留品牌蓝色元素。
 - Tripo 沿用已确认的透明裁切资产，并通过具名 class 控制光学尺寸；不再依赖品牌位置对应的 `nth-child` 序号。
 - HTML 只保留一组可访问 Logo。`script.js` 从首轮 DOM 自动克隆一组 `aria-hidden` 复制轮，形成无缝滚动；无 JavaScript 时仍显示静态首轮。

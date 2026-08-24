@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
 
 function section(html, className) {
@@ -620,4 +620,54 @@ test("review editable page exists as a safe annotated editing copy", async () =>
   ]) {
     assert.match(html, new RegExp(marker));
   }
+});
+
+test("shared Canva-sourced FLOURISH lockup and mark are used across public and review pages", async () => {
+  for (const filename of ["index.html", "privacy.html", "review-editable.html"]) {
+    const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
+    assert.match(html, /rel="icon" href="assets\/flourish-mark\.png"/);
+    assert.match(html, /src="assets\/flourish-logo-lockup\.png"/);
+  }
+
+  for (const asset of [
+    "flourish-logo-lockup.png",
+    "flourish-mark.png",
+    "brand-logos/usmile.png",
+    "partner-badges/tiktok-shop-tap.png",
+    "partner-badges/tiktok-shop-cap.png",
+  ]) {
+    await stat(new URL(`../assets/${asset}`, import.meta.url));
+  }
+});
+
+test("homepage presents complete Hero media and the approved partner proof sequence", async () => {
+  const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+  const script = await readFile(new URL("../script.js", import.meta.url), "utf8");
+  const hero = html.match(/<figure class="hero-media[\s\S]*?<\/figure>/)?.[0] ?? "";
+  const rail = html.match(/<section class="logo-strip"[\s\S]*?<\/section>/)?.[0] ?? "";
+
+  assert.match(hero, /hero-card-landscape/);
+  assert.match(hero, /hero-card-portrait/);
+  assert.match(css, /\.hero-media\s*{[\s\S]*grid-template-areas:/);
+  assert.match(css, /\.hero-card img\s*{[\s\S]*object-fit:\s*contain/);
+  assert.match(rail, /data-brand-logo-set/);
+  assert.deepEqual(
+    [...rail.matchAll(/assets\/brand-logos\/([^"\s]+)/g)].map((match) => match[1]),
+    [
+      "tripo-transparent-cropped.png",
+      "temu.png",
+      "anker.png",
+      "usmile.png",
+      "dreame.png",
+      "aliexpress.png",
+      "lovart.png",
+      "atoms-transparent.png",
+      "ksp.png",
+    ],
+  );
+  assert.match(script, /cloneBrandLogoSet/);
+  assert.match(html, /<section class="official-partners"/);
+  assert.ok(html.indexOf('class="bridge"') < html.indexOf('class="official-partners"'));
+  assert.ok(html.indexOf('class="official-partners"') < html.indexOf('class="services"'));
 });

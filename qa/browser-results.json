@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-22T11:34:53.165Z",
+  "generatedAt": "2026-08-24T04:13:16.180Z",
   "browser": "System Google Chrome via playwright-core 1.62.1",
   "viewports": {
     "desktop-1440x1024": {
@@ -20,7 +20,7 @@
         "splitMediaAligned": true,
         "serviceThreeObjectPosition": "88% 50%",
         "horizontalOverflow": false,
-        "hiddenRevealCount": 12,
+        "hiddenRevealCount": 14,
         "heroCtaFullyContained": true,
         "heroCtaBottomGap": 97
       },
@@ -124,9 +124,9 @@
         "splitMediaAligned": true,
         "serviceThreeObjectPosition": "88% 50%",
         "horizontalOverflow": false,
-        "hiddenRevealCount": 9,
+        "hiddenRevealCount": 11,
         "heroCtaFullyContained": true,
-        "heroCtaBottomGap": 97
+        "heroCtaBottomGap": 198
       },
       "creatorState": {
         "role": "creator",
@@ -228,9 +228,9 @@
         "splitMediaAligned": true,
         "serviceThreeObjectPosition": "88% 50%",
         "horizontalOverflow": false,
-        "hiddenRevealCount": 12,
+        "hiddenRevealCount": 14,
         "heroCtaFullyContained": true,
-        "heroCtaBottomGap": 931
+        "heroCtaBottomGap": 993
       },
       "creatorState": {
         "role": "creator",
@@ -336,9 +336,9 @@
         "splitMediaAligned": true,
         "serviceThreeObjectPosition": "88% 50%",
         "horizontalOverflow": false,
-        "hiddenRevealCount": 12,
+        "hiddenRevealCount": 14,
         "heroCtaFullyContained": true,
-        "heroCtaBottomGap": 931
+        "heroCtaBottomGap": 918
       },
       "creatorState": {
         "role": "creator",

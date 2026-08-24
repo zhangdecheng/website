@@ -6,7 +6,7 @@
 
 **Architecture:** Keep the site static. Use one accessible HTML Logo set and let the existing module script clone its decorative repeat after load, so the source has one order of record and still degrades to a readable static rail. New visual elements reuse existing black/coral/gold tokens and responsive breakpoints; no Contact, Nginx, Review, deployment, or remote Git behavior changes.
 
-**Tech Stack:** Semantic HTML, CSS custom properties/Grid, browser-native DOM cloning, Node test runner, Playwright Core/Chrome, Python/Pillow only for one-off local raster asset preparation.
+**Tech Stack:** Semantic HTML, CSS custom properties/Grid, browser-native DOM cloning, Node test runner, Playwright Core/Chrome, macOS Swift/AppKit only for one-off local raster asset preparation.
 
 ---
 
@@ -125,7 +125,7 @@ Expected: FAIL with `ENOENT` for the new approved production asset paths.
 
 - [ ] **Step 3: Generate the minimal production derivatives from the three user-supplied source images**
 
-Run a one-off Pillow command that:
+Run a one-off Swift/AppKit command that:
 
 ```text
 1. Removes the dark screenshot background from the 778×276 FLOURISH source while retaining white wordmark pixels and the gold mark.

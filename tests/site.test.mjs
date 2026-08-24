@@ -671,3 +671,17 @@ test("homepage presents complete Hero media and the approved partner proof seque
   assert.ok(html.indexOf('class="bridge"') < html.indexOf('class="official-partners"'));
   assert.ok(html.indexOf('class="official-partners"') < html.indexOf('class="services"'));
 });
+
+test("official partner badges retain full source bounds and the header logo has breathing room", async () => {
+  const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+
+  for (const [filename, minimumWidth] of [["tiktok-shop-tap.png", 340], ["tiktok-shop-cap.png", 320]]) {
+    const bytes = await readFile(new URL(`../assets/partner-badges/${filename}`, import.meta.url));
+    assert.equal(bytes.toString("ascii", 1, 4), "PNG");
+    assert.ok(bytes.readUInt32BE(16) >= minimumWidth, `${filename} must retain a complete horizontal badge boundary`);
+  }
+
+  assert.match(css, /\.official-partner-badges\s*{[\s\S]*padding:\s*clamp\(18px,\s*2vw,\s*30px\)/);
+  assert.match(css, /\.official-partner-badges img\s*{[\s\S]*width:\s*min\(40%,\s*164px\)/);
+  assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(164px,\s*14vw,\s*204px\)/);
+});

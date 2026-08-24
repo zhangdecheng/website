@@ -14,6 +14,7 @@ acceptance remain incomplete.
 - Changed the logo rail to one accessible source set; `script.js` now creates the decorative duplicate for scrolling. The approved order is Tripo, Temu, Anker Innovations, uSmile, Dreame, AliExpress, Lovart, Atoms and KSP Performance.
 - Reworked the Hero media into a responsive two-landscape/one-portrait grid using `object-fit: contain`, so each supplied image remains fully visible.
 - Added the English “Official Partnership” proof section between Who We Are and Services, with transparent TAP and CAP badge derivatives on the left and partner copy on the right.
+- Re-exported the TAP/CAP badges from the complete supplied reference after detecting a clipped TAP contour; reduced the header lockup and added explicit badge padding so neither treatment touches its container edges.
 - This is a local source candidate only: no archive, production deployment, rollback snapshot or public read-back has been performed.
 
 | Version | Date | Status | Notes |

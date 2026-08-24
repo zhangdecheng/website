@@ -179,7 +179,7 @@ textarea {
 }
 
 .wordmark-lockup img {
-  width: clamp(218px, 20vw, 294px);
+  width: clamp(164px, 14vw, 204px);
   height: auto;
 }
 
@@ -968,10 +968,11 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: clamp(10px, 2vw, 24px);
+  padding: clamp(18px, 2vw, 30px);
 }
 
 .official-partner-badges img {
-  width: min(44%, 186px);
+  width: min(40%, 164px);
   height: auto;
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.28));
 }

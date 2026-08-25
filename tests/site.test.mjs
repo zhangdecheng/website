@@ -40,8 +40,15 @@ test("CSS rule helper returns declarations from a direct rule", () => {
 function mediaQueryBody(css, query) {
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = new RegExp(`@media\\s*\\(${escaped}\\)\\s*\\{`).exec(css);
-  return match ? bracedBlock(css, match.index + match[0].lastIndex - 1) : "";
+  return match ? bracedBlock(css, match.index + match[0].length - 1) : "";
 }
+
+test("media query helper returns its declarations", () => {
+  assert.match(
+    mediaQueryBody("@media (max-width: 1100px) { .sample { color: red; } }", "max-width: 1100px"),
+    /\.sample \{ color: red; \}/,
+  );
+});
 
 function matchingDivEnd(html, openingIndex) {
   const divTokens = /<\/?div\b[^>]*>/gi;

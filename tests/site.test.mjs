@@ -446,9 +446,9 @@ test("styles preserve social-first polish without changing locked content", asyn
   assert.match(css, /--card-line-dark:\s*rgba\(250,\s*249,\s*247,\s*0\.08\)/);
   assert.match(css, /\.platform-chip\s*{[\s\S]*width:\s*clamp\(36px,\s*3\.2vw,\s*46px\)/);
   assert.match(css, /\.platform-chip:is\(:hover,\s*:focus-visible\)\s*{[\s\S]*background:\s*var\(--coral\)/);
-  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(288px,\s*0\.67fr\) minmax\(0,\s*1\.33fr\)/);
-  assert.match(css, /\.service-media img\s*{[\s\S]*min-height:\s*clamp\(340px,\s*33vw,\s*420px\)/);
-  assert.match(css, /\.service-media img\s*{[\s\S]*object-fit:\s*cover/);
+  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\) minmax\(0,\s*1fr\)/);
+  assert.match(css, /\.service-media \.service-media-frame\s*{[\s\S]*display:\s*block[\s\S]*aspect-ratio:\s*16 \/ 10/);
+  assert.match(css, /\.service-media-frame img\s*{[\s\S]*object-fit:\s*contain/);
   assert.match(css, /\.service-detail\s*{[\s\S]*grid-template-columns:\s*clamp\(128px,\s*13vw,\s*178px\) minmax\(0,\s*1fr\)/);
   assert.match(css, /--type-label:\s*clamp\(11px,\s*0\.78vw,\s*12px\)/);
   assert.match(css, /--type-body:\s*clamp\(14px,\s*1\.1vw,\s*17px\)/);
@@ -729,7 +729,7 @@ test("official partner badges retain full source bounds and the header logo has 
   assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
 });
 
-test("partner proof has a clean transparent exterior and Services 02/03 use widened focused crops", async () => {
+test("Service media uses equal complete uniform frames while partner proof retains a clean transparent exterior", async () => {
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
 
   for (const asset of ["tiktok-shop-tap.png", "tiktok-shop-cap.png"]) {
@@ -744,12 +744,17 @@ test("partner proof has a clean transparent exterior and Services 02/03 use wide
 
   for (const filename of ["index.html", "review-editable.html"]) {
     const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
-    assert.match(html, /class="service-image-performance"/);
-    assert.match(html, /class="service-image-localization"/);
+    assert.equal(
+      html.match(/class="service-media-frame"/g)?.length,
+      3,
+      `${filename} should provide exactly three uniform service media frames`,
+    );
   }
 
   assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
-  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(288px,\s*0\.67fr\) minmax\(0,\s*1\.33fr\)/);
-  assert.match(css, /\.service-media img\.service-image-performance\s*{[\s\S]*object-position:\s*0% center/);
-  assert.match(css, /\.service-media img\.service-image-localization\s*{[\s\S]*object-position:\s*88% center/);
+  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\) minmax\(0,\s*1fr\)/);
+  assert.match(css, /\.service-media \.service-media-frame\s*{[\s\S]*display:\s*block[\s\S]*aspect-ratio:\s*16 \/ 10/);
+  assert.match(css, /\.service-media-frame img\s*{[\s\S]*object-fit:\s*contain/);
+  assert.match(css, /\.service-copy h3\s*{[\s\S]*overflow-wrap:\s*anywhere/);
+  assert.doesNotMatch(css, /\.service-block:hover \.service-media img\s*{[^}]*transform:\s*scale/);
 });

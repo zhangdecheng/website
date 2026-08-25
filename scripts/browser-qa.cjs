@@ -212,8 +212,6 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     const heroCtaRect = heroCta?.getBoundingClientRect();
     const talentMedia = document.querySelector(".talent-media");
     const aboutMedia = document.querySelector(".about-media");
-    const serviceTwoImage = document.querySelector(".service-image-performance");
-    const serviceThreeImage = document.querySelector(".service-image-localization");
     const talentMediaRect = talentMedia?.getBoundingClientRect();
     const aboutMediaRect = aboutMedia?.getBoundingClientRect();
     return {
@@ -232,10 +230,14 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
           && aboutMediaRect
           && Math.abs(talentMediaRect.width - aboutMediaRect.width) <= 1,
       ),
-      serviceImagePositions: {
-        performance: serviceTwoImage ? getComputedStyle(serviceTwoImage).objectPosition : null,
-        localization: serviceThreeImage ? getComputedStyle(serviceThreeImage).objectPosition : null,
-      },
+      serviceFrames: [...document.querySelectorAll(".service-media-frame")].map((frame) => {
+        const rect = frame.getBoundingClientRect();
+        const image = frame.querySelector("img");
+        return {
+          ratio: rect.height ? Math.round((rect.width / rect.height) * 100) / 100 : null,
+          objectFit: image ? getComputedStyle(image).objectFit : null,
+        };
+      }),
       horizontalOverflow:
         document.documentElement.scrollWidth > document.documentElement.clientWidth,
       hiddenRevealCount: [...document.querySelectorAll(".reveal")]
@@ -424,11 +426,11 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     defaultState.splitMediaAligned,
     `${prefix}: Talent and About image columns are not aligned (${defaultState.splitMediaWidths.talent}px vs ${defaultState.splitMediaWidths.about}px)`,
   );
-  report.checks.serviceMediaFocus = check(
+  report.checks.serviceMediaFrames = check(
     results,
-    defaultState.serviceImagePositions.performance === "0% 50%"
-      && defaultState.serviceImagePositions.localization === "88% 50%",
-    `${prefix}: Service 02/03 focal crop is incorrect (${JSON.stringify(defaultState.serviceImagePositions)})`,
+    defaultState.serviceFrames.length === 3
+      && defaultState.serviceFrames.every((frame) => frame.ratio === 1.6 && frame.objectFit === "contain"),
+    `${prefix}: Service media frames must be three complete 16:10 contain frames (${JSON.stringify(defaultState.serviceFrames)})`,
   );
   report.checks.creatorSwitch = check(
     results,

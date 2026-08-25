@@ -236,10 +236,11 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
           frameCount: frames.length,
           frames: frames.map((frame) => {
             const rect = frame.getBoundingClientRect();
-            const image = frame.querySelector("img");
+            const images = [...frame.querySelectorAll("img")];
             return {
+              imageCount: images.length,
               ratio: rect.height ? Math.round((rect.width / rect.height) * 100) / 100 : null,
-              objectFit: image ? getComputedStyle(image).objectFit : null,
+              objectFit: images.length === 1 ? getComputedStyle(images[0]).objectFit : null,
             };
           }),
         };
@@ -436,7 +437,8 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     results,
     defaultState.serviceFrames.length === 3
       && defaultState.serviceFrames.every((media) => media.frameCount === 1
-        && media.frames[0]?.ratio === 1.6
+        && media.frames[0]?.imageCount === 1
+        && media.frames[0].ratio === 1.6
         && media.frames[0]?.objectFit === "contain"),
     `${prefix}: Service media frames must be three complete 16:10 contain frames (${JSON.stringify(defaultState.serviceFrames)})`,
   );

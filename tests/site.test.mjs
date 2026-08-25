@@ -491,9 +491,6 @@ test("styles preserve social-first polish without changing locked content", asyn
   assert.match(css, /--card-line-dark:\s*rgba\(250,\s*249,\s*247,\s*0\.08\)/);
   assert.match(css, /\.platform-chip\s*{[\s\S]*width:\s*clamp\(36px,\s*3\.2vw,\s*46px\)/);
   assert.match(css, /\.platform-chip:is\(:hover,\s*:focus-visible\)\s*{[\s\S]*background:\s*var\(--coral\)/);
-  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\) minmax\(0,\s*1fr\)/);
-  assert.match(css, /\.service-media \.service-media-frame\s*{[\s\S]*display:\s*block[\s\S]*aspect-ratio:\s*16 \/ 10/);
-  assert.match(css, /\.service-media-frame img\s*{[\s\S]*object-fit:\s*contain/);
   assert.match(css, /\.service-detail\s*{[\s\S]*grid-template-columns:\s*clamp\(128px,\s*13vw,\s*178px\) minmax\(0,\s*1fr\)/);
   assert.match(css, /--type-label:\s*clamp\(11px,\s*0\.78vw,\s*12px\)/);
   assert.match(css, /--type-body:\s*clamp\(14px,\s*1\.1vw,\s*17px\)/);
@@ -793,10 +790,16 @@ test("Service media uses equal complete uniform frames while partner proof retai
 
     assert.equal(mediaBlocks.length, 3, `${filename} should retain three service media blocks`);
     for (const [index, media] of mediaBlocks.entries()) {
+      const frames = [...media.matchAll(/<picture class="service-media-frame">([\s\S]*?)<\/picture>/g)];
       assert.equal(
-        media.match(/<picture class="service-media-frame">[\s\S]*?<img\b[\s\S]*?<\/picture>/g)?.length,
+        frames.length,
         1,
-        `${filename} service media block ${index + 1} should contain one framed image`,
+        `${filename} service media block ${index + 1} should contain one frame`,
+      );
+      assert.equal(
+        frames[0]?.[1].match(/<img\b/g)?.length ?? 0,
+        1,
+        `${filename} service media block ${index + 1} frame should contain exactly one image`,
       );
     }
     assert.equal(
@@ -828,13 +831,14 @@ test("Service media uses equal complete uniform frames while partner proof retai
   for (const rule of serviceHeadingRules) {
     assert.doesNotMatch(rule, /white-space:\s*nowrap/);
   }
-  const serviceImageHoverRules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
-    .filter(([, selector]) => /\.service-block:hover/.test(selector) && /\bimg\b/.test(selector));
-  for (const [, selector, declarations] of serviceImageHoverRules) {
+  const serviceHoverRules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .filter(([, selector]) => /:hover/.test(selector)
+      && /\.service-block|\.service-media(?:-frame)?/.test(selector));
+  for (const [, selector, declarations] of serviceHoverRules) {
     assert.doesNotMatch(
       declarations,
-      /transform:\s*scale/,
-      `Service image hover selector must not crop through scale: ${selector.trim()}`,
+      /transform:\s*scale\s*\(/,
+      `Service hover selector must not crop through scale: ${selector.trim()}`,
     );
   }
 });

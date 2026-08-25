@@ -30,8 +30,12 @@ function bracedBlock(source, openingBrace) {
 function cssRuleBody(source, selector) {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = new RegExp(`${escaped}\\s*\\{`).exec(source);
-  return match ? bracedBlock(source, match.index + match[0].lastIndex - 1) : "";
+  return match ? bracedBlock(source, match.index + match[0].length - 1) : "";
 }
+
+test("CSS rule helper returns declarations from a direct rule", () => {
+  assert.equal(cssRuleBody(".sample { color: red; }", ".sample").trim(), "color: red;");
+});
 
 function mediaQueryBody(css, query) {
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

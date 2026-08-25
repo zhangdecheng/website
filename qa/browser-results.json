@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T10:14:43.489Z",
+  "generatedAt": "2026-08-25T11:54:39.452Z",
   "browser": "System Google Chrome via playwright-core 1.62.1",
   "viewports": {
     "desktop-1440x1024": {
@@ -26,23 +26,23 @@
               {
                 "imageCount": 1,
                 "imageComplete": true,
-                "ratio": 1.6,
-                "objectFit": "contain",
+                "ratio": 0.78,
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 73,
-                  "top": 2930.67,
+                  "top": 2718,
                   "width": 647,
-                  "height": 404.38,
+                  "height": 829.72,
                   "right": 720,
-                  "bottom": 3335.05
+                  "bottom": 3547.72
                 },
                 "imageBox": {
                   "left": 73,
-                  "top": 2930.67,
+                  "top": 2718,
                   "width": 647,
-                  "height": 404.38,
+                  "height": 829.72,
                   "right": 720,
-                  "bottom": 3335.05
+                  "bottom": 3547.72
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 640,
@@ -58,23 +58,23 @@
               {
                 "imageCount": 1,
                 "imageComplete": true,
-                "ratio": 1.6,
-                "objectFit": "contain",
+                "ratio": 0.68,
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 73,
-                  "top": 3852.88,
+                  "top": 3581.72,
                   "width": 647,
-                  "height": 404.38,
+                  "height": 946.69,
                   "right": 720,
-                  "bottom": 4257.25
+                  "bottom": 4528.41
                 },
                 "imageBox": {
                   "left": 73,
-                  "top": 3852.88,
+                  "top": 3581.72,
                   "width": 647,
-                  "height": 404.38,
+                  "height": 946.69,
                   "right": 720,
-                  "bottom": 4257.25
+                  "bottom": 4528.41
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 642,
@@ -90,23 +90,23 @@
               {
                 "imageCount": 1,
                 "imageComplete": true,
-                "ratio": 1.6,
-                "objectFit": "contain",
+                "ratio": 0.86,
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 73,
-                  "top": 4735.86,
+                  "top": 4562.41,
                   "width": 647,
-                  "height": 404.38,
+                  "height": 751.3,
                   "right": 720,
-                  "bottom": 5140.23
+                  "bottom": 5313.7
                 },
                 "imageBox": {
                   "left": 73,
-                  "top": 4735.86,
+                  "top": 4562.41,
                   "width": 647,
-                  "height": 404.38,
+                  "height": 751.3,
                   "right": 720,
-                  "bottom": 5140.23
+                  "bottom": 5313.7
                 },
                 "naturalWidth": 1536,
                 "naturalHeight": 1024,
@@ -139,10 +139,18 @@
               "height": 829.72,
               "bottom": 3547.72
             },
+            "frame": {
+              "left": 73,
+              "top": 2718,
+              "width": 647,
+              "height": 829.72,
+              "bottom": 3547.72
+            },
             "equalWidths": true,
             "sameTrack": false,
             "sideBySide": true,
-            "stacked": false
+            "stacked": false,
+            "frameFillsMedia": true
           },
           {
             "block": {
@@ -166,10 +174,18 @@
               "height": 946.69,
               "bottom": 4528.41
             },
+            "frame": {
+              "left": 73,
+              "top": 3581.72,
+              "width": 647,
+              "height": 946.69,
+              "bottom": 4528.41
+            },
             "equalWidths": true,
             "sameTrack": false,
             "sideBySide": true,
-            "stacked": false
+            "stacked": false,
+            "frameFillsMedia": true
           },
           {
             "block": {
@@ -193,10 +209,18 @@
               "height": 751.3,
               "bottom": 5313.7
             },
+            "frame": {
+              "left": 73,
+              "top": 4562.41,
+              "width": 647,
+              "height": 751.3,
+              "bottom": 5313.7
+            },
             "equalWidths": true,
             "sameTrack": false,
             "sideBySide": true,
-            "stacked": false
+            "stacked": false,
+            "frameFillsMedia": true
           }
         ],
         "horizontalOverflow": false,
@@ -311,23 +335,23 @@
               {
                 "imageCount": 1,
                 "imageComplete": true,
-                "ratio": 1.6,
-                "objectFit": "contain",
+                "ratio": 0.73,
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 41.95,
-                  "top": 2701.06,
+                  "top": 2524.23,
                   "width": 470.03,
-                  "height": 293.77,
+                  "height": 647.44,
                   "right": 511.98,
-                  "bottom": 2994.83
+                  "bottom": 3171.67
                 },
                 "imageBox": {
                   "left": 41.95,
-                  "top": 2701.06,
+                  "top": 2524.23,
                   "width": 470.03,
-                  "height": 293.77,
+                  "height": 647.44,
                   "right": 511.98,
-                  "bottom": 2994.83
+                  "bottom": 3171.67
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 640,
@@ -343,23 +367,23 @@
               {
                 "imageCount": 1,
                 "imageComplete": true,
-                "ratio": 1.6,
-                "objectFit": "contain",
+                "ratio": 0.65,
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 41.95,
-                  "top": 3413.91,
+                  "top": 3200.28,
                   "width": 470.03,
-                  "height": 293.77,
+                  "height": 721.03,
                   "right": 511.98,
-                  "bottom": 3707.67
+                  "bottom": 3921.31
                 },
                 "imageBox": {
                   "left": 41.95,
-                  "top": 3413.91,
+                  "top": 3200.28,
                   "width": 470.03,
-                  "height": 293.77,
+                  "height": 721.03,
                   "right": 511.98,
-                  "bottom": 3707.67
+                  "bottom": 3921.31
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 642,
@@ -375,23 +399,23 @@
               {
                 "imageCount": 1,
                 "imageComplete": true,
-                "ratio": 1.6,
-                "objectFit": "contain",
+                "ratio": 0.78,
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 41.95,
-                  "top": 4103.66,
+                  "top": 3949.92,
                   "width": 470.03,
-                  "height": 293.77,
+                  "height": 601.25,
                   "right": 511.98,
-                  "bottom": 4397.42
+                  "bottom": 4551.17
                 },
                 "imageBox": {
                   "left": 41.95,
-                  "top": 4103.66,
+                  "top": 3949.92,
                   "width": 470.03,
-                  "height": 293.77,
+                  "height": 601.25,
                   "right": 511.98,
-                  "bottom": 4397.42
+                  "bottom": 4551.17
                 },
                 "naturalWidth": 1536,
                 "naturalHeight": 1024,
@@ -424,10 +448,18 @@
               "height": 647.44,
               "bottom": 3171.67
             },
+            "frame": {
+              "left": 41.95,
+              "top": 2524.23,
+              "width": 470.03,
+              "height": 647.44,
+              "bottom": 3171.67
+            },
             "equalWidths": true,
             "sameTrack": false,
             "sideBySide": true,
-            "stacked": false
+            "stacked": false,
+            "frameFillsMedia": true
           },
           {
             "block": {
@@ -451,10 +483,18 @@
               "height": 721.03,
               "bottom": 3921.31
             },
+            "frame": {
+              "left": 41.95,
+              "top": 3200.28,
+              "width": 470.03,
+              "height": 721.03,
+              "bottom": 3921.31
+            },
             "equalWidths": true,
             "sameTrack": false,
             "sideBySide": true,
-            "stacked": false
+            "stacked": false,
+            "frameFillsMedia": true
           },
           {
             "block": {
@@ -478,10 +518,18 @@
               "height": 601.25,
               "bottom": 4551.17
             },
+            "frame": {
+              "left": 41.95,
+              "top": 3949.92,
+              "width": 470.03,
+              "height": 601.25,
+              "bottom": 4551.17
+            },
             "equalWidths": true,
             "sameTrack": false,
             "sideBySide": true,
-            "stacked": false
+            "stacked": false,
+            "frameFillsMedia": true
           }
         ],
         "horizontalOverflow": false,
@@ -597,7 +645,7 @@
                 "imageCount": 1,
                 "imageComplete": true,
                 "ratio": 1.6,
-                "objectFit": "contain",
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
                   "top": 3785.05,
@@ -629,7 +677,7 @@
                 "imageCount": 1,
                 "imageComplete": true,
                 "ratio": 1.6,
-                "objectFit": "contain",
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
                   "top": 4739.63,
@@ -661,7 +709,7 @@
                 "imageCount": 1,
                 "imageComplete": true,
                 "ratio": 1.6,
-                "objectFit": "contain",
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
                   "top": 5740.39,
@@ -709,10 +757,18 @@
               "height": 712.58,
               "bottom": 4717.63
             },
+            "frame": {
+              "left": 19,
+              "top": 3785.05,
+              "width": 352,
+              "height": 220,
+              "bottom": 4005.05
+            },
             "equalWidths": true,
             "sameTrack": true,
             "sideBySide": false,
-            "stacked": true
+            "stacked": true,
+            "frameFillsMedia": true
           },
           {
             "block": {
@@ -736,10 +792,18 @@
               "height": 758.77,
               "bottom": 5718.39
             },
+            "frame": {
+              "left": 19,
+              "top": 4739.63,
+              "width": 352,
+              "height": 220,
+              "bottom": 4959.63
+            },
             "equalWidths": true,
             "sameTrack": true,
             "sideBySide": false,
-            "stacked": true
+            "stacked": true,
+            "frameFillsMedia": true
           },
           {
             "block": {
@@ -763,10 +827,18 @@
               "height": 643.3,
               "bottom": 6603.69
             },
+            "frame": {
+              "left": 19,
+              "top": 5740.39,
+              "width": 352,
+              "height": 220,
+              "bottom": 5960.39
+            },
             "equalWidths": true,
             "sameTrack": true,
             "sideBySide": false,
-            "stacked": true
+            "stacked": true,
+            "frameFillsMedia": true
           }
         ],
         "horizontalOverflow": false,
@@ -886,7 +958,7 @@
                 "imageCount": 1,
                 "imageComplete": true,
                 "ratio": 1.6,
-                "objectFit": "contain",
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
                   "top": 3685.28,
@@ -918,7 +990,7 @@
                 "imageCount": 1,
                 "imageComplete": true,
                 "ratio": 1.6,
-                "objectFit": "contain",
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
                   "top": 4690.39,
@@ -950,7 +1022,7 @@
                 "imageCount": 1,
                 "imageComplete": true,
                 "ratio": 1.6,
-                "objectFit": "contain",
+                "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
                   "top": 5764.78,
@@ -998,10 +1070,18 @@
               "height": 781.86,
               "bottom": 4668.39
             },
+            "frame": {
+              "left": 19,
+              "top": 3685.28,
+              "width": 322,
+              "height": 201.25,
+              "bottom": 3886.53
+            },
             "equalWidths": true,
             "sameTrack": true,
             "sideBySide": false,
-            "stacked": true
+            "stacked": true,
+            "frameFillsMedia": true
           },
           {
             "block": {
@@ -1025,10 +1105,18 @@
               "height": 851.14,
               "bottom": 5742.78
             },
+            "frame": {
+              "left": 19,
+              "top": 4690.39,
+              "width": 322,
+              "height": 201.25,
+              "bottom": 4891.64
+            },
             "equalWidths": true,
             "sameTrack": true,
             "sideBySide": false,
-            "stacked": true
+            "stacked": true,
+            "frameFillsMedia": true
           },
           {
             "block": {
@@ -1052,10 +1140,18 @@
               "height": 689.48,
               "bottom": 6655.52
             },
+            "frame": {
+              "left": 19,
+              "top": 5764.78,
+              "width": 322,
+              "height": 201.25,
+              "bottom": 5966.03
+            },
             "equalWidths": true,
             "sameTrack": true,
             "sideBySide": false,
-            "stacked": true
+            "stacked": true,
+            "frameFillsMedia": true
           }
         ],
         "horizontalOverflow": false,

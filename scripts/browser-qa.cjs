@@ -292,9 +292,11 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
       serviceLayouts: [...document.querySelectorAll(".service-block")].map((block) => {
         const media = block.querySelector(".service-media");
         const copy = block.querySelector(".service-copy");
+        const frame = media?.querySelector(".service-media-frame");
         const blockRect = block.getBoundingClientRect();
         const mediaRect = media?.getBoundingClientRect();
         const copyRect = copy?.getBoundingClientRect();
+        const frameRect = frame?.getBoundingClientRect();
         const snapshot = (rect) => rect ? {
           left: Math.round(rect.left * 100) / 100,
           top: Math.round(rect.top * 100) / 100,
@@ -307,10 +309,19 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
           block: snapshot(blockRect),
           media: snapshot(mediaRect),
           copy: snapshot(copyRect),
+          frame: snapshot(frameRect),
           equalWidths: hasBoth && Math.abs(mediaRect.width - copyRect.width) <= 1,
           sameTrack: hasBoth && Math.abs(mediaRect.left - copyRect.left) <= 1,
           sideBySide: hasBoth && Math.abs(mediaRect.top - copyRect.top) <= 1,
           stacked: hasBoth && copyRect.top >= mediaRect.bottom - 1,
+          frameFillsMedia: Boolean(
+            frameRect
+              && mediaRect
+              && Math.abs(frameRect.left - mediaRect.left) <= 1
+              && Math.abs(frameRect.top - mediaRect.top) <= 1
+              && Math.abs(frameRect.width - mediaRect.width) <= 1
+              && Math.abs(frameRect.height - mediaRect.height) <= 1,
+          ),
         };
       }),
       horizontalOverflow:
@@ -508,23 +519,22 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
         && media.frameCount === 1
         && media.frames[0]?.imageCount === 1
         && media.frames[0]?.imageComplete === true
-        && media.frames[0].ratio === 1.6
-        && media.frames[0]?.objectFit === "contain"
+        && media.frames[0]?.objectFit === "cover"
         && media.frames[0].naturalWidth > 0
         && media.frames[0].naturalHeight > 0
         && media.frames[0]?.imageBox?.width > 0
         && media.frames[0]?.imageBox?.height > 0
         && media.frames[0]?.imageContained
         && media.frames[0]?.fillsFrame),
-    `${prefix}: Service media frames must be three complete 16:10 contain frames (${JSON.stringify(defaultState.serviceFrames)})`,
+    `${prefix}: Service media frames must be three loaded full-bleed cover frames (${JSON.stringify(defaultState.serviceFrames)})`,
   );
   const usesTwoColumnServiceLayout = viewport.width >= 1024;
   report.checks.serviceMediaLayout = check(
     results,
     defaultState.serviceLayouts.length === 3
       && defaultState.serviceLayouts.every((layout) => usesTwoColumnServiceLayout
-        ? layout.sideBySide && layout.equalWidths
-        : layout.stacked && layout.sameTrack && layout.equalWidths),
+        ? layout.sideBySide && layout.equalWidths && layout.frameFillsMedia
+        : layout.stacked && layout.sameTrack && layout.equalWidths && layout.frameFillsMedia),
     `${prefix}: Service media layout must use ${usesTwoColumnServiceLayout ? "equal two columns" : "one stacked full-width track"} (${JSON.stringify(defaultState.serviceLayouts)})`,
   );
   report.checks.creatorSwitch = check(

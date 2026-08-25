@@ -179,11 +179,13 @@ test("browser QA locks the system-Chrome automation dependency", async () => {
   assert.match(qaScript, /waitForFunction\([\s\S]*?#contact[\s\S]*?window\.innerHeight/);
 });
 
-test("browser QA records loaded service media before accepting frames", async () => {
+test("browser QA records loaded service media before accepting full-bleed frames", async () => {
   const qaScript = await readFile(new URL("../scripts/browser-qa.cjs", import.meta.url), "utf8");
 
   assert.match(qaScript, /imageComplete:\s*image\?\.complete\s*===\s*true/);
   assert.match(qaScript, /media\.frames\[0\]\?\.imageComplete\s*===\s*true/);
+  assert.match(qaScript, /media\.frames\[0\]\?\.objectFit\s*===\s*"cover"/);
+  assert.match(qaScript, /layout\.frameFillsMedia/);
 });
 
 test("only Service 03 and Our Talent use the two approved new AI assets", async () => {
@@ -788,7 +790,7 @@ test("official partner badges retain full source bounds and the header logo has 
   assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
 });
 
-test("Service media uses equal complete uniform frames while partner proof retains a clean transparent exterior", async () => {
+test("Service media fills equal desktop columns while partner proof retains a clean transparent exterior", async () => {
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
 
   for (const asset of ["tiktok-shop-tap.png", "tiktok-shop-cap.png"]) {
@@ -843,8 +845,16 @@ test("Service media uses equal complete uniform frames while partner proof retai
     mobileServiceLayout,
     /\.service-block,\s*\.about,\s*\.contact-layout\s*\{[\s\S]*grid-template-columns:\s*1fr/,
   );
-  assert.match(css, /\.service-media \.service-media-frame\s*{[\s\S]*display:\s*block[\s\S]*aspect-ratio:\s*16 \/ 10/);
-  assert.match(css, /\.service-media-frame img\s*{[\s\S]*object-fit:\s*contain/);
+  assert.match(css, /\.service-media \.service-media-frame\s*{[\s\S]*display:\s*block[\s\S]*height:\s*100%/);
+  assert.match(css, /\.service-media-frame img\s*{[\s\S]*object-fit:\s*cover/);
+  assert.match(
+    css,
+    /\.service-media-frame img\[src\*="creator-recruitment"\]\s*{[\s\S]*object-position:\s*20% center/,
+  );
+  assert.match(
+    mobileServiceLayout,
+    /\.service-media \.service-media-frame\s*{[\s\S]*height:\s*auto[\s\S]*aspect-ratio:\s*16 \/ 10/,
+  );
   const serviceHeadingRules = [...css.matchAll(/\.service-copy h3\s*\{([^}]*)\}/g)].map((match) => match[1]);
   assert.ok(serviceHeadingRules.length > 0, "service heading rules should exist");
   assert.ok(

@@ -743,6 +743,17 @@ test("Service media uses equal complete uniform frames while partner proof retai
 
   for (const filename of ["index.html", "review-editable.html"]) {
     const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
+    const services = section(html, "services");
+    const mediaBlocks = services.match(/<div class="service-media">[\s\S]*?<\/div>/g) ?? [];
+
+    assert.equal(mediaBlocks.length, 3, `${filename} should retain three service media blocks`);
+    for (const [index, media] of mediaBlocks.entries()) {
+      assert.equal(
+        media.match(/<picture class="service-media-frame">[\s\S]*?<img\b[\s\S]*?<\/picture>/g)?.length,
+        1,
+        `${filename} service media block ${index + 1} should contain one framed image`,
+      );
+    }
     assert.equal(
       html.match(/class="service-media-frame"/g)?.length,
       3,
@@ -751,9 +762,23 @@ test("Service media uses equal complete uniform frames while partner proof retai
   }
 
   assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
-  assert.match(css, /\.service-block\s*{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\) minmax\(0,\s*1fr\)/);
+  const serviceBlockColumns = [...css.matchAll(/\.service-block\s*\{([^}]*)\}/g)]
+    .map((match) => match[1])
+    .filter((rule) => /grid-template-columns/.test(rule));
+  assert.ok(serviceBlockColumns.length >= 2, "desktop and <=1100px service column rules should both exist");
+  for (const rule of serviceBlockColumns) {
+    assert.match(rule, /grid-template-columns:\s*minmax\(0,\s*1fr\) minmax\(0,\s*1fr\)/);
+  }
   assert.match(css, /\.service-media \.service-media-frame\s*{[\s\S]*display:\s*block[\s\S]*aspect-ratio:\s*16 \/ 10/);
   assert.match(css, /\.service-media-frame img\s*{[\s\S]*object-fit:\s*contain/);
-  assert.match(css, /\.service-copy h3\s*{[\s\S]*overflow-wrap:\s*anywhere/);
+  const serviceHeadingRules = [...css.matchAll(/\.service-copy h3\s*\{([^}]*)\}/g)].map((match) => match[1]);
+  assert.ok(serviceHeadingRules.length > 0, "service heading rules should exist");
+  assert.ok(
+    serviceHeadingRules.some((rule) => /overflow-wrap:\s*anywhere/.test(rule) && /white-space:\s*normal/.test(rule)),
+    "service headings should explicitly allow emergency wrapping",
+  );
+  for (const rule of serviceHeadingRules) {
+    assert.doesNotMatch(rule, /white-space:\s*nowrap/);
+  }
   assert.doesNotMatch(css, /\.service-block:hover \.service-media img\s*{[^}]*transform:\s*scale/);
 });

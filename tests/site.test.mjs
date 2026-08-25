@@ -797,9 +797,14 @@ test("Service media uses equal complete uniform frames while partner proof retai
         `${filename} service media block ${index + 1} should contain one frame`,
       );
       assert.equal(
+        media.match(/<img\b/g)?.length ?? 0,
+        1,
+        `${filename} service media block ${index + 1} should contain exactly one image`,
+      );
+      assert.equal(
         frames[0]?.[1].match(/<img\b/g)?.length ?? 0,
         1,
-        `${filename} service media block ${index + 1} frame should contain exactly one image`,
+        `${filename} service media block ${index + 1} unique image should be inside its frame`,
       );
     }
     assert.equal(

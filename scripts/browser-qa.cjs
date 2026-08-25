@@ -231,8 +231,10 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
           && Math.abs(talentMediaRect.width - aboutMediaRect.width) <= 1,
       ),
       serviceFrames: [...document.querySelectorAll(".service-media")].map((media) => {
+        const mediaImages = [...media.querySelectorAll("img")];
         const frames = [...media.querySelectorAll(".service-media-frame")];
         return {
+          imageCount: mediaImages.length,
           frameCount: frames.length,
           frames: frames.map((frame) => {
             const rect = frame.getBoundingClientRect();
@@ -460,7 +462,8 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
   report.checks.serviceMediaFrames = check(
     results,
     defaultState.serviceFrames.length === 3
-      && defaultState.serviceFrames.every((media) => media.frameCount === 1
+      && defaultState.serviceFrames.every((media) => media.imageCount === 1
+        && media.frameCount === 1
         && media.frames[0]?.imageCount === 1
         && media.frames[0].ratio === 1.6
         && media.frames[0]?.objectFit === "contain"),

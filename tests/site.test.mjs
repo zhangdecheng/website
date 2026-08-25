@@ -842,7 +842,7 @@ test("Service media uses equal complete uniform frames while partner proof retai
   for (const [, selector, declarations] of serviceHoverRules) {
     assert.doesNotMatch(
       declarations,
-      /transform:\s*[^;{}]*\bscale\s*\(/,
+      /transform:\s*[^;{}]*\bscale(?:[a-z0-9]+)?\s*\(/i,
       `Service hover selector must not crop through scale: ${selector.trim()}`,
     );
     assert.doesNotMatch(

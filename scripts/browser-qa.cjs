@@ -239,10 +239,37 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
           frames: frames.map((frame) => {
             const rect = frame.getBoundingClientRect();
             const images = [...frame.querySelectorAll("img")];
+            const image = images.length === 1 ? images[0] : null;
+            const imageRect = image?.getBoundingClientRect();
+            const snapshot = (box) => box ? {
+              left: Math.round(box.left * 100) / 100,
+              top: Math.round(box.top * 100) / 100,
+              width: Math.round(box.width * 100) / 100,
+              height: Math.round(box.height * 100) / 100,
+              right: Math.round(box.right * 100) / 100,
+              bottom: Math.round(box.bottom * 100) / 100,
+            } : null;
+            const tolerance = 1;
             return {
               imageCount: images.length,
               ratio: rect.height ? Math.round((rect.width / rect.height) * 100) / 100 : null,
-              objectFit: images.length === 1 ? getComputedStyle(images[0]).objectFit : null,
+              objectFit: image ? getComputedStyle(image).objectFit : null,
+              frameBox: snapshot(rect),
+              imageBox: snapshot(imageRect),
+              naturalWidth: image?.naturalWidth ?? 0,
+              naturalHeight: image?.naturalHeight ?? 0,
+              imageContained: Boolean(
+                imageRect
+                  && imageRect.left >= rect.left - tolerance
+                  && imageRect.top >= rect.top - tolerance
+                  && imageRect.right <= rect.right + tolerance
+                  && imageRect.bottom <= rect.bottom + tolerance,
+              ),
+              fillsFrame: Boolean(
+                imageRect
+                  && Math.abs(imageRect.width - rect.width) <= tolerance
+                  && Math.abs(imageRect.height - rect.height) <= tolerance,
+              ),
             };
           }),
         };
@@ -466,7 +493,13 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
         && media.frameCount === 1
         && media.frames[0]?.imageCount === 1
         && media.frames[0].ratio === 1.6
-        && media.frames[0]?.objectFit === "contain"),
+        && media.frames[0]?.objectFit === "contain"
+        && media.frames[0].naturalWidth > 0
+        && media.frames[0].naturalHeight > 0
+        && media.frames[0]?.imageBox?.width > 0
+        && media.frames[0]?.imageBox?.height > 0
+        && media.frames[0]?.imageContained
+        && media.frames[0]?.fillsFrame),
     `${prefix}: Service media frames must be three complete 16:10 contain frames (${JSON.stringify(defaultState.serviceFrames)})`,
   );
   const usesTwoColumnServiceLayout = viewport.width >= 1024;

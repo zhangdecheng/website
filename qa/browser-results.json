@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T09:48:05.170Z",
+  "generatedAt": "2026-08-25T10:14:43.489Z",
   "browser": "System Google Chrome via playwright-core 1.62.1",
   "viewports": {
     "desktop-1440x1024": {
@@ -25,6 +25,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -56,6 +57,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -87,6 +89,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -307,6 +310,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -338,6 +342,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -369,6 +374,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -589,6 +595,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -620,6 +627,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -651,6 +659,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -875,6 +884,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -906,6 +916,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {
@@ -937,6 +948,7 @@
             "frames": [
               {
                 "imageCount": 1,
+                "imageComplete": true,
                 "ratio": 1.6,
                 "objectFit": "contain",
                 "frameBox": {

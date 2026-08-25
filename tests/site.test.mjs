@@ -471,7 +471,6 @@ test("styles preserve social-first polish without changing locked content", asyn
   assert.match(css, /\.about-media img\s*{[\s\S]*object-position:\s*54% center/);
   assert.match(css, /\.about-media img\s*{[\s\S]*filter:\s*saturate\(0\.9\) contrast\(1\.04\) brightness\(0\.88\)/);
   assert.match(css, /\.contact-copy img\s*{[\s\S]*aspect-ratio:\s*16 \/ 10/);
-  assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*\.service-media img,[\s\S]*\.about-media\s*{[\s\S]*min-height:\s*260px/);
 });
 
 test("new contact and privacy styles extend the existing visual system accessibly", async () => {

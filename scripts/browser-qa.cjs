@@ -155,6 +155,19 @@ async function waitForFormReady(page) {
   });
 }
 
+async function loadServiceMedia(page) {
+  const selector = ".service-media .service-media-frame img";
+  const images = page.locator(selector);
+  for (let index = 0; index < await images.count(); index += 1) {
+    await images.nth(index).scrollIntoViewIfNeeded();
+    await page.waitForFunction(({ selector, index }) => {
+      const image = document.querySelectorAll(selector)[index];
+      return Boolean(image?.complete && image.naturalWidth > 0 && image.naturalHeight > 0);
+    }, { selector, index }, { timeout: 5_000 });
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+}
+
 function check(results, condition, message) {
   if (!condition) results.failures.push(message);
   return Boolean(condition);
@@ -203,6 +216,7 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
 
   await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
   await waitForFormReady(page);
+  await loadServiceMedia(page);
   const defaultState = await page.evaluate(() => {
     const brand = document.querySelector('[data-role-fields="brand"]');
     const creator = document.querySelector('[data-role-fields="creator"]');

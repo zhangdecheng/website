@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-24T07:23:04.031Z",
+  "generatedAt": "2026-08-25T09:48:05.170Z",
   "browser": "System Google Chrome via playwright-core 1.62.1",
   "viewports": {
     "desktop-1440x1024": {
@@ -18,12 +18,186 @@
           "about": 633.59
         },
         "splitMediaAligned": true,
-        "serviceImagePositions": {
-          "performance": "0% 50%",
-          "localization": "88% 50%"
-        },
+        "serviceFrames": [
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 73,
+                  "top": 2930.67,
+                  "width": 647,
+                  "height": 404.38,
+                  "right": 720,
+                  "bottom": 3335.05
+                },
+                "imageBox": {
+                  "left": 73,
+                  "top": 2930.67,
+                  "width": 647,
+                  "height": 404.38,
+                  "right": 720,
+                  "bottom": 3335.05
+                },
+                "naturalWidth": 1200,
+                "naturalHeight": 640,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          },
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 73,
+                  "top": 3852.88,
+                  "width": 647,
+                  "height": 404.38,
+                  "right": 720,
+                  "bottom": 4257.25
+                },
+                "imageBox": {
+                  "left": 73,
+                  "top": 3852.88,
+                  "width": 647,
+                  "height": 404.38,
+                  "right": 720,
+                  "bottom": 4257.25
+                },
+                "naturalWidth": 1200,
+                "naturalHeight": 642,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          },
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 73,
+                  "top": 4735.86,
+                  "width": 647,
+                  "height": 404.38,
+                  "right": 720,
+                  "bottom": 5140.23
+                },
+                "imageBox": {
+                  "left": 73,
+                  "top": 4735.86,
+                  "width": 647,
+                  "height": 404.38,
+                  "right": 720,
+                  "bottom": 5140.23
+                },
+                "naturalWidth": 1536,
+                "naturalHeight": 1024,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          }
+        ],
+        "serviceLayouts": [
+          {
+            "block": {
+              "left": 72,
+              "top": 2717,
+              "width": 1296,
+              "height": 831.72,
+              "bottom": 3548.72
+            },
+            "media": {
+              "left": 73,
+              "top": 2718,
+              "width": 647,
+              "height": 829.72,
+              "bottom": 3547.72
+            },
+            "copy": {
+              "left": 720,
+              "top": 2718,
+              "width": 647,
+              "height": 829.72,
+              "bottom": 3547.72
+            },
+            "equalWidths": true,
+            "sameTrack": false,
+            "sideBySide": true,
+            "stacked": false
+          },
+          {
+            "block": {
+              "left": 72,
+              "top": 3580.72,
+              "width": 1296,
+              "height": 948.69,
+              "bottom": 4529.41
+            },
+            "media": {
+              "left": 73,
+              "top": 3581.72,
+              "width": 647,
+              "height": 946.69,
+              "bottom": 4528.41
+            },
+            "copy": {
+              "left": 720,
+              "top": 3581.72,
+              "width": 647,
+              "height": 946.69,
+              "bottom": 4528.41
+            },
+            "equalWidths": true,
+            "sameTrack": false,
+            "sideBySide": true,
+            "stacked": false
+          },
+          {
+            "block": {
+              "left": 72,
+              "top": 4561.41,
+              "width": 1296,
+              "height": 753.3,
+              "bottom": 5314.7
+            },
+            "media": {
+              "left": 73,
+              "top": 4562.41,
+              "width": 647,
+              "height": 751.3,
+              "bottom": 5313.7
+            },
+            "copy": {
+              "left": 720,
+              "top": 4562.41,
+              "width": 647,
+              "height": 751.3,
+              "bottom": 5313.7
+            },
+            "equalWidths": true,
+            "sameTrack": false,
+            "sideBySide": true,
+            "stacked": false
+          }
+        ],
         "horizontalOverflow": false,
-        "hiddenRevealCount": 14,
+        "hiddenRevealCount": 4,
         "heroCtaFullyContained": true,
         "heroCtaBottomGap": 97
       },
@@ -95,7 +269,8 @@
         "defaultBrand": true,
         "heroCtaContained": true,
         "splitMediaAligned": true,
-        "serviceMediaFocus": true,
+        "serviceMediaFrames": true,
+        "serviceMediaLayout": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
@@ -125,12 +300,186 @@
           "about": 450.55
         },
         "splitMediaAligned": true,
-        "serviceImagePositions": {
-          "performance": "0% 50%",
-          "localization": "88% 50%"
-        },
+        "serviceFrames": [
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 41.95,
+                  "top": 2701.06,
+                  "width": 470.03,
+                  "height": 293.77,
+                  "right": 511.98,
+                  "bottom": 2994.83
+                },
+                "imageBox": {
+                  "left": 41.95,
+                  "top": 2701.06,
+                  "width": 470.03,
+                  "height": 293.77,
+                  "right": 511.98,
+                  "bottom": 2994.83
+                },
+                "naturalWidth": 1200,
+                "naturalHeight": 640,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          },
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 41.95,
+                  "top": 3413.91,
+                  "width": 470.03,
+                  "height": 293.77,
+                  "right": 511.98,
+                  "bottom": 3707.67
+                },
+                "imageBox": {
+                  "left": 41.95,
+                  "top": 3413.91,
+                  "width": 470.03,
+                  "height": 293.77,
+                  "right": 511.98,
+                  "bottom": 3707.67
+                },
+                "naturalWidth": 1200,
+                "naturalHeight": 642,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          },
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 41.95,
+                  "top": 4103.66,
+                  "width": 470.03,
+                  "height": 293.77,
+                  "right": 511.98,
+                  "bottom": 4397.42
+                },
+                "imageBox": {
+                  "left": 41.95,
+                  "top": 4103.66,
+                  "width": 470.03,
+                  "height": 293.77,
+                  "right": 511.98,
+                  "bottom": 4397.42
+                },
+                "naturalWidth": 1536,
+                "naturalHeight": 1024,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          }
+        ],
+        "serviceLayouts": [
+          {
+            "block": {
+              "left": 40.95,
+              "top": 2523.23,
+              "width": 942.08,
+              "height": 649.44,
+              "bottom": 3172.67
+            },
+            "media": {
+              "left": 41.95,
+              "top": 2524.23,
+              "width": 470.03,
+              "height": 647.44,
+              "bottom": 3171.67
+            },
+            "copy": {
+              "left": 511.98,
+              "top": 2524.23,
+              "width": 470.05,
+              "height": 647.44,
+              "bottom": 3171.67
+            },
+            "equalWidths": true,
+            "sameTrack": false,
+            "sideBySide": true,
+            "stacked": false
+          },
+          {
+            "block": {
+              "left": 40.95,
+              "top": 3199.28,
+              "width": 942.08,
+              "height": 723.03,
+              "bottom": 3922.31
+            },
+            "media": {
+              "left": 41.95,
+              "top": 3200.28,
+              "width": 470.03,
+              "height": 721.03,
+              "bottom": 3921.31
+            },
+            "copy": {
+              "left": 511.98,
+              "top": 3200.28,
+              "width": 470.05,
+              "height": 721.03,
+              "bottom": 3921.31
+            },
+            "equalWidths": true,
+            "sameTrack": false,
+            "sideBySide": true,
+            "stacked": false
+          },
+          {
+            "block": {
+              "left": 40.95,
+              "top": 3948.92,
+              "width": 942.08,
+              "height": 603.25,
+              "bottom": 4552.17
+            },
+            "media": {
+              "left": 41.95,
+              "top": 3949.92,
+              "width": 470.03,
+              "height": 601.25,
+              "bottom": 4551.17
+            },
+            "copy": {
+              "left": 511.98,
+              "top": 3949.92,
+              "width": 470.05,
+              "height": 601.25,
+              "bottom": 4551.17
+            },
+            "equalWidths": true,
+            "sameTrack": false,
+            "sideBySide": true,
+            "stacked": false
+          }
+        ],
         "horizontalOverflow": false,
-        "hiddenRevealCount": 11,
+        "hiddenRevealCount": 4,
         "heroCtaFullyContained": true,
         "heroCtaBottomGap": 198
       },
@@ -202,7 +551,8 @@
         "defaultBrand": true,
         "heroCtaContained": true,
         "splitMediaAligned": true,
-        "serviceMediaFocus": true,
+        "serviceMediaFrames": true,
+        "serviceMediaLayout": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
@@ -232,12 +582,186 @@
           "about": 390
         },
         "splitMediaAligned": true,
-        "serviceImagePositions": {
-          "performance": "0% 50%",
-          "localization": "88% 50%"
-        },
+        "serviceFrames": [
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 19,
+                  "top": 3785.05,
+                  "width": 352,
+                  "height": 220,
+                  "right": 371,
+                  "bottom": 4005.05
+                },
+                "imageBox": {
+                  "left": 19,
+                  "top": 3785.05,
+                  "width": 352,
+                  "height": 220,
+                  "right": 371,
+                  "bottom": 4005.05
+                },
+                "naturalWidth": 1200,
+                "naturalHeight": 640,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          },
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 19,
+                  "top": 4739.63,
+                  "width": 352,
+                  "height": 220,
+                  "right": 371,
+                  "bottom": 4959.63
+                },
+                "imageBox": {
+                  "left": 19,
+                  "top": 4739.63,
+                  "width": 352,
+                  "height": 220,
+                  "right": 371,
+                  "bottom": 4959.63
+                },
+                "naturalWidth": 1200,
+                "naturalHeight": 642,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          },
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 19,
+                  "top": 5740.39,
+                  "width": 352,
+                  "height": 220,
+                  "right": 371,
+                  "bottom": 5960.39
+                },
+                "imageBox": {
+                  "left": 19,
+                  "top": 5740.39,
+                  "width": 352,
+                  "height": 220,
+                  "right": 371,
+                  "bottom": 5960.39
+                },
+                "naturalWidth": 1536,
+                "naturalHeight": 1024,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          }
+        ],
+        "serviceLayouts": [
+          {
+            "block": {
+              "left": 18,
+              "top": 3784.05,
+              "width": 354,
+              "height": 934.58,
+              "bottom": 4718.63
+            },
+            "media": {
+              "left": 19,
+              "top": 3785.05,
+              "width": 352,
+              "height": 220,
+              "bottom": 4005.05
+            },
+            "copy": {
+              "left": 19,
+              "top": 4005.05,
+              "width": 352,
+              "height": 712.58,
+              "bottom": 4717.63
+            },
+            "equalWidths": true,
+            "sameTrack": true,
+            "sideBySide": false,
+            "stacked": true
+          },
+          {
+            "block": {
+              "left": 18,
+              "top": 4738.63,
+              "width": 354,
+              "height": 980.77,
+              "bottom": 5719.39
+            },
+            "media": {
+              "left": 19,
+              "top": 4739.63,
+              "width": 352,
+              "height": 220,
+              "bottom": 4959.63
+            },
+            "copy": {
+              "left": 19,
+              "top": 4959.63,
+              "width": 352,
+              "height": 758.77,
+              "bottom": 5718.39
+            },
+            "equalWidths": true,
+            "sameTrack": true,
+            "sideBySide": false,
+            "stacked": true
+          },
+          {
+            "block": {
+              "left": 18,
+              "top": 5739.39,
+              "width": 354,
+              "height": 865.3,
+              "bottom": 6604.69
+            },
+            "media": {
+              "left": 19,
+              "top": 5740.39,
+              "width": 352,
+              "height": 220,
+              "bottom": 5960.39
+            },
+            "copy": {
+              "left": 19,
+              "top": 5960.39,
+              "width": 352,
+              "height": 643.3,
+              "bottom": 6603.69
+            },
+            "equalWidths": true,
+            "sameTrack": true,
+            "sideBySide": false,
+            "stacked": true
+          }
+        ],
         "horizontalOverflow": false,
-        "hiddenRevealCount": 14,
+        "hiddenRevealCount": 6,
         "heroCtaFullyContained": true,
         "heroCtaBottomGap": 993
       },
@@ -312,7 +836,8 @@
         "defaultBrand": true,
         "heroCtaContained": true,
         "splitMediaAligned": true,
-        "serviceMediaFocus": true,
+        "serviceMediaFrames": true,
+        "serviceMediaLayout": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,
@@ -343,12 +868,186 @@
           "about": 360
         },
         "splitMediaAligned": true,
-        "serviceImagePositions": {
-          "performance": "0% 50%",
-          "localization": "88% 50%"
-        },
+        "serviceFrames": [
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 19,
+                  "top": 3685.28,
+                  "width": 322,
+                  "height": 201.25,
+                  "right": 341,
+                  "bottom": 3886.53
+                },
+                "imageBox": {
+                  "left": 19,
+                  "top": 3685.28,
+                  "width": 322,
+                  "height": 201.25,
+                  "right": 341,
+                  "bottom": 3886.53
+                },
+                "naturalWidth": 1200,
+                "naturalHeight": 640,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          },
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 19,
+                  "top": 4690.39,
+                  "width": 322,
+                  "height": 201.25,
+                  "right": 341,
+                  "bottom": 4891.64
+                },
+                "imageBox": {
+                  "left": 19,
+                  "top": 4690.39,
+                  "width": 322,
+                  "height": 201.25,
+                  "right": 341,
+                  "bottom": 4891.64
+                },
+                "naturalWidth": 1200,
+                "naturalHeight": 642,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          },
+          {
+            "imageCount": 1,
+            "frameCount": 1,
+            "frames": [
+              {
+                "imageCount": 1,
+                "ratio": 1.6,
+                "objectFit": "contain",
+                "frameBox": {
+                  "left": 19,
+                  "top": 5764.78,
+                  "width": 322,
+                  "height": 201.25,
+                  "right": 341,
+                  "bottom": 5966.03
+                },
+                "imageBox": {
+                  "left": 19,
+                  "top": 5764.78,
+                  "width": 322,
+                  "height": 201.25,
+                  "right": 341,
+                  "bottom": 5966.03
+                },
+                "naturalWidth": 1536,
+                "naturalHeight": 1024,
+                "imageContained": true,
+                "fillsFrame": true
+              }
+            ]
+          }
+        ],
+        "serviceLayouts": [
+          {
+            "block": {
+              "left": 18,
+              "top": 3684.28,
+              "width": 324,
+              "height": 985.11,
+              "bottom": 4669.39
+            },
+            "media": {
+              "left": 19,
+              "top": 3685.28,
+              "width": 322,
+              "height": 201.25,
+              "bottom": 3886.53
+            },
+            "copy": {
+              "left": 19,
+              "top": 3886.53,
+              "width": 322,
+              "height": 781.86,
+              "bottom": 4668.39
+            },
+            "equalWidths": true,
+            "sameTrack": true,
+            "sideBySide": false,
+            "stacked": true
+          },
+          {
+            "block": {
+              "left": 18,
+              "top": 4689.39,
+              "width": 324,
+              "height": 1054.39,
+              "bottom": 5743.78
+            },
+            "media": {
+              "left": 19,
+              "top": 4690.39,
+              "width": 322,
+              "height": 201.25,
+              "bottom": 4891.64
+            },
+            "copy": {
+              "left": 19,
+              "top": 4891.64,
+              "width": 322,
+              "height": 851.14,
+              "bottom": 5742.78
+            },
+            "equalWidths": true,
+            "sameTrack": true,
+            "sideBySide": false,
+            "stacked": true
+          },
+          {
+            "block": {
+              "left": 18,
+              "top": 5763.78,
+              "width": 324,
+              "height": 892.73,
+              "bottom": 6656.52
+            },
+            "media": {
+              "left": 19,
+              "top": 5764.78,
+              "width": 322,
+              "height": 201.25,
+              "bottom": 5966.03
+            },
+            "copy": {
+              "left": 19,
+              "top": 5966.03,
+              "width": 322,
+              "height": 689.48,
+              "bottom": 6655.52
+            },
+            "equalWidths": true,
+            "sameTrack": true,
+            "sideBySide": false,
+            "stacked": true
+          }
+        ],
         "horizontalOverflow": false,
-        "hiddenRevealCount": 14,
+        "hiddenRevealCount": 6,
         "heroCtaFullyContained": true,
         "heroCtaBottomGap": 918
       },
@@ -423,7 +1122,8 @@
         "defaultBrand": true,
         "heroCtaContained": true,
         "splitMediaAligned": true,
-        "serviceMediaFocus": true,
+        "serviceMediaFrames": true,
+        "serviceMediaLayout": true,
         "creatorSwitch": true,
         "joinCta": true,
         "keyboardOrder": true,

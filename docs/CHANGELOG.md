@@ -16,7 +16,7 @@ acceptance remain incomplete.
 - Added the English “Official Partnership” proof section between Who We Are and Services, with transparent TAP and CAP badge derivatives on the left and partner copy on the right.
 - Re-exported the TAP/CAP badges from the complete supplied reference after detecting a clipped TAP contour; reduced the header lockup and added explicit badge padding so neither treatment touches its container edges.
 - Replaced brightness-based badge background removal with edge-connected background removal; verified the exterior edge columns are transparent while TAP/CAP letter highlights remain intact.
-- Restored Service 02/03 to the `755d57b` cover-crop treatment, widened the media column slightly, and set independent 02/03 focal positions for the presenter/camera and speaker/photographer.
+- Standardized the three Service media panels as 50/50 cards with centered 16:10 complete-image frames, dark matte breathing room, safe heading wrapping, and no hover zoom crop.
 - This is a local source candidate only: no archive, production deployment, rollback snapshot or public read-back has been performed.
 
 | Version | Date | Status | Notes |

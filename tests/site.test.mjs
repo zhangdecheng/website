@@ -179,6 +179,13 @@ test("browser QA locks the system-Chrome automation dependency", async () => {
   assert.match(qaScript, /waitForFunction\([\s\S]*?#contact[\s\S]*?window\.innerHeight/);
 });
 
+test("browser QA records loaded service media before accepting frames", async () => {
+  const qaScript = await readFile(new URL("../scripts/browser-qa.cjs", import.meta.url), "utf8");
+
+  assert.match(qaScript, /imageComplete:\s*image\?\.complete\s*===\s*true/);
+  assert.match(qaScript, /media\.frames\[0\]\?\.imageComplete\s*===\s*true/);
+});
+
 test("only Service 03 and Our Talent use the two approved new AI assets", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const serviceThree =

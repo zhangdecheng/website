@@ -266,6 +266,7 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
             const tolerance = 1;
             return {
               imageCount: images.length,
+              imageComplete: image?.complete === true,
               ratio: rect.height ? Math.round((rect.width / rect.height) * 100) / 100 : null,
               objectFit: image ? getComputedStyle(image).objectFit : null,
               frameBox: snapshot(rect),
@@ -506,6 +507,7 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
       && defaultState.serviceFrames.every((media) => media.imageCount === 1
         && media.frameCount === 1
         && media.frames[0]?.imageCount === 1
+        && media.frames[0]?.imageComplete === true
         && media.frames[0].ratio === 1.6
         && media.frames[0]?.objectFit === "contain"
         && media.frames[0].naturalWidth > 0

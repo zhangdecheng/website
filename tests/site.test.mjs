@@ -833,12 +833,17 @@ test("Service media uses equal complete uniform frames while partner proof retai
   }
   const serviceHoverRules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
     .filter(([, selector]) => /:hover/.test(selector)
-      && /\.service-block|\.service-media(?:-frame)?/.test(selector));
+      && /(?:\.service-block|\.service-media(?:-frame)?)/.test(selector));
   for (const [, selector, declarations] of serviceHoverRules) {
     assert.doesNotMatch(
       declarations,
-      /transform:\s*scale\s*\(/,
+      /transform:\s*[^;{}]*\bscale\s*\(/,
       `Service hover selector must not crop through scale: ${selector.trim()}`,
+    );
+    assert.doesNotMatch(
+      declarations,
+      /(?:^|[;\n])\s*scale\s*:/,
+      `Service hover selector must not use the independent scale property: ${selector.trim()}`,
     );
   }
 });

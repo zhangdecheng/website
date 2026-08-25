@@ -245,6 +245,30 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
           }),
         };
       }),
+      serviceLayouts: [...document.querySelectorAll(".service-block")].map((block) => {
+        const media = block.querySelector(".service-media");
+        const copy = block.querySelector(".service-copy");
+        const blockRect = block.getBoundingClientRect();
+        const mediaRect = media?.getBoundingClientRect();
+        const copyRect = copy?.getBoundingClientRect();
+        const snapshot = (rect) => rect ? {
+          left: Math.round(rect.left * 100) / 100,
+          top: Math.round(rect.top * 100) / 100,
+          width: Math.round(rect.width * 100) / 100,
+          height: Math.round(rect.height * 100) / 100,
+          bottom: Math.round(rect.bottom * 100) / 100,
+        } : null;
+        const hasBoth = Boolean(mediaRect && copyRect);
+        return {
+          block: snapshot(blockRect),
+          media: snapshot(mediaRect),
+          copy: snapshot(copyRect),
+          equalWidths: hasBoth && Math.abs(mediaRect.width - copyRect.width) <= 1,
+          sameTrack: hasBoth && Math.abs(mediaRect.left - copyRect.left) <= 1,
+          sideBySide: hasBoth && Math.abs(mediaRect.top - copyRect.top) <= 1,
+          stacked: hasBoth && copyRect.top >= mediaRect.bottom - 1,
+        };
+      }),
       horizontalOverflow:
         document.documentElement.scrollWidth > document.documentElement.clientWidth,
       hiddenRevealCount: [...document.querySelectorAll(".reveal")]
@@ -441,6 +465,15 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
         && media.frames[0].ratio === 1.6
         && media.frames[0]?.objectFit === "contain"),
     `${prefix}: Service media frames must be three complete 16:10 contain frames (${JSON.stringify(defaultState.serviceFrames)})`,
+  );
+  const usesTwoColumnServiceLayout = viewport.width >= 1024;
+  report.checks.serviceMediaLayout = check(
+    results,
+    defaultState.serviceLayouts.length === 3
+      && defaultState.serviceLayouts.every((layout) => usesTwoColumnServiceLayout
+        ? layout.sideBySide && layout.equalWidths
+        : layout.stacked && layout.sameTrack && layout.equalWidths),
+    `${prefix}: Service media layout must use ${usesTwoColumnServiceLayout ? "equal two columns" : "one stacked full-width track"} (${JSON.stringify(defaultState.serviceLayouts)})`,
   );
   report.checks.creatorSwitch = check(
     results,

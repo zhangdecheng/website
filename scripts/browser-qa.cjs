@@ -230,12 +230,18 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
           && aboutMediaRect
           && Math.abs(talentMediaRect.width - aboutMediaRect.width) <= 1,
       ),
-      serviceFrames: [...document.querySelectorAll(".service-media-frame")].map((frame) => {
-        const rect = frame.getBoundingClientRect();
-        const image = frame.querySelector("img");
+      serviceFrames: [...document.querySelectorAll(".service-media")].map((media) => {
+        const frames = [...media.querySelectorAll(".service-media-frame")];
         return {
-          ratio: rect.height ? Math.round((rect.width / rect.height) * 100) / 100 : null,
-          objectFit: image ? getComputedStyle(image).objectFit : null,
+          frameCount: frames.length,
+          frames: frames.map((frame) => {
+            const rect = frame.getBoundingClientRect();
+            const image = frame.querySelector("img");
+            return {
+              ratio: rect.height ? Math.round((rect.width / rect.height) * 100) / 100 : null,
+              objectFit: image ? getComputedStyle(image).objectFit : null,
+            };
+          }),
         };
       }),
       horizontalOverflow:
@@ -429,7 +435,9 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
   report.checks.serviceMediaFrames = check(
     results,
     defaultState.serviceFrames.length === 3
-      && defaultState.serviceFrames.every((frame) => frame.ratio === 1.6 && frame.objectFit === "contain"),
+      && defaultState.serviceFrames.every((media) => media.frameCount === 1
+        && media.frames[0]?.ratio === 1.6
+        && media.frames[0]?.objectFit === "contain"),
     `${prefix}: Service media frames must be three complete 16:10 contain frames (${JSON.stringify(defaultState.serviceFrames)})`,
   );
   report.checks.creatorSwitch = check(

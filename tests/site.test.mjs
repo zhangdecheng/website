@@ -15,6 +15,51 @@ function assertIncludesText(source, expected) {
   assert.ok(source.includes(expected), `Expected text not found: ${expected}`);
 }
 
+function bracedBlock(source, openingBrace) {
+  let depth = 0;
+  for (let index = openingBrace; index < source.length; index += 1) {
+    if (source[index] === "{") depth += 1;
+    if (source[index] === "}") {
+      depth -= 1;
+      if (depth === 0) return source.slice(openingBrace + 1, index);
+    }
+  }
+  return "";
+}
+
+function cssRuleBody(source, selector) {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = new RegExp(`${escaped}\\s*\\{`).exec(source);
+  return match ? bracedBlock(source, match.index + match[0].lastIndex - 1) : "";
+}
+
+function mediaQueryBody(css, query) {
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = new RegExp(`@media\\s*\\(${escaped}\\)\\s*\\{`).exec(css);
+  return match ? bracedBlock(css, match.index + match[0].lastIndex - 1) : "";
+}
+
+function matchingDivEnd(html, openingIndex) {
+  const divTokens = /<\/?div\b[^>]*>/gi;
+  divTokens.lastIndex = openingIndex;
+  let depth = 0;
+  for (let token = divTokens.exec(html); token; token = divTokens.exec(html)) {
+    depth += token[0].startsWith("</") ? -1 : 1;
+    if (depth === 0) return token.index + token[0].length;
+  }
+  return -1;
+}
+
+function divBlocksByClass(html, className) {
+  const openings = new RegExp(`<div\\s+class="${className}">`, "g");
+  const blocks = [];
+  for (let match = openings.exec(html); match; match = openings.exec(html)) {
+    const end = matchingDivEnd(html, match.index);
+    if (end !== -1) blocks.push(html.slice(match.index, end));
+  }
+  return blocks;
+}
+
 function decodeRgbaPng(bytes) {
   assert.equal(bytes.toString("ascii", 1, 4), "PNG");
   const width = bytes.readUInt32BE(16);
@@ -744,7 +789,7 @@ test("Service media uses equal complete uniform frames while partner proof retai
   for (const filename of ["index.html", "review-editable.html"]) {
     const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
     const services = section(html, "services");
-    const mediaBlocks = services.match(/<div class="service-media">[\s\S]*?<\/div>/g) ?? [];
+    const mediaBlocks = divBlocksByClass(services, "service-media");
 
     assert.equal(mediaBlocks.length, 3, `${filename} should retain three service media blocks`);
     for (const [index, media] of mediaBlocks.entries()) {
@@ -762,13 +807,16 @@ test("Service media uses equal complete uniform frames while partner proof retai
   }
 
   assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
-  const serviceBlockColumns = [...css.matchAll(/\.service-block\s*\{([^}]*)\}/g)]
-    .map((match) => match[1])
-    .filter((rule) => /grid-template-columns/.test(rule));
-  assert.ok(serviceBlockColumns.length >= 2, "desktop and <=1100px service column rules should both exist");
-  for (const rule of serviceBlockColumns) {
-    assert.match(rule, /grid-template-columns:\s*minmax\(0,\s*1fr\) minmax\(0,\s*1fr\)/);
-  }
+  const equalColumns = /grid-template-columns:\s*minmax\(0,\s*1fr\) minmax\(0,\s*1fr\)/;
+  const desktopServiceBlock = cssRuleBody(css, ".service-block");
+  const tabletServiceBlock = cssRuleBody(mediaQueryBody(css, "max-width: 1100px"), ".service-block");
+  const mobileServiceLayout = mediaQueryBody(css, "max-width: 820px");
+  assert.match(desktopServiceBlock, equalColumns);
+  assert.match(tabletServiceBlock, equalColumns);
+  assert.match(
+    mobileServiceLayout,
+    /\.service-block,\s*\.about,\s*\.contact-layout\s*\{[\s\S]*grid-template-columns:\s*1fr/,
+  );
   assert.match(css, /\.service-media \.service-media-frame\s*{[\s\S]*display:\s*block[\s\S]*aspect-ratio:\s*16 \/ 10/);
   assert.match(css, /\.service-media-frame img\s*{[\s\S]*object-fit:\s*contain/);
   const serviceHeadingRules = [...css.matchAll(/\.service-copy h3\s*\{([^}]*)\}/g)].map((match) => match[1]);
@@ -780,5 +828,13 @@ test("Service media uses equal complete uniform frames while partner proof retai
   for (const rule of serviceHeadingRules) {
     assert.doesNotMatch(rule, /white-space:\s*nowrap/);
   }
-  assert.doesNotMatch(css, /\.service-block:hover \.service-media img\s*{[^}]*transform:\s*scale/);
+  const serviceImageHoverRules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .filter(([, selector]) => /\.service-block:hover/.test(selector) && /\bimg\b/.test(selector));
+  for (const [, selector, declarations] of serviceImageHoverRules) {
+    assert.doesNotMatch(
+      declarations,
+      /transform:\s*scale/,
+      `Service image hover selector must not crop through scale: ${selector.trim()}`,
+    );
+  }
 });

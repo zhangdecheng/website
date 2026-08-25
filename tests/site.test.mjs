@@ -852,6 +852,10 @@ test("Service media fills equal desktop columns while partner proof retains a cl
     /\.service-media-frame img\[src\*="creator-recruitment"\]\s*{[\s\S]*object-position:\s*20% center/,
   );
   assert.match(
+    css,
+    /\.service-media-frame img\[src\*="service-creative-localization-camera-speaker"\]\s*{[\s\S]*object-position:\s*65% center/,
+  );
+  assert.match(
     mobileServiceLayout,
     /\.service-media \.service-media-frame\s*{[\s\S]*height:\s*auto[\s\S]*aspect-ratio:\s*16 \/ 10/,
   );

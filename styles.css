@@ -1098,6 +1098,10 @@ h1 {
   object-position: 20% center;
 }
 
+.service-media-frame img[src*="service-creative-localization-camera-speaker"] {
+  object-position: 65% center;
+}
+
 .service-block:hover .service-media-frame img {
   filter: saturate(1.02) contrast(1.05) brightness(0.97);
 }

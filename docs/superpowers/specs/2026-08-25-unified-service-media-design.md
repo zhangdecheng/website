@@ -12,6 +12,8 @@ checks. It does not change Contact, APIs, Nginx, deployment, or the logo rail.
 - Fill each desktop Service media column with its image.
 - Use `object-fit: cover` for the desktop full-bleed treatment; Service 02
   keeps the camera and presenter in view through a left-biased focal point.
+- Service 03 uses a right-biased focal point so the photographer and camera
+  remain visible in its full-bleed crop.
 - Keep mobile as a single-column stack with a 16:10 full-bleed image frame.
 - Allow long service headings to wrap inside the 50% copy column without
   horizontal overflow.

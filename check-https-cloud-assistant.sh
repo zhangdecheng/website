@@ -157,7 +157,7 @@ assert_status 200 "$home_status" "www homepage"
 assert_contains "$WORK_DIR/index.html" '<link rel="canonical" href="https://www.flourishculturekol.com/" />' "www homepage"
 assert_header "$WORK_DIR/home.headers" "Content-Type" "text/html" "www homepage"
 assert_page_headers "$WORK_DIR/home.headers" "www homepage"
-assert_sha256 "$WORK_DIR/index.html" "08646fc0748ace6e1c0aa62f646aef2cea68abbfb088fbe42918585e309b9f70" "www homepage"
+assert_sha256 "$WORK_DIR/index.html" "88700345f849d957193233f9211d81e1e13cd02b5e13ee8569eeb7a46bc8f5e8" "www homepage"
 
 privacy_status="$(fetch GET \
   "https://www.flourishculturekol.com/privacy.html" \
@@ -167,7 +167,7 @@ assert_status 200 "$privacy_status" "Privacy page"
 assert_contains "$WORK_DIR/privacy.html" '<link rel="canonical" href="https://www.flourishculturekol.com/privacy.html" />' "Privacy page"
 assert_header "$WORK_DIR/privacy.headers" "Content-Type" "text/html" "Privacy page"
 assert_page_headers "$WORK_DIR/privacy.headers" "Privacy page"
-assert_sha256 "$WORK_DIR/privacy.html" "ea1be315e5d0137d918d21a1fb7fff8ac0724057cb3c72ec7b0d1d5b40277f5a" "Privacy page"
+assert_sha256 "$WORK_DIR/privacy.html" "a36c172a358b2325b752e8b87e3f08c548ec035cf0de3f24bcdc0d28c2b404c2" "Privacy page"
 
 printf '\n== Contact API ==\n'
 health_status="$(fetch GET \
@@ -209,12 +209,12 @@ printf '\n== Release files and MIME ==\n'
 styles_status="$(fetch GET "$WWW_ORIGIN/styles.css" "$WORK_DIR/styles.headers" "$WORK_DIR/styles.css")"
 assert_status 200 "$styles_status" "styles.css"
 assert_header "$WORK_DIR/styles.headers" "Content-Type" "text/css" "styles.css"
-assert_sha256 "$WORK_DIR/styles.css" "9c6b0b61bc18ae38d9d83af8ce27a9f3cd7f92c14292cb6bf8441766ed661c6e" "styles.css"
+assert_sha256 "$WORK_DIR/styles.css" "b5b88af03dfb3a0b0fb22fe3b4dcbf82c929cb331281ce99d5f82f3b76405ccd" "styles.css"
 
 script_status="$(fetch GET "$WWW_ORIGIN/script.js" "$WORK_DIR/script.headers" "$WORK_DIR/script.js")"
 assert_status 200 "$script_status" "script.js"
 assert_header "$WORK_DIR/script.headers" "Content-Type" "javascript" "script.js"
-assert_sha256 "$WORK_DIR/script.js" "c6565c4b184b7a804ac3a882094de228faf45b9d50abfdb9070eebdb5b1368a7" "script.js"
+assert_sha256 "$WORK_DIR/script.js" "9c754d4227506e956b8536712bda45118de7dc194fc57cb70f65b781747a3803" "script.js"
 
 contact_form_status="$(fetch GET "$WWW_ORIGIN/contact-form.js" "$WORK_DIR/contact-form.headers" "$WORK_DIR/contact-form.js")"
 assert_status 200 "$contact_form_status" "contact-form.js"

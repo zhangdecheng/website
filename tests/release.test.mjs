@@ -558,10 +558,12 @@ test("public release check is strict about canonical routing, APIs, headers, ass
 test("final static rollout pins the audited candidate and never rolls Nginx back", async () => {
   const script = await readFile(new URL("../deploy-cloud-assistant.sh", import.meta.url), "utf8");
 
-  assert.match(script, /c8007cdcc75d11f3d07d8c6f2b32351cd459c8ce5fc3f7d5c0d01fe7caa674ab/u);
-  assert.match(script, /b2220599ff7060c00c2e78efb78feb37e48a93ed837dbac71ae5626f1d02f1b4/u);
-  assert.match(script, /5075e2b499d39121f4c2164b2a6478652b41494931c3d9aaf698ba4685a3da6f/u);
+  assert.match(script, /4bbe493acc780f9791595ff303a90f8257e0a17009c9a1192b11021d82bf08de/u);
+  assert.match(script, /877ead7939d3973e2e6f6a435b9eb737f647d4ed8e90910fe91114a5806ae359/u);
+  assert.match(script, /08646fc0748ace6e1c0aa62f646aef2cea68abbfb088fbe42918585e309b9f70/u);
   assert.match(script, /9c6b0b61bc18ae38d9d83af8ce27a9f3cd7f92c14292cb6bf8441766ed661c6e/u);
+  assert.match(script, /88700345f849d957193233f9211d81e1e13cd02b5e13ee8569eeb7a46bc8f5e8/u);
+  assert.match(script, /b5b88af03dfb3a0b0fb22fe3b4dcbf82c929cb331281ce99d5f82f3b76405ccd/u);
   assert.match(script, /BACKUP_TREE="\$\{BACKUP\}\/tree"/u);
   assert.match(script, /rsync -a --delete "\$BACKUP_TREE\/" "\$WEB_ROOT\/"/u);
   assert.match(script, /rsync -a "\$WEB_ROOT\/" "\$BACKUP_TREE\/"[\s\S]*chmod 0700 "\$BACKUP"/u);

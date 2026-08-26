@@ -2,13 +2,14 @@
 
 ## Project version records
 
-Current source version: `v1.2.0-logo-rail-20260822` archived locally and live in production.
+Current static source version: `v1.2.0-service-media-20260826` (`87fb346`) archived,
+published to GitHub and live in production.
 The package/API version remains `v1.2.0`; actual inbox/Reply-To and remote-source
 acceptance remain incomplete.
 
 ## 2026-08-24
 
-### Unreleased homepage visual candidate
+### v1.2.0-service-media-20260826 static production release
 
 - Added the approved transparent FLOURISH lockup and square favicon mark across the homepage, Privacy Notice and editable review copy.
 - Changed the logo rail to one accessible source set; `script.js` now creates the decorative duplicate for scrolling. The approved order is Tripo, Temu, Anker Innovations, uSmile, Dreame, AliExpress, Lovart, Atoms and KSP Performance.
@@ -17,10 +18,14 @@ acceptance remain incomplete.
 - Re-exported the TAP/CAP badges from the complete supplied reference after detecting a clipped TAP contour; reduced the header lockup and added explicit badge padding so neither treatment touches its container edges.
 - Replaced brightness-based badge background removal with edge-connected background removal; verified the exterior edge columns are transparent while TAP/CAP letter highlights remain intact.
 - Updated the three Service media panels to fill 50/50 desktop cards with full-bleed cover imagery; mobile keeps 16:10 cover frames, Service 02 retains its camera and presenter through a left-biased focal point, Service 03 keeps its photographer and camera through a right-biased focal point, headings wrap safely, and hover does not zoom images.
-- This is a local source candidate only: no archive, production deployment, rollback snapshot or public read-back has been performed.
+- Published static ZIP `4bbe493acc780f9791595ff303a90f8257e0a17009c9a1192b11021d82bf08de`
+  through the verified GitHub Release artifact. The ECS created rollback snapshot
+  `20260826T051413Z-v1.2.0-static-88700345`; server-side gates and independent
+  public hash read-back passed. Nginx, Contact and `/review/` were preserved.
 
 | Version | Date | Status | Notes |
 | --- | --- | --- | --- |
+| `v1.2.0-service-media-20260826` | 2026-08-26 | GitHub-tagged static production release | Commit `87fb346`, service media 50/50 layout and full-bleed focal adjustments; ZIP `4bbe493a…08de`, backup `20260826T051413Z-v1.2.0-static-88700345`, server and public read-back passed. |
 | `v1.2.0-logo-rail-20260822` | 2026-08-22 | Archived locally and production live | Transparent Atoms/TRIPO assets, optical sizing, deterministic static package, production backup and public read-back. |
 | `v1.2.0` | 2026-08-20 | Production URL ready; final closure incomplete | Unified Contact flow, privacy, abuse controls, approved AI images, portable production tooling, canonical routing and accepted real submissions. |
 | `v1.1.0` | 2026-06-26 | Historical production record | Static homepage release. |

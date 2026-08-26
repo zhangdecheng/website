@@ -18,10 +18,16 @@ requirements document.
 
 ## Current Phase
 
-Phase 8 — v1.2.0 static Logo release archived and live; inbox readback and source-hosting closure remain in progress.
+Phase 8 — v1.2.0 static releases archived and live; inbox readback remains in progress.
 
 ## Completed
 
+- Published the service-media static candidate as GitHub tag
+  `v1.2.0-service-media-20260826` at commit `87fb346`. The 7,369,973-byte ZIP
+  (`4bbe493a…08de`) was hash-verified on ECS before deployment. ECS created
+  `20260826T051413Z-v1.2.0-static-88700345`; server-side acceptance and an
+  independent public hash read-back passed. Nginx, Contact and `/review/` were
+  not changed.
 - Archived the current source snapshot as local tag `v1.2.0-logo-rail-20260822`.
   The package/API version remains `1.2.0`; the archive records the static Logo rail
   revision separately from the Contact service version.

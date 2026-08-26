@@ -2,7 +2,7 @@
 
 ## 当前结论
 
-状态：**部分完成（v1.2.0 Logo 静态修订已归档并上线；收件箱读回与代码托管收尾尚未完成）**。
+状态：**部分完成（v1.2.0 服务媒体静态修订已归档并上线；收件箱读回仍未完成）**。
 
 本地代码、发布包、四视口 Chrome 回归、Contact 服务、Nginx 与最终静态站点已实测上线到
 香港实例 `i-yeo9geadc0plsv0abgv0`。Contact 通过
@@ -20,19 +20,19 @@ Creator 固定收件人随后更正为 `irisa@flourish-culture.com` 并完成一
 
 ## 发布身份
 
-### 当前生产状态（2026-08-22 已读回）
+### 当前生产状态（2026-08-26 已读回）
 
 | 项目 | 已确认值 |
 | --- | --- |
 | 版本 | `1.2.0` |
-| 当前静态源码归档 | 本地 Git tag `v1.2.0-logo-rail-20260822`；生产候选 `08646fc` |
-| 当前静态 ZIP | `6,744,747` bytes；SHA-256 `c8007cdcc75d11f3d07d8c6f2b32351cd459c8ce5fc3f7d5c0d01fe7caa674ab` |
-| 生产首页 / 样式 SHA-256 | `08646fc0748ace6e1c0aa62f646aef2cea68abbfb088fbe42918585e309b9f70` / `9c6b0b61bc18ae38d9d83af8ce27a9f3cd7f92c14292cb6bf8441766ed661c6e` |
+| 当前静态源码归档 | GitHub tag/Release `v1.2.0-service-media-20260826`；生产候选 `87fb346` |
+| 当前静态 ZIP | `7,369,973` bytes；SHA-256 `4bbe493acc780f9791595ff303a90f8257e0a17009c9a1192b11021d82bf08de` |
+| 生产首页 / 样式 SHA-256 | `88700345f849d957193233f9211d81e1e13cd02b5e13ee8569eeb7a46bc8f5e8` / `b5b88af03dfb3a0b0fb22fe3b4dcbf82c929cb331281ce99d5f82f3b76405ccd` |
 | 生产 Atoms / TRIPO PNG SHA-256 | `a24e629aa00be325844022f03043b4659bf9624fce617a7d52d66af93e3d26ea` / `5ddece931f2369199b0251dc2bc4a2a288654ece32806c7c939c3a0221508912` |
 | 当前 Contact release | `/opt/flourish-contact/releases/20260820T110838Z`；路由文件 SHA-256 `47d40d2c…30b235`，匹配本地已审计源码 |
 | 当前 Nginx SHA-256 | `22efa58a328b5855999638133acc13a9472fa27132b1cba675479adbe2904d3e`（本次静态发布未修改） |
 | 实际发布使用的外层包 | `1,022,097` bytes；SHA-256 `d90c795cba9d494eecfaf6cbd17fe52cc6d0268cd353da41b9ee3113c4188022`；12 个普通文件 |
-| 本次回滚点 | `/var/backups/flourishculturekol.com/20260822T115118Z-v1.2.0-static-08646fc`；发布脚本读回全量 `OK` |
+| 本次回滚点 | `/var/backups/flourishculturekol.com/20260826T051413Z-v1.2.0-static-88700345`；发布脚本读回全量 `OK` |
 
 ### 当前仓库可复现包（部署后安全修订）
 

@@ -8,7 +8,8 @@
 ## 源码与制品
 
 - GitHub 分支：`codex/flourish-site-refresh`，提交 `87fb34678247e1ead77260c6d84a34d86279cd89`。
-- 标签及 GitHub Release：`v1.2.0-service-media-20260826`。
+- 标签及 GitHub Release：`v1.2.0-service-media-20260826`；该 tag 是与生产候选
+  `87fb346` 绑定的源码归档锚点。
 - 静态 ZIP：`flourishculturekol-homepage.zip`，7,369,973 bytes，SHA-256
   `4bbe493acc780f9791595ff303a90f8257e0a17009c9a1192b11021d82bf08de`。
 

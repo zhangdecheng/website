@@ -38,10 +38,10 @@ certificate directives and all `/review/` locations, files, data and services.
 
 ## Project version records
 
-Current source version: local tag `v1.2.0-logo-rail-20260822` on branch
-`codex/flourish-site-refresh`. Package/API version remains `v1.2.0`; the static Logo
-revision is archived separately. Authenticated remote push and actual inbox/Reply-To
-readback are still pending.
+Current source version: GitHub tag and Release `v1.2.0-service-media-20260826` at
+commit `87fb346` on branch `codex/flourish-site-refresh`. Package/API version remains
+`v1.2.0`; the static logo, partnership and Service media revision is archived
+separately. Actual inbox/Reply-To readback remains pending.
 
 The authoritative archive byte counts and SHA-256 values are pinned in
 `docs/PRODUCTION_RUNBOOK.md`. Production file hashes have been read back against that
@@ -50,7 +50,8 @@ incomplete gates.
 
 | Version | Date | Status | Notes |
 | --- | --- | --- | --- |
-| `v1.2.0-logo-rail-20260822` | 2026-08-22 | Local source archive and production static release | Transparent Atoms/TRIPO assets, optical sizing, static ZIP `c8007cd…74ab`, backup `20260822T115118Z-v1.2.0-static-08646fc`. |
+| `v1.2.0-service-media-20260826` | 2026-08-26 | GitHub source archive and production static release | Commit `87fb346`, static ZIP `4bbe493a…08de`, backup `20260826T051413Z-v1.2.0-static-88700345`, server and public read-back passed. |
+| `v1.2.0-logo-rail-20260822` | 2026-08-22 | Prior static production release | Transparent Atoms/TRIPO assets, optical sizing, static ZIP `c8007cd…74ab`, backup `20260822T115118Z-v1.2.0-static-08646fc`. |
 | `v1.2.0` | 2026-08-20 | Production acceptance URL ready; final closure incomplete | Unified Contact API, privacy notice, risk controls, two approved AI images, portable release, canonical routing and real Brand/Creator submissions. Inbox/Reply-To and remote source closure remain. |
 | `v1.1.0` | 2026-06-26 | Historical production record | Static homepage release; exact commit currently serving production is not confirmed. |
 | `v1.0.0` | 2026-06-26 | Historical record | Baseline project version record for documentation and handoff tracking. |

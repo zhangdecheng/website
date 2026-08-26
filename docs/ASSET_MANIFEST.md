@@ -1,10 +1,10 @@
 # FLOURISH CULTURE Asset Manifest
 
-Last updated: 2026-08-24
+Last updated: 2026-08-26
 
-The `v1.2.0-logo-rail-20260822` source archive and production release use the
-transparent Atoms/TRIPO derivatives listed below; the original supplied files are
-retained only as rollback/reference inputs.
+The `v1.2.0-service-media-20260826` source archive and production release use the
+transparent FLOURISH, Atoms/TRIPO and partnership derivatives listed below; the
+original supplied files are retained only as rollback/reference inputs.
 
 ## Production homepage assets
 

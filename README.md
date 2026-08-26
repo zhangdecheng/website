@@ -60,17 +60,17 @@ to `hannah@flourish-culture.com`, Creator applications route to
 `irisa@flourish-culture.com`, and the validated visitor address is used only as
 Reply-To. There is no database or analytics integration.
 
-The latest archived source snapshot is the local Git tag
-`v1.2.0-logo-rail-20260822`. It keeps package/API version `1.2.0` and records the
-transparent Atoms/TRIPO Logo rail revision separately. Production static release
-evidence and rollback paths are recorded in `docs/PRODUCTION_RUNBOOK.md` and
-`qa/production-release-2026-08-22.md`.
+The latest archived source snapshot is GitHub tag and Release
+`v1.2.0-service-media-20260826` at commit `87fb346`. It keeps package/API version
+`1.2.0` and records the homepage logo, partnership and Service media revision
+separately. Production static release evidence and rollback paths are recorded in
+`docs/PRODUCTION_RUNBOOK.md` and `qa/production-release-2026-08-26.md`.
 
 ## Project documentation
 
 - Project handoff and production notes: `docs/PROJECT_HANDOFF.md`
 - Production release and rollback runbook: `docs/PRODUCTION_RUNBOOK.md`
-- Latest production preflight evidence: `qa/production-preflight-2026-08-18.md`
+- Latest production release evidence: `qa/production-release-2026-08-26.md`
 - Asset inventory and handling rules: `docs/ASSET_MANIFEST.md`
 - Change history: `docs/CHANGELOG.md`
 - Coding and release workflow: `docs/CODING_WORKFLOW.md`

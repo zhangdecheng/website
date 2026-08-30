@@ -303,8 +303,16 @@ test("review editable mirrors the matching title and connectors", async () => {
     `The FLOURISH Advantage: Why HK ${marker} Why Us?`,
   ]) assertIncludesText(html, context);
   assert.equal(html.includes('class="ampersand"'), false);
-  assert.equal(html.match(/&amp;/g)?.length, 1);
-  assertIncludesText(html, "Primary Social Media Handle &amp; Link");
+  const approvedAmpersandContexts = [
+    "FLOURISH is an officially certified TikTok Shop TAP &amp; CAP partner across multiple markets",
+    "TikTok Shop multi-market certified TAP &amp; CAP partner.",
+    "Creator Whitelisting &amp; Spark Ads:",
+    "Primary Social Media Handle &amp; Link",
+    "Name &amp; Job Title",
+    "Company Name &amp; Website URL",
+  ];
+  assert.equal(html.match(/&amp;/g)?.length, approvedAmpersandContexts.length);
+  for (const context of approvedAmpersandContexts) assertIncludesText(html, context);
 });
 
 test("homepage talent module uses the approved benefits and unified-form CTA", async () => {

@@ -89,6 +89,17 @@ assert_contains() {
   pass "$label contains the required markup"
 }
 
+assert_occurrences() {
+  local file="$1"
+  local needle="$2"
+  local expected="$3"
+  local label="$4"
+  local actual
+  actual="$(grep -oF "$needle" "$file" | wc -l | tr -d '[:space:]')"
+  [[ "$actual" == "$expected" ]] || fail "$label contained $actual instances; expected $expected"
+  pass "$label contains exactly $expected required instances"
+}
+
 assert_sha256() {
   local file="$1"
   local expected="$2"
@@ -155,9 +166,10 @@ home_status="$(fetch GET \
   "$WORK_DIR/index.html")"
 assert_status 200 "$home_status" "www homepage"
 assert_contains "$WORK_DIR/index.html" '<link rel="canonical" href="https://www.flourishculturekol.com/" />' "www homepage"
+assert_occurrences "$WORK_DIR/index.html" '<span class="connector-word">and</span>' "14" "www homepage connector words"
 assert_header "$WORK_DIR/home.headers" "Content-Type" "text/html" "www homepage"
 assert_page_headers "$WORK_DIR/home.headers" "www homepage"
-assert_sha256 "$WORK_DIR/index.html" "555f402344ebd2d4973ddb82a72fb2a30695fc2652622915685071689ab57e9c" "www homepage"
+assert_sha256 "$WORK_DIR/index.html" "c96f7bc5f291e292473b4603bc55587710464e5272867d2e69888530ca4a39e1" "www homepage"
 
 privacy_status="$(fetch GET \
   "https://www.flourishculturekol.com/privacy.html" \
@@ -209,7 +221,7 @@ printf '\n== Release files and MIME ==\n'
 styles_status="$(fetch GET "$WWW_ORIGIN/styles.css" "$WORK_DIR/styles.headers" "$WORK_DIR/styles.css")"
 assert_status 200 "$styles_status" "styles.css"
 assert_header "$WORK_DIR/styles.headers" "Content-Type" "text/css" "styles.css"
-assert_sha256 "$WORK_DIR/styles.css" "45a0e8110c100a4ba601ad0047f04d35f252830743443d4b72a0ee0ae824b812" "styles.css"
+assert_sha256 "$WORK_DIR/styles.css" "b5b88af03dfb3a0b0fb22fe3b4dcbf82c929cb331281ce99d5f82f3b76405ccd" "styles.css"
 
 script_status="$(fetch GET "$WWW_ORIGIN/script.js" "$WORK_DIR/script.headers" "$WORK_DIR/script.js")"
 assert_status 200 "$script_status" "script.js"

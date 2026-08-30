@@ -505,6 +505,7 @@ test("package scripts and ignore rules keep generated releases out of Git", asyn
 
 test("public release check is strict about canonical routing, APIs, headers, assets and review", async () => {
   const check = await readFile(new URL("../check-https-cloud-assistant.sh", import.meta.url), "utf8");
+  const deploy = await readFile(new URL("../deploy-cloud-assistant.sh", import.meta.url), "utf8");
 
   for (const expected of [
     "set -euo pipefail",
@@ -533,6 +534,9 @@ test("public release check is strict about canonical routing, APIs, headers, ass
   assert.match(check, /--resolve 'www\.flourishculturekol\.com:443:127\.0\.0\.1'/);
   assert.doesNotMatch(check, /http:\/\/127\.0\.0\.1\/api\/contact\/health/);
   assert.doesNotMatch(check, /(?:health|config|canonical|privacy|review)[^\n]*\|\| true/i);
+  assert.match(check, /assert_occurrences\(\) \{[\s\S]*?grep -oF "\$needle" "\$file" \| wc -l \| tr -d '\[:space:\]'[\s\S]*?\[\[ "\$actual" == "\$expected" \]\] \|\| fail "\$label contained \$actual instances; expected \$expected"[\s\S]*?pass "\$label contains exactly \$expected required instances"[\s\S]*?\n\}/u);
+  assert.match(check, /assert_occurrences "\$WORK_DIR\/index\.html" '<span class="connector-word">and<\/span>' "14" "www homepage connector words"/u);
+  assert.match(deploy, /PATH="\/opt\/node-v24\.17\.0-linux-x64\/bin:\$PATH" bash "\$CHECK_SCRIPT"/u);
 
   await runFile(
     process.execPath,
@@ -558,12 +562,30 @@ test("public release check is strict about canonical routing, APIs, headers, ass
 test("final static rollout pins the audited candidate and never rolls Nginx back", async () => {
   const script = await readFile(new URL("../deploy-cloud-assistant.sh", import.meta.url), "utf8");
 
-  assert.match(script, /2621e9053ebc48169e8acc706946f51458da1bea6f4683754df29e81dbf70441/u);
-  assert.match(script, /6e79e9720131e395e55fd0fdb8059798bae4f11c240b76b16f2c8fc09443e631/u);
-  assert.match(script, /88700345f849d957193233f9211d81e1e13cd02b5e13ee8569eeb7a46bc8f5e8/u);
-  assert.match(script, /b5b88af03dfb3a0b0fb22fe3b4dcbf82c929cb331281ce99d5f82f3b76405ccd/u);
-  assert.match(script, /555f402344ebd2d4973ddb82a72fb2a30695fc2652622915685071689ab57e9c/u);
-  assert.match(script, /45a0e8110c100a4ba601ad0047f04d35f252830743443d4b72a0ee0ae824b812/u);
+  await runFile(
+    "/bin/bash",
+    ["scripts/build-production-artifacts.sh"],
+    { cwd: new URL("../", import.meta.url), encoding: "utf8" },
+  );
+
+  assert.equal(
+    deploymentHash(script, "EXPECTED_ARCHIVE_SHA"),
+    await fileSha256(new URL("../release/flourishculturekol-homepage.zip", import.meta.url)),
+  );
+  assert.equal(
+    deploymentHash(script, "EXPECTED_CHECK_SCRIPT_SHA"),
+    await fileSha256(new URL("../check-https-cloud-assistant.sh", import.meta.url)),
+  );
+  assert.equal(deploymentHash(script, "EXPECTED_OLD_HOME_SHA"), "555f402344ebd2d4973ddb82a72fb2a30695fc2652622915685071689ab57e9c");
+  assert.equal(deploymentHash(script, "EXPECTED_OLD_STYLES_SHA"), "45a0e8110c100a4ba601ad0047f04d35f252830743443d4b72a0ee0ae824b812");
+  assert.equal(
+    deploymentHash(script, "EXPECTED_NEW_HOME_SHA"),
+    await fileSha256(new URL("../dist/index.html", import.meta.url)),
+  );
+  assert.equal(
+    deploymentHash(script, "EXPECTED_STYLES_SHA"),
+    await fileSha256(new URL("../dist/styles.css", import.meta.url)),
+  );
   assert.match(script, /BACKUP_TREE="\$\{BACKUP\}\/tree"/u);
   assert.match(script, /rsync -a --delete "\$BACKUP_TREE\/" "\$WEB_ROOT\/"/u);
   assert.match(script, /rsync -a "\$WEB_ROOT\/" "\$BACKUP_TREE\/"[\s\S]*chmod 0700 "\$BACKUP"/u);
@@ -572,6 +594,10 @@ test("final static rollout pins the audited candidate and never rolls Nginx back
 
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
+}
+
+function deploymentHash(script, name) {
+  return script.match(new RegExp(`readonly ${name}="([a-f0-9]{64})"`))?.[1] ?? "";
 }
 
 async function fileSha256(path) {

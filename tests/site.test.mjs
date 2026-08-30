@@ -296,7 +296,7 @@ test("homepage marks exactly the 14 approved and connectors", async () => {
   for (const context of approvedContexts) assertIncludesText(html, context);
 });
 
-test("review editable mirrors the matching title and connectors", async () => {
+test("review editable mirrors the 5 approved and connectors", async () => {
   const html = await readFile(new URL("../review-editable.html", import.meta.url), "utf8");
   const marker = '<span class="connector-word">and</span>';
 

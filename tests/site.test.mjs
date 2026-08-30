@@ -233,7 +233,7 @@ test("homepage services use the approved three-block copy", async () => {
     "Data-Driven Growth &amp; Performance Insights",
     "Creative Strategy &amp; Localization",
   ]) {
-    assert.match(services, new RegExp(title));
+    assertIncludesText(text, title);
   }
   assert.equal(services.match(/The Overview/g)?.length, 3);
   assert.equal(services.match(/What We Do/g)?.length, 3);
@@ -269,6 +269,48 @@ test("homepage services use the approved three-block copy", async () => {
   }
 
   assert.doesNotMatch(html, /paid media|paid growth|Spark Ads|whitelisting/i);
+});
+
+test("homepage marks exactly the 14 approved ampersands with the Arial hook", async () => {
+  const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+  const marker = '<span class="ampersand">&amp;</span>';
+  const approvedContexts = [
+    `Trusted by Leading Global Brands ${marker} Innovators`,
+    `Certified TikTok Shop TAP ${marker} CAP Partner`,
+    `FLOURISH is an officially certified TikTok Shop TAP ${marker} CAP partner across multiple markets`,
+    `TikTok Shop multi-market certified TAP ${marker} CAP partner.`,
+    `Data-Driven Growth ${marker} Performance Insights`,
+    `Algorithmic ${marker} Retention Audits:`,
+    `E-Commerce ${marker} Direct-Response Optimization:`,
+    `Audience Demographics ${marker} Niche Matching:`,
+    `Creative Strategy ${marker} Localization`,
+    `Script Audits ${marker} UGC Production:`,
+    `Supply Chain ${marker} Offline Immersion:`,
+    `Seamless Monetization ${marker} Operations:`,
+    `Global Community ${marker} Supply Chain Access:`,
+    `The FLOURISH Advantage: Why HK ${marker} Why Us?`,
+  ];
+
+  assert.equal(html.split(marker).length - 1, approvedContexts.length);
+  assert.equal(html.match(/&amp;/g)?.length, approvedContexts.length);
+  for (const context of approvedContexts) assertIncludesText(html, context);
+  assert.equal(cssRuleBody(css, ".ampersand").replace(/\s+/g, " ").trim(), "font-family: Arial, Helvetica, sans-serif; font-size: 1em; font-weight: inherit; line-height: inherit;");
+});
+
+test("review editable mirrors the matching title ampersand hooks", async () => {
+  const html = await readFile(new URL("../review-editable.html", import.meta.url), "utf8");
+  const marker = '<span class="ampersand">&amp;</span>';
+
+  assert.equal(html.split(marker).length - 1, 5);
+  for (const context of [
+    `Trusted by Leading Global Brands ${marker} Innovators`,
+    `Certified TikTok Shop TAP ${marker} CAP Partner`,
+    `Performance-Driven Growth ${marker} Paid Media`,
+    `Creative Strategy ${marker} Localization`,
+    `The FLOURISH Advantage: Why HK ${marker} Why Us?`,
+  ]) assertIncludesText(html, context);
+  assertIncludesText(html, "Primary Social Media Handle &amp; Link");
 });
 
 test("homepage talent module uses the approved benefits and unified-form CTA", async () => {
@@ -453,8 +495,9 @@ test("contact client uses Turnstile and same-page JSON submission without mailto
 
 test("review editable mirrors remaining Feishu module copy", async () => {
   const html = await readFile(new URL("../review-editable.html", import.meta.url), "utf8");
+  const documentText = normalized(html);
 
-  for (const text of [
+  for (const expected of [
     "Global Influencer Marketing",
     "Performance-Driven Growth &amp; Paid Media",
     "Creative Strategy &amp; Localization",
@@ -464,7 +507,7 @@ test("review editable mirrors remaining Feishu module copy", async () => {
     "Ready to Scale Your Global Footprint?",
     "Book a Strategy Call",
   ]) {
-    assertIncludesText(html, text);
+    assertIncludesText(documentText, expected);
   }
 
   assert.match(html, /assets\/talent-global-creator-network\.png/);
@@ -674,7 +717,7 @@ test("logo rail autoscrolls the approved nine-logo source set accessibly", async
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
   const logoStrip = html.match(/<section class="logo-strip"[\s\S]*?<\/section>/)?.[0] ?? "";
 
-  assert.match(logoStrip, /<h2 id="trusted-heading">Trusted by Leading Global Brands &amp; Innovators<\/h2>/);
+  assert.match(logoStrip, /<h2 id="trusted-heading">Trusted by Leading Global Brands <span class="ampersand">&amp;<\/span> Innovators<\/h2>/);
   assert.match(logoStrip, /class="brand-logo-viewport"/);
   assert.match(logoStrip, /class="brand-logo-track"/);
   assert.match(logoStrip, /data-brand-logo-set/);

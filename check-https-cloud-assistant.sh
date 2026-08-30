@@ -157,7 +157,7 @@ assert_status 200 "$home_status" "www homepage"
 assert_contains "$WORK_DIR/index.html" '<link rel="canonical" href="https://www.flourishculturekol.com/" />' "www homepage"
 assert_header "$WORK_DIR/home.headers" "Content-Type" "text/html" "www homepage"
 assert_page_headers "$WORK_DIR/home.headers" "www homepage"
-assert_sha256 "$WORK_DIR/index.html" "88700345f849d957193233f9211d81e1e13cd02b5e13ee8569eeb7a46bc8f5e8" "www homepage"
+assert_sha256 "$WORK_DIR/index.html" "555f402344ebd2d4973ddb82a72fb2a30695fc2652622915685071689ab57e9c" "www homepage"
 
 privacy_status="$(fetch GET \
   "https://www.flourishculturekol.com/privacy.html" \
@@ -209,7 +209,7 @@ printf '\n== Release files and MIME ==\n'
 styles_status="$(fetch GET "$WWW_ORIGIN/styles.css" "$WORK_DIR/styles.headers" "$WORK_DIR/styles.css")"
 assert_status 200 "$styles_status" "styles.css"
 assert_header "$WORK_DIR/styles.headers" "Content-Type" "text/css" "styles.css"
-assert_sha256 "$WORK_DIR/styles.css" "b5b88af03dfb3a0b0fb22fe3b4dcbf82c929cb331281ce99d5f82f3b76405ccd" "styles.css"
+assert_sha256 "$WORK_DIR/styles.css" "45a0e8110c100a4ba601ad0047f04d35f252830743443d4b72a0ee0ae824b812" "styles.css"
 
 script_status="$(fetch GET "$WWW_ORIGIN/script.js" "$WORK_DIR/script.headers" "$WORK_DIR/script.js")"
 assert_status 200 "$script_status" "script.js"

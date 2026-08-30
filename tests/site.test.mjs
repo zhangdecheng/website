@@ -27,16 +27,6 @@ function bracedBlock(source, openingBrace) {
   return "";
 }
 
-function cssRuleBody(source, selector) {
-  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const match = new RegExp(`${escaped}\\s*\\{`).exec(source);
-  return match ? bracedBlock(source, match.index + match[0].length - 1) : "";
-}
-
-test("CSS rule helper returns declarations from a direct rule", () => {
-  assert.equal(cssRuleBody(".sample { color: red; }", ".sample").trim(), "color: red;");
-});
-
 function mediaQueryBody(css, query) {
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = new RegExp(`@media\\s*\\(${escaped}\\)\\s*\\{`).exec(css);
@@ -312,6 +302,8 @@ test("review editable mirrors the matching title and connectors", async () => {
     `Creative Strategy ${marker} Localization`,
     `The FLOURISH Advantage: Why HK ${marker} Why Us?`,
   ]) assertIncludesText(html, context);
+  assert.equal(html.includes('class="ampersand"'), false);
+  assert.equal(html.match(/&amp;/g)?.length, 1);
   assertIncludesText(html, "Primary Social Media Handle &amp; Link");
 });
 
@@ -881,8 +873,15 @@ test("Service media fills equal desktop columns while partner proof retains a cl
 
   assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
   const equalColumns = /grid-template-columns:\s*minmax\(0,\s*1fr\) minmax\(0,\s*1fr\)/;
-  const desktopServiceBlock = cssRuleBody(css, ".service-block");
-  const tabletServiceBlock = cssRuleBody(mediaQueryBody(css, "max-width: 1100px"), ".service-block");
+  const desktopServiceRule = /\.service-block\s*\{/.exec(css);
+  const desktopServiceBlock = desktopServiceRule
+    ? bracedBlock(css, desktopServiceRule.index + desktopServiceRule[0].length - 1)
+    : "";
+  const tabletCss = mediaQueryBody(css, "max-width: 1100px");
+  const tabletServiceRule = /\.service-block\s*\{/.exec(tabletCss);
+  const tabletServiceBlock = tabletServiceRule
+    ? bracedBlock(tabletCss, tabletServiceRule.index + tabletServiceRule[0].length - 1)
+    : "";
   const mobileServiceLayout = mediaQueryBody(css, "max-width: 820px");
   assert.match(desktopServiceBlock, equalColumns);
   assert.match(tabletServiceBlock, equalColumns);

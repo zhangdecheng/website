@@ -1,6 +1,6 @@
 # FLOURISH CULTURE Website — Project Progress
 
-Last updated: 2026-08-22
+Last updated: 2026-08-30
 
 ## Goal
 
@@ -21,6 +21,14 @@ requirements document.
 Phase 8 — v1.2.0 static releases archived and live; inbox readback remains in progress.
 
 ## Completed
+
+- Published the readable `and` connector update on 2026-08-30. The 14 approved
+  homepage title connectors are now explicit `and` spans; desktop Logo rail
+  headings stay on one line while tablet/mobile widths wrap naturally. The
+  transfer package SHA-256 is `928eed5706b8baed2aea37c9c0e7444999f4ecbd2d25755fdd710c9421f1cad8`,
+  the public homepage/styles hashes are `c96f7bc5…a39e1` / `746e8b3a…8a49d`,
+  Cloud Assistant invocation `ivk-yetzjxixbf8vwx39a8su` succeeded, and the
+  full evidence is archived in `qa/production-release-2026-08-30-and-word.md`.
 
 - Published the service-media static candidate as GitHub tag
   `v1.2.0-service-media-20260826` at commit `87fb346`. The 7,369,973-byte ZIP

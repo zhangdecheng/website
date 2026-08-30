@@ -17,7 +17,7 @@
 - Modify: `tests/site.test.mjs`
 - Test: `tests/site.test.mjs`
 
-- [ ] **Step 1: 新增失败用例，锁定首页 14 个批准实例。**
+- [x] **Step 1: 新增失败用例，锁定首页 14 个批准实例。**
 
 ```js
 test("homepage marks only the 14 approved ampersands with the Arial hook", async () => {
@@ -39,7 +39,7 @@ test("homepage marks only the 14 approved ampersands with the Arial hook", async
 });
 ```
 
-- [ ] **Step 2: 运行红灯测试。**
+- [x] **Step 2: 运行红灯测试。**
 
 Run: `node --test --test-name-pattern="homepage marks only" tests/site.test.mjs`
 
@@ -54,7 +54,7 @@ Expected: 因标记数为 `0` 而失败，期望值为 `14`。
 - Modify: `styles.css:after the display-heading rules near line 290`
 - Test: `tests/site.test.mjs`
 
-- [ ] **Step 1: 仅包裹首页 14 个批准的 `&`。**
+- [x] **Step 1: 仅包裹首页 14 个批准的 `&`。**
 
 ```html
 Trusted by Leading Global Brands <span class="ampersand">&amp;</span> Innovators
@@ -73,7 +73,7 @@ Global Community <span class="ampersand">&amp;</span> Supply Chain Access:
 
 保留官方合作区正文和认证注记中的两个批准实例；不包裹其他正文、表单或链接的 `&`。在 `review-editable.html` 中同步该副本中已有的对应标题/眉题实例，不扩展到它的历史正文或表单标签。
 
-- [ ] **Step 2: 添加唯一的字形规则。**
+- [x] **Step 2: 添加唯一的字形规则。**
 
 ```css
 .ampersand {
@@ -84,13 +84,13 @@ Global Community <span class="ampersand">&amp;</span> Supply Chain Access:
 }
 ```
 
-- [ ] **Step 3: 运行绿灯测试。**
+- [x] **Step 3: 运行绿灯测试。**
 
 Run: `node --test --test-name-pattern="homepage marks only" tests/site.test.mjs`
 
 Expected: `pass 1`、`fail 0`。
 
-- [ ] **Step 4: 运行全量静态测试并提交实现。**
+- [x] **Step 4: 运行全量静态测试并提交实现。**
 
 Run: `node --test tests/site.test.mjs`
 
@@ -107,19 +107,19 @@ git commit -m "fix: clarify approved ampersand glyphs"
 
 - Generated: `dist/`, `release/`, `qa/`
 
-- [ ] **Step 1: 运行完整本地发布门禁。**
+- [x] **Step 1: 运行完整本地发布门禁。**
 
 Run: `npm run release:verify`
 
 Expected: 输出以 `local release candidate is ready` 结束。
 
-- [ ] **Step 2: 在本地预览的桌面与移动宽度检查 14 个实例。**
+- [x] **Step 2: 在本地预览的桌面与移动宽度检查 14 个实例。**
 
 Run: `npm run serve`
 
 Expected: 目标符号使用 Arial 常规字形，标题不裁切、不溢出；合作区两个正文实例没有意外间距问题。
 
-- [ ] **Step 3: 记录制品并创建发布锚点。**
+- [x] **Step 3: 记录制品并创建发布锚点。**
 
 Run: `git rev-parse HEAD && shasum -a 256 release/flourishculturekol-homepage.zip && shasum -a 256 release/flourish-production-transfer-v1.2.0.tgz`
 
@@ -132,27 +132,27 @@ Expected: 获取唯一源码提交及两个候选 SHA-256；只有工作树没�
 - Create: `qa/production-release-2026-08-30.md`
 - Modify: `PROJECT_PROGRESS.md`
 
-- [ ] **Step 1: 在真实云账号和目标主机上做只读预检。**
+- [x] **Step 1: 在真实云账号和目标主机上做只读预检。**
 
 Run: `ve sts GetCallerIdentity && ve ecs DescribeInstances --EipAddresses.1 150.5.135.196 --MaxResults 100 && ve ecs DescribeCloudAssistantStatus --InstanceIds.1 i-yeo9geadc0plsv0abgv0 --PageNumber 1 --PageSize 10`
 
 Expected: 身份可用，实例 ID 为 `i-yeo9geadc0plsv0abgv0`，主机为 `webhkhome`，Cloud Assistant 为 `Running`。任一项不符即停止发布。
 
-- [ ] **Step 2: 通过 Cloud Assistant 创建精确 web root 备份并发布 Task 3 的候选包。**
+- [x] **Step 2: 通过 Cloud Assistant 创建精确 web root 备份并发布 Task 3 的候选包。**
 
-按 `docs/PRODUCTION_RUNBOOK.md` 的受控顺序验证传输包 SHA-256、内层 `release/SHA256SUMS`，再运行 `deploy-cloud-assistant.sh` 发布静态 ZIP。命令仅可作用于 `/var/www/flourishculturekol.com` 的本次受限暂存目录和新备份目录；不得修改 Nginx、证书、Contact 服务或 `/review/`。
+按 `docs/PRODUCTION_RUNBOOK.md` 的受控顺序验证传输包 SHA-256、内层 `release/SHA256SUMS`，再运行 `deploy-cloud-assistant.sh` 发布静态 ZIP。内层清单使用相对路径，因此必须在暂存根目录执行：`(cd "$stage" && sha256sum -c release/SHA256SUMS)`；不得从 Cloud Assistant 的默认工作目录直接执行。命令仅可作用于 `/var/www/flourishculturekol.com` 的本次受限暂存目录和新备份目录；不得修改 Nginx、证书、Contact 服务或 `/review/`。
 
-- [ ] **Step 3: 轮询 Cloud Assistant invocation 至终态并读回输出。**
+- [x] **Step 3: 轮询 Cloud Assistant invocation 至终态并读回输出。**
 
 Expected: 退出码 `0`，并含实际备份目录、Nginx 语法检查、Contact 健康检查和 `/review/healthz` 成功。已调度不是成功证据。
 
-- [ ] **Step 4: 独立公网读回候选内容。**
+- [x] **Step 4: 独立公网读回候选内容。**
 
 Run: `curl --noproxy '*' -fsS https://www.flourishculturekol.com/ -o /tmp/flourish-home.html && shasum -a 256 /tmp/flourish-home.html && curl --noproxy '*' -fsSI https://www.flourishculturekol.com/`
 
 Expected: 首页 `200`，包含 14 个 `<span class="ampersand">&amp;</span>`，HTML 与候选 `dist/index.html` 哈希一致；再确认 CSS `200`、桌面/移动浏览器字形正确以及 `/review/healthz` 为 `200`。
 
-- [ ] **Step 5: 记录并提交发布证据。**
+- [x] **Step 5: 记录并提交发布证据。**
 
 记录源码 commit/tag、两个制品 SHA-256、目标实例、invocation ID、备份路径、公开 HTTP/哈希和视觉 QA 结果；不记录密钥或 token。
 

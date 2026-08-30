@@ -370,3 +370,11 @@ Phase 8 — v1.2.0 static releases archived and live; inbox readback remains in 
 - Published the verified minimal package to `150.5.135.196` by using a temporary GitHub artifact branch for transfer, downloading it to `/tmp` on the server, verifying SHA256, then deleting the temporary branch after deployment.
 - Server backup created at `/var/backups/flourishculturekol.com/20260626-113529`.
 - Post-release verification passed: public `index.html`, `styles.css`, `script.js`, and `site-core.js` hashes match local `dist/`; key WebP assets and `remixicon.woff2` return HTTP 200; `/review/healthz` remains healthy at review version `2.0.4`; Nginx config passes.
+
+## 2026-08-30 — Ampersand Font Production Release
+
+- Replaced only the 14 screenshot-approved homepage ampersands with an explicit Arial span, protected by a TDD regression contract and full `npm test` pass (`96/96`).
+- Built immutable static and transfer artifacts from source commit `258b9d2`, then deployed the static candidate through ECS `i-yeo9geadc0plsv0abgv0` / `webhkhome` after cloud identity, instance, Cloud Assistant, Nginx, storage, pre-release-hash and Review-health preflight readbacks.
+- The first Cloud Assistant attempt stopped before deployment because the wrapper evaluated the inner checksum manifest outside its extraction root. A corrected retry ran the identical checksum from the staging root, exited `0`, and created rollback snapshot `/var/backups/flourishculturekol.com/20260830T061317Z-v1.2.0-static-555f4023`.
+- Independent public readback confirmed HTTP `200`, exact local-candidate hashes for `index.html` (`555f4023…e9c`) and `styles.css` (`45a0e811…b812`), exactly 14 ampersand markers, retained security headers, and healthy `/review/healthz`.
+- The static-only release did not modify Nginx, Contact or `/review/`; no mail-delivery claim was made. Full evidence: `qa/production-release-2026-08-30.md`.

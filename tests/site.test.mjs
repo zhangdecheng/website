@@ -230,8 +230,8 @@ test("homepage services use the approved three-block copy", async () => {
   assert.equal(services.match(/class="service-block(?: service-block-complete-media)? reveal"/g)?.length, 3);
   for (const title of [
     "Global Influencer Marketing",
-    "Data-Driven Growth &amp; Performance Insights",
-    "Creative Strategy &amp; Localization",
+    "Data-Driven Growth and Performance Insights",
+    "Creative Strategy and Localization",
   ]) {
     assertIncludesText(text, title);
   }
@@ -257,13 +257,13 @@ test("homepage services use the approved three-block copy", async () => {
   for (const copy of [
     "We build high-impact partnerships between visionary brands and top-tier creators across TikTok, YouTube, and Instagram. We engineer win-win campaigns that elevate brand authority while driving sustainable monetization for creators.",
     "Going viral shouldn’t be a guessing game. We leverage real-time platform analytics, retention metrics, and audience engagement data to turn one-off viral hits into a predictable, high-performing content flywheel for both brands and creators.",
-    "Algorithmic &amp; Retention Audits: Deconstruct video performance line-by-line (retention curves, 3-second hook rates, and CTRs) to optimize content structures for maximum algorithmic push.",
-    "E-Commerce &amp; Direct-Response Optimization: Analyze audience purchasing behavior and conversion funnels to refine call-to-actions (CTAs), maximizing both brand sales and creator commissions.",
-    "Audience Demographics &amp; Niche Matching: Utilize deep-level audience insights to pair creators with the exact brand categories their followers are most likely to buy from.",
+    "Algorithmic and Retention Audits: Deconstruct video performance line-by-line (retention curves, 3-second hook rates, and CTRs) to optimize content structures for maximum algorithmic push.",
+    "E-Commerce and Direct-Response Optimization: Analyze audience purchasing behavior and conversion funnels to refine call-to-actions (CTAs), maximizing both brand sales and creator commissions.",
+    "Audience Demographics and Niche Matching: Utilize deep-level audience insights to pair creators with the exact brand categories their followers are most likely to buy from.",
     "We break down cultural barriers by pairing brands with local trendsetters. We empower creators with algorithm coaching, script audits, and native trend insights to produce high-performing UGC.",
     "Localized Trend Jacking: Aligning creator content with fast-moving global social trends, sounds, and native hooks.",
-    "Script Audits &amp; UGC Production: Actionable content optimizations and scalable asset creation for long-term brand equity.",
-    "Supply Chain &amp; Offline Immersion: Exclusive factory tours and sourcing trips that give creators first-look access to unreleased products.",
+    "Script Audits and UGC Production: Actionable content optimizations and scalable asset creation for long-term brand equity.",
+    "Supply Chain and Offline Immersion: Exclusive factory tours and sourcing trips that give creators first-look access to unreleased products.",
   ]) {
     assertIncludesText(text, copy);
   }
@@ -271,10 +271,10 @@ test("homepage services use the approved three-block copy", async () => {
   assert.doesNotMatch(html, /paid media|paid growth|Spark Ads|whitelisting/i);
 });
 
-test("homepage marks exactly the 14 approved ampersands with the Arial hook", async () => {
+test("homepage marks exactly the 14 approved and connectors", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
-  const marker = '<span class="ampersand">&amp;</span>';
+  const marker = '<span class="connector-word">and</span>';
   const approvedContexts = [
     `Trusted by Leading Global Brands ${marker} Innovators`,
     `Certified TikTok Shop TAP ${marker} CAP Partner`,
@@ -293,14 +293,16 @@ test("homepage marks exactly the 14 approved ampersands with the Arial hook", as
   ];
 
   assert.equal(html.split(marker).length - 1, approvedContexts.length);
-  assert.equal(html.match(/&amp;/g)?.length, approvedContexts.length);
+  assert.equal(html.includes('class="ampersand"'), false);
+  assert.equal(html.includes("&amp;"), false);
+  assert.equal(css.includes(".ampersand"), false);
+  assert.equal(css.includes(".connector-word"), false);
   for (const context of approvedContexts) assertIncludesText(html, context);
-  assert.equal(cssRuleBody(css, ".ampersand").replace(/\s+/g, " ").trim(), "font-family: Arial, Helvetica, sans-serif; font-size: 1em; font-weight: inherit; line-height: inherit;");
 });
 
-test("review editable mirrors the matching title ampersand hooks", async () => {
+test("review editable mirrors the matching title and connectors", async () => {
   const html = await readFile(new URL("../review-editable.html", import.meta.url), "utf8");
-  const marker = '<span class="ampersand">&amp;</span>';
+  const marker = '<span class="connector-word">and</span>';
 
   assert.equal(html.split(marker).length - 1, 5);
   for (const context of [
@@ -324,9 +326,9 @@ test("homepage talent module uses the approved benefits and unified-form CTA", a
   assert.match(talent, /Why Creators Partner With Us:/);
   for (const expected of [
     "Direct Access to Top Global Brands: Secure exclusive sponsorships with market leaders and pioneering lifestyle labels, high-tier deal flow.",
-    "Seamless Monetization &amp; Operations: We handle negotiation, contract compliance, and on-time payouts, so you can focus 100% on creating.",
+    "Seamless Monetization and Operations: We handle negotiation, contract compliance, and on-time payouts, so you can focus 100% on creating.",
     "Data-Backed Creator Growth: Gain actionable script audits, algorithm insights, and cross-platform distribution strategies designed to turn viral moments into sustainable career growth.",
-    "Global Community &amp; Supply Chain Access: Join exclusive Creator Masterminds, global offline meetups, and sponsored China factory tours to test unreleased products and create behind-the-scenes content.",
+    "Global Community and Supply Chain Access: Join exclusive Creator Masterminds, global offline meetups, and sponsored China factory tours to test unreleased products and create behind-the-scenes content.",
     "Ready to Scale?",
     "Join Our Roster →",
   ]) {
@@ -358,7 +360,7 @@ test("homepage about module uses exact mission and advantage copy with image", a
     "[Our Mission]",
     "Making Cultural Boundaries Invisible.",
     "At FLOURISH CULTURE, we believe that great brands shouldn't be limited by geography. Our mission is to empower both visionaries and creators to transcend borders, turning cross-cultural stories into meaningful global growth.",
-    "[The FLOURISH Advantage: Why HK &amp; Why Us?]",
+    "[The FLOURISH Advantage: Why HK and Why Us?]",
     "Headquartered in Hong Kong, FLOURISH CULTURE occupies a unique position as the ultimate bridge between East and West.",
     "We possess an intrinsic, deep-rooted understanding of China’s world-class supply chains, e-commerce innovations, and brand aspirations. Simultaneously, we operate with a 100% localized, ground-level execution network across North America, Europe, and beyond. This dual DNA allows us to eliminate cross-border friction entirely, making us the trusted launchpad for creators seeking top-tier sponsorships and brands conquering global markets.",
   ]) {
@@ -499,8 +501,8 @@ test("review editable mirrors remaining Feishu module copy", async () => {
 
   for (const expected of [
     "Global Influencer Marketing",
-    "Performance-Driven Growth &amp; Paid Media",
-    "Creative Strategy &amp; Localization",
+    "Performance-Driven Growth and Paid Media",
+    "Creative Strategy and Localization",
     "Turn Your Influence into a Global Legacy.",
     "Join the Culture (Application Form)",
     "Making Cultural Boundaries Invisible.",
@@ -717,7 +719,7 @@ test("logo rail autoscrolls the approved nine-logo source set accessibly", async
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
   const logoStrip = html.match(/<section class="logo-strip"[\s\S]*?<\/section>/)?.[0] ?? "";
 
-  assert.match(logoStrip, /<h2 id="trusted-heading">Trusted by Leading Global Brands <span class="ampersand">&amp;<\/span> Innovators<\/h2>/);
+  assert.match(logoStrip, /<h2 id="trusted-heading">Trusted by Leading Global Brands <span class="connector-word">and<\/span> Innovators<\/h2>/);
   assert.match(logoStrip, /class="brand-logo-viewport"/);
   assert.match(logoStrip, /class="brand-logo-track"/);
   assert.match(logoStrip, /data-brand-logo-set/);

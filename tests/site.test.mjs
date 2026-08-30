@@ -27,6 +27,12 @@ function bracedBlock(source, openingBrace) {
   return "";
 }
 
+function directRuleBody(source, selector) {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = new RegExp(`${escaped}\\s*\\{`).exec(source);
+  return match ? bracedBlock(source, match.index + match[0].length - 1) : "";
+}
+
 function mediaQueryBody(css, query) {
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = new RegExp(`@media\\s*\\(${escaped}\\)\\s*\\{`).exec(css);
@@ -881,15 +887,9 @@ test("Service media fills equal desktop columns while partner proof retains a cl
 
   assert.match(css, /\.wordmark-lockup img\s*{[\s\S]*width:\s*clamp\(132px,\s*11vw,\s*164px\)/);
   const equalColumns = /grid-template-columns:\s*minmax\(0,\s*1fr\) minmax\(0,\s*1fr\)/;
-  const desktopServiceRule = /\.service-block\s*\{/.exec(css);
-  const desktopServiceBlock = desktopServiceRule
-    ? bracedBlock(css, desktopServiceRule.index + desktopServiceRule[0].length - 1)
-    : "";
+  const desktopServiceBlock = directRuleBody(css, ".service-block");
   const tabletCss = mediaQueryBody(css, "max-width: 1100px");
-  const tabletServiceRule = /\.service-block\s*\{/.exec(tabletCss);
-  const tabletServiceBlock = tabletServiceRule
-    ? bracedBlock(tabletCss, tabletServiceRule.index + tabletServiceRule[0].length - 1)
-    : "";
+  const tabletServiceBlock = directRuleBody(tabletCss, ".service-block");
   const mobileServiceLayout = mediaQueryBody(css, "max-width: 820px");
   assert.match(desktopServiceBlock, equalColumns);
   assert.match(tabletServiceBlock, equalColumns);

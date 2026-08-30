@@ -534,7 +534,8 @@ test("public release check is strict about canonical routing, APIs, headers, ass
   assert.match(check, /--resolve 'www\.flourishculturekol\.com:443:127\.0\.0\.1'/);
   assert.doesNotMatch(check, /http:\/\/127\.0\.0\.1\/api\/contact\/health/);
   assert.doesNotMatch(check, /(?:health|config|canonical|privacy|review)[^\n]*\|\| true/i);
-  assert.match(check, /assert_occurrences\(\) \{[\s\S]*?grep -oF "\$needle" "\$file" \| wc -l \| tr -d '\[:space:\]'[\s\S]*?\[\[ "\$actual" == "\$expected" \]\] \|\| fail "\$label contained \$actual instances; expected \$expected"[\s\S]*?pass "\$label contains exactly \$expected required instances"[\s\S]*?\n\}/u);
+  assert.match(check, /assert_occurrences\(\) \{/u);
+  assert.match(check, /grep -oF -- "\$needle" "\$file"/u);
   assert.match(check, /assert_occurrences "\$WORK_DIR\/index\.html" '<span class="connector-word">and<\/span>' "14" "www homepage connector words"/u);
   assert.match(deploy, /PATH="\/opt\/node-v24\.17\.0-linux-x64\/bin:\$PATH" bash "\$CHECK_SCRIPT"/u);
 
@@ -556,6 +557,59 @@ test("public release check is strict about canonical routing, APIs, headers, ass
     const bytes = await readFile(new URL(`../dist/${path}`, import.meta.url));
     const hash = createHash("sha256").update(bytes).digest("hex");
     assert.match(check, new RegExp(hash), `${path} hash should be pinned in the public check`);
+  }
+});
+
+test("public release check reports zero connector matches and grep errors safely", async () => {
+  const check = await readFile(new URL("../check-https-cloud-assistant.sh", import.meta.url), "utf8");
+  const occurrenceFunction = check.match(/^assert_occurrences\(\) \{[\s\S]*?^\}/m)?.[0];
+  assert.notEqual(occurrenceFunction, undefined);
+
+  const fixture = await mkdtemp(join(tmpdir(), "flourish-occurrences-"));
+  const document = join(fixture, "document.html");
+  const harness = join(fixture, "assert-occurrences.sh");
+  await writeFile(document, "<main>no connector here</main>\n", "utf8");
+  await writeExecutable(harness, `#!/usr/bin/env bash
+set -euo pipefail
+fail() {
+  printf 'FAIL: %s\\n' "$1" >&2
+  exit 1
+}
+pass() {
+  printf 'OK: %s\\n' "$1"
+}
+${occurrenceFunction}
+assert_occurrences "$@"
+`);
+
+  try {
+    await writeFile(document, "connector-word\nconnector-word\n", "utf8");
+    const success = await runFile(
+      "/bin/bash",
+      [harness, document, "connector-word", "2", "fixture connector words"],
+      { encoding: "utf8" },
+    );
+    assert.match(success.stdout, /OK: fixture connector words contains exactly 2 required instances/u);
+
+    await writeFile(document, "<main>no connector here</main>\n", "utf8");
+    await assert.rejects(
+      runFile("/bin/bash", [harness, document, "connector-word", "1", "fixture connector words"], { encoding: "utf8" }),
+      (error) => {
+        assert.equal(error.code, 1);
+        assert.match(error.stderr, /FAIL: fixture connector words contained 0 instances; expected 1/u);
+        return true;
+      },
+    );
+    await assert.rejects(
+      runFile("/bin/bash", [harness, join(fixture, "missing.html"), "connector-word", "1", "fixture connector words"], { encoding: "utf8" }),
+      (error) => {
+        assert.equal(error.code, 1);
+        assert.match(error.stderr, /FAIL: fixture connector words could not be searched \(grep exit 2\)/u);
+        return true;
+      },
+    );
+  } finally {
+    await rm(fixture, { recursive: true, force: true });
   }
 });
 

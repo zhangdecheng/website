@@ -95,7 +95,18 @@ assert_occurrences() {
   local expected="$3"
   local label="$4"
   local actual
-  actual="$(grep -oF "$needle" "$file" | wc -l | tr -d '[:space:]')"
+  local matches
+  local status
+  if matches="$(grep -oF -- "$needle" "$file")"; then
+    actual="$(printf '%s\n' "$matches" | wc -l | tr -d '[:space:]')"
+  else
+    status="$?"
+    if [[ "$status" -eq 1 ]]; then
+      actual=0
+    else
+      fail "$label could not be searched (grep exit $status)"
+    fi
+  fi
   [[ "$actual" == "$expected" ]] || fail "$label contained $actual instances; expected $expected"
   pass "$label contains exactly $expected required instances"
 }

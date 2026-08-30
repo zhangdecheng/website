@@ -719,14 +719,20 @@ h1 {
 }
 
 .logo-strip h2 {
-  max-width: 860px;
-  margin: 0 auto 44px;
+  max-width: 1200px;
+  margin: 0 auto 32px;
   color: var(--white);
   font-size: clamp(26px, 3vw, 42px);
   font-weight: 600;
   letter-spacing: -0.035em;
   line-height: 1.1;
   text-align: center;
+}
+
+@media (min-width: 821px) {
+  .logo-strip h2 {
+    white-space: nowrap;
+  }
 }
 
 .brand-logo-viewport {
@@ -2161,6 +2167,10 @@ textarea:user-invalid {
 
   .talent-content {
     padding: 52px var(--gutter);
+  }
+
+  .logo-strip h2 {
+    white-space: normal;
   }
 }
 

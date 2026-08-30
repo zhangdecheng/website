@@ -738,6 +738,10 @@ test("logo rail autoscrolls the approved nine-logo source set accessibly", async
   assert.match(css, /\.hero::before\s*{[\s\S]*radial-gradient\(ellipse at 20% 30%/);
   assert.match(css, /\.logo-strip\s*{[\s\S]*padding:\s*clamp\(80px,\s*8\.5vw,\s*120px\) 0 clamp\(56px,\s*5\.5vw,\s*78px\)/);
   assert.match(css, /\.logo-strip h2\s*{[\s\S]*font-size:\s*clamp\(26px,\s*3vw,\s*42px\)/);
+  assert.match(css, /\.logo-strip h2\s*{[\s\S]*max-width:\s*1200px/);
+  assert.match(css, /@media \(min-width:\s*821px\)[\s\S]*\.logo-strip h2\s*{[\s\S]*white-space:\s*nowrap/);
+  assert.match(css, /@media \(max-width:\s*820px\)[\s\S]*\.logo-strip h2\s*{[\s\S]*white-space:\s*normal/);
+  assert.match(css, /\.logo-strip h2\s*{[\s\S]*margin:\s*0 auto 32px/);
   assert.match(css, /\.brand-logo-track\.is-ready\s*{[\s\S]*animation:\s*logo-scroll/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)[\s\S]*\.brand-logo-track\s*{[\s\S]*animation:\s*none/);
   assert.match(css, /\.brand-logo-viewport\s*{[\s\S]*overflow:\s*hidden/);

@@ -232,7 +232,7 @@ printf '\n== Release files and MIME ==\n'
 styles_status="$(fetch GET "$WWW_ORIGIN/styles.css" "$WORK_DIR/styles.headers" "$WORK_DIR/styles.css")"
 assert_status 200 "$styles_status" "styles.css"
 assert_header "$WORK_DIR/styles.headers" "Content-Type" "text/css" "styles.css"
-assert_sha256 "$WORK_DIR/styles.css" "b5b88af03dfb3a0b0fb22fe3b4dcbf82c929cb331281ce99d5f82f3b76405ccd" "styles.css"
+assert_sha256 "$WORK_DIR/styles.css" "746e8b3adda56aecacba235bd032f8e5001b84ff4395e77bba4079793598a49d" "styles.css"
 
 script_status="$(fetch GET "$WWW_ORIGIN/script.js" "$WORK_DIR/script.headers" "$WORK_DIR/script.js")"
 assert_status 200 "$script_status" "script.js"

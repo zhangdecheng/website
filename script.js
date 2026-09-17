@@ -1,4 +1,4 @@
-import { initContactForm } from "./contact-form.js";
+import { initContactForm, scrollContactTargetIntoView } from "./contact-form.js";
 
 const header = document.querySelector("[data-header]");
 const menuToggle = document.querySelector("[data-menu-toggle]");
@@ -35,6 +35,74 @@ window.addEventListener(
 );
 
 initContactForm();
+
+function scrollToLocationHash() {
+  const id = decodeURIComponent(String(window.location.hash || "").replace(/^#/, ""));
+  if (!id) return;
+  const target = document.getElementById(id);
+  if (!target) return;
+  if (id === "contact") {
+    scrollContactTargetIntoView(target);
+    return;
+  }
+  target.scrollIntoView({
+    behavior: reducedMotion ? "auto" : "smooth",
+    block: "start",
+  });
+}
+
+function scheduleHashScroll() {
+  if (!window.location.hash) return;
+  const run = () => scrollToLocationHash();
+  run();
+  requestAnimationFrame(run);
+}
+
+if (window.location.hash === "#contact") {
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  document.documentElement.style.scrollBehavior = "auto";
+}
+scheduleHashScroll();
+window.addEventListener("pageshow", scheduleHashScroll);
+window.addEventListener("load", () => {
+  scheduleHashScroll();
+  window.setTimeout(scheduleHashScroll, 50);
+  window.setTimeout(() => {
+    scheduleHashScroll();
+    if (window.location.hash === "#contact") document.documentElement.style.scrollBehavior = "";
+  }, 120);
+});
+window.addEventListener("hashchange", () => {
+  scrollToLocationHash();
+});
+
+document.addEventListener("click", (event) => {
+  if (event.defaultPrevented || event.button !== 0) return;
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = event.target.closest("a[href]");
+  if (!link) return;
+  let url;
+  try {
+    url = new URL(link.href, window.location.href);
+  } catch {
+    return;
+  }
+  if (url.origin !== window.location.origin || url.hash !== "#contact") return;
+  const normalizePath = (path) => path.replace(/\/index\.html$/, "/").replace(/\/+$/, "") || "/";
+  if (normalizePath(url.pathname) !== normalizePath(window.location.pathname)) return;
+  if (url.search !== window.location.search) return;
+  const target = document.getElementById("contact");
+  if (!target) return;
+  event.preventDefault();
+  const roleSelect = document.querySelector("[data-role-select]");
+  const requestedRole = new URLSearchParams(url.search).get("role");
+  if (roleSelect && (requestedRole === "creator" || requestedRole === "brand")) {
+    roleSelect.value = requestedRole;
+    roleSelect.dispatchEvent(new Event("change"));
+  }
+  history.pushState({}, "", `${url.pathname}${url.search}#contact`);
+  scrollToLocationHash();
+});
 
 function cloneBrandLogoSet() {
   const source = document.querySelector("[data-brand-logo-set]");

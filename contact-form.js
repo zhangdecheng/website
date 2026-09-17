@@ -23,6 +23,21 @@ export function loadTurnstile(doc = document, win = window) {
   return turnstileLoader;
 }
 
+export function scrollContactTargetIntoView(target, win = window) {
+  if (!target) return;
+  const root = win.document.documentElement;
+  const header = win.document.querySelector("[data-header]");
+  const headerSize = header?.getBoundingClientRect().height
+    || Number.parseFloat(win.getComputedStyle(root).getPropertyValue("--header-height"))
+    || 76;
+  const previousBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = "auto";
+  target.scrollIntoView({ behavior: "auto", block: "start" });
+  const top = win.scrollY + target.getBoundingClientRect().top - headerSize - 16;
+  win.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+  root.style.scrollBehavior = previousBehavior;
+}
+
 const CONTACT_ROLES = new Set(["brand", "creator"]);
 
 export function setRole(form, role) {
@@ -211,20 +226,34 @@ export async function initContactForm({
     });
   });
 
+  function scrollContactIntoView() {
+    scrollContactTargetIntoView(contactSection || form, win);
+  }
+
   for (const link of doc.querySelectorAll('[data-select-contact-role="creator"]')) {
     link.addEventListener("click", (event) => {
+      let url;
+      try {
+        url = new URL(link.href, win.location.href);
+      } catch {
+        url = null;
+      }
+      const sameDocument = Boolean(
+        url
+          && url.origin === win.location.origin
+          && url.pathname === win.location.pathname
+          && url.search === win.location.search,
+      );
+      if (!sameDocument) return;
       event.preventDefault();
       roleSelect.value = "creator";
       setRole(form, "creator");
-      contactSection?.scrollIntoView({
-        behavior: win.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-      });
+      scrollContactIntoView();
       win.setTimeout(() => {
         const firstEmpty = fieldsForRole("creator")
           .map((name) => form.elements.namedItem(name))
           .find((control) => !control?.value.trim());
-        firstEmpty?.focus();
+        firstEmpty?.focus({ preventScroll: true });
       }, 250);
     });
   }

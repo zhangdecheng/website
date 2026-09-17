@@ -57,9 +57,13 @@ html {
   scroll-padding-top: var(--header-height);
 }
 
+html:has(#contact:target) {
+  scroll-behavior: auto;
+}
+
 body {
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
@@ -1600,6 +1604,11 @@ textarea:user-invalid {
   margin-bottom: 0;
 }
 
+#contact,
+#contact-heading {
+  scroll-margin-top: 16px;
+}
+
 .contact {
   position: relative;
   padding: clamp(56px, 6.2vw, 86px) 0;
@@ -1607,7 +1616,7 @@ textarea:user-invalid {
     radial-gradient(ellipse at 80% 20%, rgba(230, 92, 71, 0.08) 0%, transparent 55%),
     var(--paper);
   color: var(--ink);
-  overflow: hidden;
+  overflow: clip;
 }
 
 .contact::before {
@@ -1893,8 +1902,9 @@ textarea:user-invalid {
 
 .creators-main {
   min-height: 100vh;
-  padding: clamp(120px, 14vw, 180px) var(--gutter) 80px;
+  padding: max(clamp(120px, 14vw, 180px), calc(var(--header-height) + 56px)) var(--gutter) 80px;
   background: var(--black);
+  overflow: visible;
 }
 
 .creators-article {
@@ -1905,7 +1915,10 @@ textarea:user-invalid {
 
 .creators-article h1 {
   margin-bottom: 18px;
+  padding-top: 0.22em;
   font-size: clamp(44px, 6vw, 72px);
+  line-height: 1.15;
+  overflow: visible;
 }
 
 .creators-article h2 {
@@ -2280,6 +2293,11 @@ textarea:user-invalid {
   h1 {
     font-size: clamp(50px, 13.4vw, 62px);
     line-height: 0.9;
+  }
+
+  .creators-article h1 {
+    line-height: 1.15;
+    overflow: visible;
   }
 
   .hero-copy {

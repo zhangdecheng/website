@@ -44,7 +44,7 @@ command -v node >/dev/null 2>&1 || die "node is unavailable"
 [[ -d "$CONTACT_DIR" && ! -L "$CONTACT_DIR" ]] || die "contact build directory is missing or unsafe"
 [[ -z "$(/usr/bin/find "$DIST_DIR" "$CONTACT_DIR" -type l -print -quit)" ]] || die "release inputs contain a symlink"
 
-for required in index.html privacy.html styles.css script.js contact-form.js site-core.js assets; do
+for required in index.html privacy.html styles.css script.js contact-form.js site-core.js robots.txt sitemap.xml creators/index.html assets; do
   [[ -e "${DIST_DIR}/${required}" ]] || die "static build is missing: $required"
 done
 for required in package.json package-lock.json ops/flourish-contact.service server/index.js server/smtp-check.js; do

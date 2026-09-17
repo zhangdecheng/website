@@ -23,6 +23,8 @@ export function loadTurnstile(doc = document, win = window) {
   return turnstileLoader;
 }
 
+const CONTACT_ROLES = new Set(["brand", "creator"]);
+
 export function setRole(form, role) {
   for (const panel of form.querySelectorAll("[data-role-fields]")) {
     const active = panel.dataset.roleFields === role;
@@ -32,6 +34,24 @@ export function setRole(form, role) {
       control.disabled = !active;
     }
   }
+}
+
+export function contactRoleFromLocation(win = window) {
+  try {
+    const searchParams = new URLSearchParams(win.location.search ?? "");
+    const searchRole = searchParams.get("role");
+    if (CONTACT_ROLES.has(searchRole)) return searchRole;
+
+    const hash = String(win.location.hash ?? "");
+    const queryStart = hash.indexOf("?");
+    if (queryStart !== -1) {
+      const hashRole = new URLSearchParams(hash.slice(queryStart + 1)).get("role");
+      if (CONTACT_ROLES.has(hashRole)) return hashRole;
+    }
+  } catch {
+    return null;
+  }
+  return null;
 }
 
 function setStatus(element, message, state = "") {
@@ -171,6 +191,8 @@ export async function initContactForm({
     }
   }
 
+  const requestedRole = contactRoleFromLocation(win);
+  if (requestedRole) roleSelect.value = requestedRole;
   setRole(form, roleSelect.value);
   roleSelect.addEventListener("change", () => {
     clearServerErrors(form);

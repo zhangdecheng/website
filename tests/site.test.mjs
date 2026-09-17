@@ -127,6 +127,10 @@ test("homepage exposes the locked English anchors and canonical metadata", async
   }
   assert.doesNotMatch(html, /20K\+|98%|已记录合作意向/);
   assert.doesNotMatch(html, /name="robots"|noindex/i);
+  assert.match(
+    html,
+    /if \(location\.hash === "#contact"\) document\.documentElement\.style\.scrollBehavior = "auto";/,
+  );
 });
 
 test("release modules use production-safe JavaScript MIME extensions", async () => {
@@ -510,6 +514,8 @@ test("contact client uses Turnstile and same-page JSON submission without mailto
   assert.match(script, /scrollToLocationHash/);
   assert.match(script, /getElementById\("contact"\)/);
   assert.match(script, /hashchange/);
+  assert.match(script, /scrollRestoration/);
+  assert.match(script, /pageshow/);
   assert.doesNotMatch(script, /buildCreatorMailto|buildProjectMailto|window\.location\s*=/);
   assert.doesNotMatch(
     core,
@@ -633,8 +639,9 @@ test("new contact and privacy styles extend the existing visual system accessibl
   assert.match(css, /\.creators-article h1\s*\{[\s\S]*line-height:\s*1\.15/);
   assert.match(css, /\.creators-article h1\s*\{[\s\S]*overflow:\s*visible/);
   assert.match(css, /html\s*\{[\s\S]*scroll-padding-top:\s*var\(--header-height\)/);
+  assert.match(css, /html:has\(#contact:target\)\s*\{[\s\S]*scroll-behavior:\s*auto/);
   assert.match(css, /body\s*\{[\s\S]*overflow-x:\s*clip/);
-  assert.match(css, /#contact,\s*#contact-heading\s*\{[\s\S]*scroll-margin-top:\s*calc\(var\(--header-height\) \+ 16px\)/);
+  assert.match(css, /#contact,\s*#contact-heading\s*\{[\s\S]*scroll-margin-top:\s*16px/);
   assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*\.project-form \.button\s*\{[\s\S]*width:\s*100%/);
   assert.doesNotMatch(css, /\.creator-form/);
 });

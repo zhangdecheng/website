@@ -57,6 +57,10 @@ html {
   scroll-padding-top: var(--header-height);
 }
 
+html:has(#contact:target) {
+  scroll-behavior: auto;
+}
+
 body {
   margin: 0;
   overflow-x: clip;
@@ -1602,7 +1606,9 @@ textarea:user-invalid {
 
 #contact,
 #contact-heading {
-  scroll-margin-top: calc(var(--header-height) + 16px);
+  /* Extra 16px on top of html scroll-padding (header height). Together these
+     match the JS header+16 offset so native hash landing is not 2× header. */
+  scroll-margin-top: 16px;
 }
 
 .contact {

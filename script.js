@@ -59,11 +59,14 @@ function scheduleHashScroll() {
 }
 
 if (window.location.hash === "#contact") {
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   document.documentElement.style.scrollBehavior = "auto";
 }
 scheduleHashScroll();
+window.addEventListener("pageshow", scheduleHashScroll);
 window.addEventListener("load", () => {
   scheduleHashScroll();
+  window.setTimeout(scheduleHashScroll, 50);
   window.setTimeout(() => {
     scheduleHashScroll();
     if (window.location.hash === "#contact") document.documentElement.style.scrollBehavior = "";

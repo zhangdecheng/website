@@ -856,6 +856,7 @@ test("homepage presents complete Hero media and the approved partner proof seque
   assert.match(css, /\.hero-card,\s*\.hero-card-landscape,\s*\.hero-card-portrait,\s*\.hero-card-live\s*{[\s\S]*box-shadow:\s*none/);
   assert.match(css, /\.hero-card::before,\s*\.hero-card-live::before\s*{[\s\S]*display:\s*none/);
   assert.match(css, /\.hero-card figcaption\s*{[\s\S]*background:\s*rgba\(10,\s*9,\s*8,\s*0\.78\)/);
+  assert.match(css, /\.hero-card figcaption\s*{[\s\S]*text-align:\s*center/);
   assert.match(css, /\.hero-card:hover,\s*\.hero-card-live:hover\s*{[\s\S]*transform:\s*none/);
   assert.match(rail, /data-brand-logo-set/);
   assert.deepEqual(

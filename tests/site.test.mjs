@@ -897,7 +897,7 @@ test("short desktop viewports compact the two-card hero for the first fold", asy
   assert.match(shortBody, /\.hero\s*{[\s\S]*height:\s*calc\(100svh - 56px\)/);
   assert.match(shortBody, /\.hero-copy\s*{[\s\S]*padding-top:\s*20px/);
   assert.match(shortBody, /\.hero-media\s*{[\s\S]*min-height:\s*0/);
-  assert.match(shortBody, /\.hero-media\s*{[\s\S]*height:\s*min\(58vh,\s*380px\)/);
+  assert.match(shortBody, /\.hero-media\s*{[\s\S]*height:\s*min\(58vh,\s*400px\)/);
   assert.doesNotMatch(shortBody, /object-fit|object-position|mix-blend-mode:\s*multiply/);
 
   const mobileBody = mediaQueryBody(css, "max-width: 820px");

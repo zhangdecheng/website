@@ -1,4 +1,4 @@
-import { initContactForm } from "./contact-form.js";
+import { initContactForm, scrollContactTargetIntoView } from "./contact-form.js";
 
 const header = document.querySelector("[data-header]");
 const menuToggle = document.querySelector("[data-menu-toggle]");
@@ -36,30 +36,43 @@ window.addEventListener(
 
 initContactForm();
 
-function scrollToLocationHash({ behavior = "auto" } = {}) {
+function scrollToLocationHash() {
   const id = decodeURIComponent(String(window.location.hash || "").replace(/^#/, ""));
   if (!id) return;
   const target = id === "contact"
     ? document.querySelector("[data-contact-form]") || document.getElementById("contact")
     : document.getElementById(id);
   if (!target) return;
+  if (id === "contact") {
+    scrollContactTargetIntoView(target);
+    return;
+  }
   target.scrollIntoView({
-    behavior: reducedMotion ? "auto" : behavior,
+    behavior: reducedMotion ? "auto" : "smooth",
     block: "start",
   });
 }
 
 function scheduleHashScroll() {
   if (!window.location.hash) return;
-  const run = () => scrollToLocationHash({ behavior: "auto" });
+  const run = () => scrollToLocationHash();
   run();
   requestAnimationFrame(run);
 }
 
+if (window.location.hash === "#contact") {
+  document.documentElement.style.scrollBehavior = "auto";
+}
 scheduleHashScroll();
-window.addEventListener("load", scheduleHashScroll);
+window.addEventListener("load", () => {
+  scheduleHashScroll();
+  window.setTimeout(() => {
+    scheduleHashScroll();
+    if (window.location.hash === "#contact") document.documentElement.style.scrollBehavior = "";
+  }, 120);
+});
 window.addEventListener("hashchange", () => {
-  scrollToLocationHash({ behavior: reducedMotion ? "auto" : "smooth" });
+  scrollToLocationHash();
 });
 
 document.addEventListener("click", (event) => {
@@ -76,6 +89,7 @@ document.addEventListener("click", (event) => {
   if (url.origin !== window.location.origin || url.hash !== "#contact") return;
   const normalizePath = (path) => path.replace(/\/index\.html$/, "/").replace(/\/+$/, "") || "/";
   if (normalizePath(url.pathname) !== normalizePath(window.location.pathname)) return;
+  if (url.search !== window.location.search) return;
   const target = document.querySelector("[data-contact-form]") || document.getElementById("contact");
   if (!target) return;
   event.preventDefault();
@@ -86,7 +100,7 @@ document.addEventListener("click", (event) => {
     roleSelect.dispatchEvent(new Event("change"));
   }
   history.pushState({}, "", `${url.pathname}${url.search}#contact`);
-  scrollToLocationHash({ behavior: reducedMotion ? "auto" : "smooth" });
+  scrollToLocationHash();
 });
 
 function cloneBrandLogoSet() {

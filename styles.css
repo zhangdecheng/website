@@ -53,14 +53,13 @@
 }
 
 html {
-  overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-height);
 }
 
 body {
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
@@ -1613,7 +1612,7 @@ textarea:user-invalid {
     radial-gradient(ellipse at 80% 20%, rgba(230, 92, 71, 0.08) 0%, transparent 55%),
     var(--paper);
   color: var(--ink);
-  overflow: hidden;
+  overflow: clip;
 }
 
 .contact::before {

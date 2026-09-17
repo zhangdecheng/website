@@ -23,6 +23,18 @@ export function loadTurnstile(doc = document, win = window) {
   return turnstileLoader;
 }
 
+export function scrollContactTargetIntoView(target, win = window) {
+  if (!target) return;
+  const root = win.document.documentElement;
+  const headerSize = Number.parseFloat(win.getComputedStyle(root).getPropertyValue("--header-height")) || 76;
+  const previousBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = "auto";
+  target.scrollIntoView({ behavior: "auto", block: "start" });
+  const top = win.scrollY + target.getBoundingClientRect().top - headerSize - 16;
+  win.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+  root.style.scrollBehavior = previousBehavior;
+}
+
 const CONTACT_ROLES = new Set(["brand", "creator"]);
 
 export function setRole(form, role) {
@@ -211,30 +223,29 @@ export async function initContactForm({
     });
   });
 
-  function scrollContactIntoView(behavior) {
-    const target = form || contactSection;
-    target?.scrollIntoView({
-      behavior,
-      block: "start",
-    });
+  function scrollContactIntoView() {
+    scrollContactTargetIntoView(form || contactSection, win);
   }
 
   for (const link of doc.querySelectorAll('[data-select-contact-role="creator"]')) {
     link.addEventListener("click", (event) => {
+      let url;
+      try {
+        url = new URL(link.href, win.location.href);
+      } catch {
+        url = null;
+      }
+      const sameDocument = Boolean(
+        url
+          && url.origin === win.location.origin
+          && url.pathname === win.location.pathname
+          && url.search === win.location.search,
+      );
+      if (!sameDocument) return;
       event.preventDefault();
       roleSelect.value = "creator";
       setRole(form, "creator");
-      try {
-        const url = new URL(link.href, win.location.href);
-        if (url.origin === win.location.origin) {
-          win.history?.pushState?.({}, "", `${url.pathname}${url.search}${url.hash || "#contact"}`);
-        }
-      } catch {
-        /* keep the in-page role + scroll even if the href is malformed */
-      }
-      scrollContactIntoView(
-        win.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-      );
+      scrollContactIntoView();
       win.setTimeout(() => {
         const firstEmpty = fieldsForRole("creator")
           .map((name) => form.elements.namedItem(name))

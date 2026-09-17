@@ -180,7 +180,7 @@ assert_contains "$WORK_DIR/index.html" '<link rel="canonical" href="https://www.
 assert_occurrences "$WORK_DIR/index.html" '<span class="connector-word">and</span>' "14" "www homepage connector words"
 assert_header "$WORK_DIR/home.headers" "Content-Type" "text/html" "www homepage"
 assert_page_headers "$WORK_DIR/home.headers" "www homepage"
-assert_sha256 "$WORK_DIR/index.html" "41cdf6d1fdc2f514d348677aa3203dbe2cb496c3040859e14f82c7da07be34ec" "www homepage"
+assert_sha256 "$WORK_DIR/index.html" "9e16117749beee11981e1a5de902426e5d48784bb34cf98810612597a9e0e7e3" "www homepage"
 
 privacy_status="$(fetch GET \
   "https://www.flourishculturekol.com/privacy.html" \
@@ -271,17 +271,17 @@ printf '\n== Release files and MIME ==\n'
 styles_status="$(fetch GET "$WWW_ORIGIN/styles.css" "$WORK_DIR/styles.headers" "$WORK_DIR/styles.css")"
 assert_status 200 "$styles_status" "styles.css"
 assert_header "$WORK_DIR/styles.headers" "Content-Type" "text/css" "styles.css"
-assert_sha256 "$WORK_DIR/styles.css" "f563de2f86121fbebf384ba512fb71cf227a96651d5b7daadc35146006ef6891" "styles.css"
+assert_sha256 "$WORK_DIR/styles.css" "bec87d9432d03be952c37537bb09dce7d726e1848bb51e05b235916e2b60a83a" "styles.css"
 
 script_status="$(fetch GET "$WWW_ORIGIN/script.js" "$WORK_DIR/script.headers" "$WORK_DIR/script.js")"
 assert_status 200 "$script_status" "script.js"
 assert_header "$WORK_DIR/script.headers" "Content-Type" "javascript" "script.js"
-assert_sha256 "$WORK_DIR/script.js" "9c754d4227506e956b8536712bda45118de7dc194fc57cb70f65b781747a3803" "script.js"
+assert_sha256 "$WORK_DIR/script.js" "613146fa4f87c0eec9d9cb8e2581eb1cda4d946f6e76b85c20739404ae02381b" "script.js"
 
 contact_form_status="$(fetch GET "$WWW_ORIGIN/contact-form.js" "$WORK_DIR/contact-form.headers" "$WORK_DIR/contact-form.js")"
 assert_status 200 "$contact_form_status" "contact-form.js"
 assert_header "$WORK_DIR/contact-form.headers" "Content-Type" "javascript" "contact-form.js"
-assert_sha256 "$WORK_DIR/contact-form.js" "52001c78a05015aef867073b5e5127e2d3548436cee478267e679eb4b4380ff8" "contact-form.js"
+assert_sha256 "$WORK_DIR/contact-form.js" "e2b1b507560f0567ae52a64a53334e7d5829aae8a7d080a7b30071394cdd2b8d" "contact-form.js"
 
 site_core_status="$(fetch GET "$WWW_ORIGIN/site-core.js" "$WORK_DIR/site-core.headers" "$WORK_DIR/site-core.js")"
 assert_status 200 "$site_core_status" "site-core.js"

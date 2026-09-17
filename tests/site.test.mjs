@@ -669,18 +669,20 @@ test("annotated hero removes the old eyebrow and secondary controls", async () =
   assert.match(css, /\.button\s*{[\s\S]*font-size:\s*14px/);
 });
 
-test("annotated hero media uses three cohesive brand story cards", async () => {
+test("annotated hero media uses two cohesive brand story cards", async () => {
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const hero = html.match(/<section class="hero" id="top">[\s\S]*?<\/section>/)?.[0] ?? "";
   const cardMatches = hero.match(/class="hero-card/g) ?? [];
 
-  assert.equal(cardMatches.length, 3);
-  for (const src of ["assets/17bcea7b-424b-4593-9f31-697e7cbecd7d.jpeg", "assets/service-performance.jpg", "assets/fe872db7-ca7c-4423-9f5c-9dc109e60619.jpeg"]) {
+  assert.equal(cardMatches.length, 2);
+  assert.match(hero, /aria-label="Two creator marketing story cards"/);
+  for (const src of ["assets/17bcea7b-424b-4593-9f31-697e7cbecd7d.jpeg", "assets/fe872db7-ca7c-4423-9f5c-9dc109e60619.jpeg"]) {
     assert.match(hero, new RegExp(`src="${src}"`));
   }
   assert.match(hero, /Brand Partnership Hub/);
   assert.match(hero, /Global Talent Network/);
-  assert.match(hero, /Data-Driven Growth/);
+  assert.doesNotMatch(hero, /Data-Driven Growth/);
+  assert.doesNotMatch(hero, /hero-card-tech|hero-performance|service-performance\.jpg/);
   assert.doesNotMatch(hero, /Live commerce experience/);
   assert.doesNotMatch(hero, /class="hero-live-interface"/);
   assert.doesNotMatch(hero, /src="assets\/service-influencer\.jpg"/);
@@ -694,7 +696,7 @@ test("source reconciliation preserves image dimensions and loading priorities", 
     const heroImages = hero.match(/<img\b[\s\S]*?\/>/g) ?? [];
     const logoImages = html.match(/<img\b[^>]*src="assets\/brand-logos\/[^>]*\/>/g) ?? [];
 
-    assert.equal(heroImages.length, 3, `${filename} should retain three hero images`);
+    assert.equal(heroImages.length, 2, `${filename} should retain two hero images`);
     for (const image of heroImages) {
       assert.match(image, /\bwidth="\d+"/);
       assert.match(image, /\bheight="\d+"/);
@@ -846,9 +848,16 @@ test("homepage presents complete Hero media and the approved partner proof seque
 
   assert.match(hero, /hero-card-landscape/);
   assert.match(hero, /hero-card-portrait/);
-  assert.match(css, /\.hero-media\s*{[\s\S]*grid-template-areas:/);
+  assert.match(css, /\.hero-media\s*{[\s\S]*grid-template-areas:\s*"talent partnership"/);
+  assert.match(css, /\.hero-media\s*{[\s\S]*grid-template-columns:\s*1fr 1fr/);
   assert.match(css, /\.hero-card img,\s*\.hero-card-live img\s*{[\s\S]*object-fit:\s*cover/);
-  assert.match(css, /\.hero-card img,\s*\.hero-card-live img\s*{[\s\S]*object-position:\s*center 20%/);
+  assert.match(css, /\.hero-card img,\s*\.hero-card-live img\s*{[\s\S]*object-position:\s*center 22%/);
+  assert.match(css, /\.hero-card,\s*\.hero-card-landscape,\s*\.hero-card-portrait,\s*\.hero-card-live\s*{[\s\S]*aspect-ratio:\s*4 \/ 5/);
+  assert.match(css, /\.hero-card,\s*\.hero-card-landscape,\s*\.hero-card-portrait,\s*\.hero-card-live\s*{[\s\S]*box-shadow:\s*none/);
+  assert.match(css, /\.hero-card::before,\s*\.hero-card-live::before\s*{[\s\S]*display:\s*none/);
+  assert.match(css, /\.hero-card figcaption\s*{[\s\S]*background:\s*rgba\(10,\s*9,\s*8,\s*0\.78\)/);
+  assert.match(css, /\.hero-card figcaption\s*{[\s\S]*text-align:\s*center/);
+  assert.match(css, /\.hero-card:hover,\s*\.hero-card-live:hover\s*{[\s\S]*transform:\s*none/);
   assert.match(rail, /data-brand-logo-set/);
   assert.deepEqual(
     [...rail.matchAll(/assets\/brand-logos\/([^"\s]+)/g)].map((match) => match[1]),
@@ -870,21 +879,31 @@ test("homepage presents complete Hero media and the approved partner proof seque
   assert.ok(html.indexOf('class="official-partners"') < html.indexOf('class="services"'));
 });
 
-test("short desktop viewports relax hero mins without changing Scheme A crops", async () => {
+test("short desktop viewports compact the two-card hero for the first fold", async () => {
   const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
   const hero = directRuleBody(css, ".hero");
   assert.match(hero, /min-height:\s*clamp\(680px,\s*52vw,\s*820px\)/);
   assert.match(hero, /overflow:\s*hidden/);
 
-  const shortQuery = "@media (min-width: 821px) and (max-height: 800px)";
+  const desktopQuery = "@media (min-width: 821px)";
+  const desktopIndex = css.indexOf(desktopQuery);
+  assert.ok(desktopIndex !== -1, "desktop hero query should exist");
+
+  const shortQuery = "@media (min-width: 821px) and (max-height: 820px)";
   const shortIndex = css.indexOf(shortQuery);
   assert.ok(shortIndex !== -1, "short-viewport hero query should exist");
   assert.ok(shortIndex > css.lastIndexOf("min-height: 760px"), "short-height query must override the 1100px hero min-height");
   const shortBody = bracedBlock(css, css.indexOf("{", shortIndex));
   assert.match(shortBody, /\.hero\s*{[\s\S]*min-height:\s*0/);
+  assert.match(shortBody, /\.hero\s*{[\s\S]*height:\s*calc\(100svh - 56px\)/);
   assert.match(shortBody, /\.hero-copy\s*{[\s\S]*padding-top:\s*20px/);
   assert.match(shortBody, /\.hero-media\s*{[\s\S]*min-height:\s*0/);
+  assert.match(shortBody, /\.hero-media\s*{[\s\S]*height:\s*min\(58vh,\s*400px\)/);
   assert.doesNotMatch(shortBody, /object-fit|object-position|mix-blend-mode:\s*multiply/);
+
+  const mobileBody = mediaQueryBody(css, "max-width: 820px");
+  assert.match(mobileBody, /\.hero-media\s*{[\s\S]*grid-template-areas:\s*"talent"\s*"partnership"/);
+  assert.match(mobileBody, /aspect-ratio:\s*16 \/ 10/);
 });
 
 test("official partner badges retain full source bounds and the header logo has breathing room", async () => {

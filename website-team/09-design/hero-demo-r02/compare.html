@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>FC Hero Demo r02 — 当前线上 | P0 方案A | P1 方案B | P2 方案C</title>
+  <meta name="description" content="Local non-production hero compare demo for FLOURISH CULTURE. Schemes A/B/C with SEO-friendly figcaption, alt, dimensions, and LCP hints." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="demo-overrides.css" />
+</head>
+<body>
+  <div class="demo-bar" role="toolbar" aria-label="Hero 方案切换">
+    <strong>头图对照 Demo r02</strong>
+    <button type="button" data-mode="current" class="active" aria-pressed="true">当前线上</button>
+    <button type="button" data-mode="p0" aria-pressed="false">P0 方案A</button>
+    <button type="button" data-mode="p1" aria-pressed="false">P1 方案B</button>
+    <button type="button" data-mode="p2" aria-pressed="false">P2 方案C</button>
+    <span class="demo-note">本地预览 · 非生产 · 仅视觉对照</span>
+  </div>
+
+  <details class="seo-notes">
+    <summary>SEO / E-E-A-T 注释（本 Demo 已落实）</summary>
+    <ul>
+      <li>每个 hero 图使用真实文本 <code>figcaption</code>（非烧进图里的字），便于抓取与无障碍。</li>
+      <li>每张图有有意义的 <code>alt</code>，描述画面内容而非空泛装饰语。</li>
+      <li><code>width</code>/<code>height</code> 属性保留，降低 CLS。</li>
+      <li>LCP：首屏可见主图 <code>loading="eager"</code> + <code>fetchpriority="high"</code>；方案内次要图可 <code>lazy</code>。</li>
+      <li>语义结构：各方案均保留 <code>figure</code> / <code>figcaption</code>（A 三卡、B 两宽卡、C 沉浸主图）。</li>
+      <li>信任文案仅用可核验表述：Official TikTok Partner、TAP / CAP Certified；定性能力 Retention Audits / ROI Tracking。禁止未核验指标（如 10M+、120+ Markets）。</li>
+    </ul>
+  </details>
+
+  <div id="demo-root" class="mode-current">
+    <main id="main-content">
+      <section class="hero" id="top">
+        <div class="hero-copy reveal">
+          <h1>Scaling Global Impact for Visionary Brands.</h1>
+          <p class="hero-intro">
+            Based in Hong Kong, FLOURISH CULTURE bridges the world's most innovative
+            brands with global audiences through data-driven influencer marketing and
+            viral creative strategies.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-accent" href="#contact">Let’s Flourish Together</a>
+          </div>
+        </div>
+
+        <!-- ========== CURRENT + P0 Scheme A: 3-card masonry ========== -->
+        <figure class="hero-media hero-scheme-masonry reveal" aria-label="Three creator marketing story cards">
+          <div class="hero-card hero-card-landscape hero-card-diversity">
+            <picture>
+              <source srcset="assets/optimized/hero-global-talent.webp" type="image/webp" />
+              <img
+                src="assets/optimized/hero-global-talent.webp"
+                alt="Global creators from different backgrounds connecting across cultures"
+                width="960"
+                height="502"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+              />
+            </picture>
+            <figcaption>Global Talent Network</figcaption>
+          </div>
+          <div class="hero-card hero-card-landscape hero-card-tech">
+            <picture>
+              <source srcset="assets/optimized/hero-performance.webp" type="image/webp" />
+              <img
+                src="assets/optimized/hero-performance.webp"
+                alt="Cross-border marketing strategy session with data dashboard"
+                width="960"
+                height="512"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+            <figcaption>Data-Driven Growth</figcaption>
+          </div>
+          <div class="hero-card hero-card-portrait hero-card-live">
+            <picture>
+              <source srcset="assets/optimized/hero-brand-partnership.webp" type="image/webp" />
+              <img
+                src="assets/optimized/hero-brand-partnership.webp"
+                alt="Brand partnership contract signing connecting creators with global brand deals"
+                width="900"
+                height="1230"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+            <figcaption>Brand Partnership Hub</figcaption>
+          </div>
+        </figure>
+
+        <!-- ========== P1 Scheme B: two wide stacked cards + trust pills ========== -->
+        <div class="hero-scheme-b" aria-label="Two wide creator marketing story cards">
+          <figure class="hero-wide-card">
+            <picture>
+              <source srcset="assets/optimized/hero-global-talent.webp" type="image/webp" />
+              <img
+                src="assets/optimized/hero-global-talent.webp"
+                alt="Global creators from different backgrounds connecting across cultures"
+                width="960"
+                height="502"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+              />
+            </picture>
+            <div class="hero-trust-pills" aria-hidden="true">
+              <span class="hero-trust-pill" data-kind="partner">Official TikTok Partner</span>
+              <span class="hero-trust-pill" data-kind="cert">TAP / CAP Certified</span>
+            </div>
+            <figcaption>Global Talent Network</figcaption>
+          </figure>
+          <figure class="hero-wide-card">
+            <picture>
+              <source srcset="assets/optimized/hero-performance.webp" type="image/webp" />
+              <img
+                src="assets/optimized/hero-performance.webp"
+                alt="Cross-border marketing strategy session with data dashboard"
+                width="960"
+                height="512"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+            <div class="hero-trust-pills" aria-hidden="true">
+              <span class="hero-trust-pill">Retention Audits</span>
+              <span class="hero-trust-pill">ROI Tracking</span>
+            </div>
+            <figcaption>Data-Driven Growth</figcaption>
+          </figure>
+        </div>
+
+        <!-- ========== P2 Scheme C: immersive + 3 glass selling-point cards ========== -->
+        <div class="hero-scheme-c" aria-label="Immersive hero with three selling points">
+          <figure class="hero-immersive">
+            <picture>
+              <source srcset="assets/optimized/hero-brand-partnership.webp" type="image/webp" />
+              <img
+                src="assets/optimized/hero-brand-partnership.webp"
+                alt="Brand partnership contract signing connecting creators with global brand deals"
+                width="900"
+                height="1230"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+              />
+            </picture>
+            <figcaption>Brand Partnership Hub</figcaption>
+            <div class="hero-glass-cards">
+              <p class="hero-glass-card">
+                <strong>Global Talent Network</strong>
+                <span>Creators matched to brand markets with culture-first briefing.</span>
+              </p>
+              <p class="hero-glass-card">
+                <strong>Data-Driven Growth</strong>
+                <span>Retention Audits and ROI Tracking for campaign flywheels.</span>
+              </p>
+              <p class="hero-glass-card">
+                <strong>Official TikTok Partner</strong>
+                <span>TAP / CAP Certified partner enablement across markets.</span>
+              </p>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <!-- Secondary snippets (light context; not the primary A/B/C deliverable) -->
+      <section class="logo-strip demo-snippet" aria-labelledby="trusted-heading">
+        <div class="section-shell">
+          <h2 id="trusted-heading">Trusted by Leading Global Brands <span class="connector-word">and</span> Innovators</h2>
+          <div class="brand-logo-viewport">
+            <div class="brand-logo-track is-ready">
+              <div class="brand-logo-set">
+                <img class="logo-tripo" src="assets/brand-logos/tripo-transparent-cropped.png" alt="Tripo" width="183" height="47" loading="lazy" decoding="async" />
+                <img class="logo-temu" src="assets/brand-logos/temu.png" alt="Temu" width="135" height="72" loading="lazy" decoding="async" />
+                <img class="logo-anker" src="assets/brand-logos/anker.png" alt="Anker Innovations" width="235" height="69" loading="lazy" decoding="async" />
+                <img class="logo-usmile" src="assets/brand-logos/usmile.png" alt="uSmile" width="388" height="130" loading="lazy" decoding="async" />
+                <img class="logo-dreame" src="assets/brand-logos/dreame.png" alt="Dreame" width="210" height="27" loading="lazy" decoding="async" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="official-partners demo-snippet" aria-labelledby="official-partners-heading">
+        <div class="official-partners-layout section-shell">
+          <div class="official-partner-badges reveal" aria-label="TikTok Shop partner certifications">
+            <img src="assets/partner-badges/tiktok-shop-tap.png" alt="TikTok Shop Certified TAP Partner" width="354" height="361" loading="lazy" decoding="async" />
+            <img src="assets/partner-badges/tiktok-shop-cap.png" alt="TikTok Shop Certified CAP Partner" width="345" height="353" loading="lazy" decoding="async" />
+          </div>
+          <div class="official-partners-copy reveal">
+            <p class="eyebrow">Official Partnership</p>
+            <h2 id="official-partners-heading">Certified TikTok Shop TAP <span class="connector-word">and</span> CAP Partner</h2>
+            <p class="official-partners-lead">Dedicated KOL marketing support for every category.</p>
+            <p class="official-partners-note">TikTok Shop multi-market certified TAP <span class="connector-word">and</span> CAP partner.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="services demo-snippet" id="services" aria-labelledby="services-heading">
+        <div class="section-shell services-shell">
+          <h2 class="sr-only" id="services-heading">Services</h2>
+          <div class="services-grid">
+            <article class="service-block reveal">
+              <div class="service-copy">
+                <span class="service-number">01</span>
+                <h3>Global Influencer Marketing</h3>
+              </div>
+            </article>
+            <article class="service-block reveal">
+              <div class="service-copy">
+                <span class="service-number">02</span>
+                <h3>Data-Driven Growth <span class="connector-word">and</span> Performance Insights</h3>
+              </div>
+            </article>
+            <article class="service-block reveal">
+              <div class="service-copy">
+                <span class="service-number">03</span>
+                <h3>Creative Strategy <span class="connector-word">and</span> Localization</h3>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <div class="demo-contact-bridge" aria-hidden="true"></div>
+
+      <section class="contact demo-snippet" id="contact" aria-labelledby="contact-heading">
+        <div class="section-shell contact-layout">
+          <div class="contact-copy reveal">
+            <h2 id="contact-heading">Ready to Scale Your Global Footprint?</h2>
+            <p>
+              Drop us a line. Our team of cross-border marketing strategists will map out
+              your route to global dominance.
+            </p>
+            <a href="mailto:business@flourish-culture.com">business@flourish-culture.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById('demo-root');
+      var buttons = document.querySelectorAll('.demo-bar button[data-mode]');
+      var modes = ['current', 'p0', 'p1', 'p2'];
+
+      function setMode(mode) {
+        modes.forEach(function (m) {
+          root.classList.remove('mode-' + m);
+        });
+        root.classList.add('mode-' + mode);
+        buttons.forEach(function (btn) {
+          var on = btn.getAttribute('data-mode') === mode;
+          btn.classList.toggle('active', on);
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setMode(btn.getAttribute('data-mode'));
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

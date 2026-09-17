@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T02:31:50.261Z",
+  "generatedAt": "2026-09-17T07:58:07.159Z",
   "browser": "System Google Chrome via playwright-core 1.62.1",
   "viewports": {
     "desktop-1440x1024": {
@@ -30,19 +30,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 73,
-                  "top": 2718,
+                  "top": -1672.82,
                   "width": 647,
                   "height": 829.72,
                   "right": 720,
-                  "bottom": 3547.72
+                  "bottom": -843.11
                 },
                 "imageBox": {
                   "left": 73,
-                  "top": 2718,
+                  "top": -1672.82,
                   "width": 647,
                   "height": 829.72,
                   "right": 720,
-                  "bottom": 3547.72
+                  "bottom": -843.11
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 640,
@@ -62,19 +62,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 73,
-                  "top": 3581.72,
+                  "top": -809.11,
                   "width": 647,
                   "height": 946.69,
                   "right": 720,
-                  "bottom": 4528.41
+                  "bottom": 137.58
                 },
                 "imageBox": {
                   "left": 73,
-                  "top": 3581.72,
+                  "top": -809.11,
                   "width": 647,
                   "height": 946.69,
                   "right": 720,
-                  "bottom": 4528.41
+                  "bottom": 137.58
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 642,
@@ -94,19 +94,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 73,
-                  "top": 4562.41,
+                  "top": 174.72,
                   "width": 647,
                   "height": 751.3,
                   "right": 720,
-                  "bottom": 5313.7
+                  "bottom": 926.02
                 },
                 "imageBox": {
                   "left": 73,
-                  "top": 4562.41,
+                  "top": 174.72,
                   "width": 647,
                   "height": 751.3,
                   "right": 720,
-                  "bottom": 5313.7
+                  "bottom": 926.02
                 },
                 "naturalWidth": 1536,
                 "naturalHeight": 1024,
@@ -120,31 +120,31 @@
           {
             "block": {
               "left": 72,
-              "top": 2717,
+              "top": -1673.82,
               "width": 1296,
               "height": 831.72,
-              "bottom": 3548.72
+              "bottom": -842.11
             },
             "media": {
               "left": 73,
-              "top": 2718,
+              "top": -1672.82,
               "width": 647,
               "height": 829.72,
-              "bottom": 3547.72
+              "bottom": -843.11
             },
             "copy": {
               "left": 720,
-              "top": 2718,
+              "top": -1672.82,
               "width": 647,
               "height": 829.72,
-              "bottom": 3547.72
+              "bottom": -843.11
             },
             "frame": {
               "left": 73,
-              "top": 2718,
+              "top": -1672.82,
               "width": 647,
               "height": 829.72,
-              "bottom": 3547.72
+              "bottom": -843.11
             },
             "equalWidths": true,
             "sameTrack": false,
@@ -155,31 +155,31 @@
           {
             "block": {
               "left": 72,
-              "top": 3580.72,
+              "top": -810.11,
               "width": 1296,
               "height": 948.69,
-              "bottom": 4529.41
+              "bottom": 138.58
             },
             "media": {
               "left": 73,
-              "top": 3581.72,
+              "top": -809.11,
               "width": 647,
               "height": 946.69,
-              "bottom": 4528.41
+              "bottom": 137.58
             },
             "copy": {
               "left": 720,
-              "top": 3581.72,
+              "top": -809.11,
               "width": 647,
               "height": 946.69,
-              "bottom": 4528.41
+              "bottom": 137.58
             },
             "frame": {
               "left": 73,
-              "top": 3581.72,
+              "top": -809.11,
               "width": 647,
               "height": 946.69,
-              "bottom": 4528.41
+              "bottom": 137.58
             },
             "equalWidths": true,
             "sameTrack": false,
@@ -190,31 +190,31 @@
           {
             "block": {
               "left": 72,
-              "top": 4561.41,
+              "top": 173.72,
               "width": 1296,
               "height": 753.3,
-              "bottom": 5314.7
+              "bottom": 927.02
             },
             "media": {
               "left": 73,
-              "top": 4562.41,
+              "top": 174.72,
               "width": 647,
               "height": 751.3,
-              "bottom": 5313.7
+              "bottom": 926.02
             },
             "copy": {
               "left": 720,
-              "top": 4562.41,
+              "top": 174.72,
               "width": 647,
               "height": 751.3,
-              "bottom": 5313.7
+              "bottom": 926.02
             },
             "frame": {
               "left": 73,
-              "top": 4562.41,
+              "top": 174.72,
               "width": 647,
               "height": 751.3,
-              "bottom": 5313.7
+              "bottom": 926.02
             },
             "equalWidths": true,
             "sameTrack": false,
@@ -224,7 +224,7 @@
           }
         ],
         "horizontalOverflow": false,
-        "hiddenRevealCount": 4,
+        "hiddenRevealCount": 12,
         "heroCtaFullyContained": true,
         "heroCtaBottomGap": 97
       },
@@ -286,6 +286,17 @@
         "bodyFontSize": 17.28,
         "hasTurnstileDisclosure": true
       },
+      "creators": {
+        "horizontalOverflow": false,
+        "articleWidth": 860,
+        "h1": "Creator partnerships with FLOURISH",
+        "applyHref": "/?role=creator#contact",
+        "hasGenericContactCta": false
+      },
+      "queryRole": {
+        "role": "creator",
+        "creatorVisible": true
+      },
       "baselineConsoleErrorCount": 0,
       "expectedFailureConsoleSignals": [
         "Failed to load resource: the server responded with a status of 400 (Bad Request)",
@@ -308,6 +319,8 @@
         "noHorizontalOverflow": true,
         "reducedMotion": true,
         "privacyReadable": true,
+        "creatorsPage": true,
+        "queryRolePreselect": true,
         "noConsoleErrors": true
       }
     },
@@ -339,19 +352,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 41.95,
-                  "top": 2524.23,
+                  "top": -1010.8,
                   "width": 470.03,
                   "height": 647.44,
                   "right": 511.98,
-                  "bottom": 3171.67
+                  "bottom": -363.37
                 },
                 "imageBox": {
                   "left": 41.95,
-                  "top": 2524.23,
+                  "top": -1010.8,
                   "width": 470.03,
                   "height": 647.44,
                   "right": 511.98,
-                  "bottom": 3171.67
+                  "bottom": -363.37
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 640,
@@ -371,19 +384,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 41.95,
-                  "top": 3200.28,
+                  "top": -334.76,
                   "width": 470.03,
                   "height": 721.03,
                   "right": 511.98,
-                  "bottom": 3921.31
+                  "bottom": 386.28
                 },
                 "imageBox": {
                   "left": 41.95,
-                  "top": 3200.28,
+                  "top": -334.76,
                   "width": 470.03,
                   "height": 721.03,
                   "right": 511.98,
-                  "bottom": 3921.31
+                  "bottom": 386.28
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 642,
@@ -403,19 +416,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 41.95,
-                  "top": 3949.92,
+                  "top": 415.92,
                   "width": 470.03,
                   "height": 601.25,
                   "right": 511.98,
-                  "bottom": 4551.17
+                  "bottom": 1017.17
                 },
                 "imageBox": {
                   "left": 41.95,
-                  "top": 3949.92,
+                  "top": 415.92,
                   "width": 470.03,
                   "height": 601.25,
                   "right": 511.98,
-                  "bottom": 4551.17
+                  "bottom": 1017.17
                 },
                 "naturalWidth": 1536,
                 "naturalHeight": 1024,
@@ -429,31 +442,31 @@
           {
             "block": {
               "left": 40.95,
-              "top": 2523.23,
+              "top": -1011.8,
               "width": 942.08,
               "height": 649.44,
-              "bottom": 3172.67
+              "bottom": -362.37
             },
             "media": {
               "left": 41.95,
-              "top": 2524.23,
+              "top": -1010.8,
               "width": 470.03,
               "height": 647.44,
-              "bottom": 3171.67
+              "bottom": -363.37
             },
             "copy": {
               "left": 511.98,
-              "top": 2524.23,
+              "top": -1010.8,
               "width": 470.05,
               "height": 647.44,
-              "bottom": 3171.67
+              "bottom": -363.37
             },
             "frame": {
               "left": 41.95,
-              "top": 2524.23,
+              "top": -1010.8,
               "width": 470.03,
               "height": 647.44,
-              "bottom": 3171.67
+              "bottom": -363.37
             },
             "equalWidths": true,
             "sameTrack": false,
@@ -464,31 +477,31 @@
           {
             "block": {
               "left": 40.95,
-              "top": 3199.28,
+              "top": -335.76,
               "width": 942.08,
               "height": 723.03,
-              "bottom": 3922.31
+              "bottom": 387.28
             },
             "media": {
               "left": 41.95,
-              "top": 3200.28,
+              "top": -334.76,
               "width": 470.03,
               "height": 721.03,
-              "bottom": 3921.31
+              "bottom": 386.28
             },
             "copy": {
               "left": 511.98,
-              "top": 3200.28,
+              "top": -334.76,
               "width": 470.05,
               "height": 721.03,
-              "bottom": 3921.31
+              "bottom": 386.28
             },
             "frame": {
               "left": 41.95,
-              "top": 3200.28,
+              "top": -334.76,
               "width": 470.03,
               "height": 721.03,
-              "bottom": 3921.31
+              "bottom": 386.28
             },
             "equalWidths": true,
             "sameTrack": false,
@@ -499,31 +512,31 @@
           {
             "block": {
               "left": 40.95,
-              "top": 3948.92,
+              "top": 414.92,
               "width": 942.08,
               "height": 603.25,
-              "bottom": 4552.17
+              "bottom": 1018.17
             },
             "media": {
               "left": 41.95,
-              "top": 3949.92,
+              "top": 415.92,
               "width": 470.03,
               "height": 601.25,
-              "bottom": 4551.17
+              "bottom": 1017.17
             },
             "copy": {
               "left": 511.98,
-              "top": 3949.92,
+              "top": 415.92,
               "width": 470.05,
               "height": 601.25,
-              "bottom": 4551.17
+              "bottom": 1017.17
             },
             "frame": {
               "left": 41.95,
-              "top": 3949.92,
+              "top": 415.92,
               "width": 470.03,
               "height": 601.25,
-              "bottom": 4551.17
+              "bottom": 1017.17
             },
             "equalWidths": true,
             "sameTrack": false,
@@ -533,9 +546,9 @@
           }
         ],
         "horizontalOverflow": false,
-        "hiddenRevealCount": 4,
+        "hiddenRevealCount": 7,
         "heroCtaFullyContained": true,
-        "heroCtaBottomGap": 198
+        "heroCtaBottomGap": 145
       },
       "creatorState": {
         "role": "creator",
@@ -595,6 +608,17 @@
         "bodyFontSize": 15,
         "hasTurnstileDisclosure": true
       },
+      "creators": {
+        "horizontalOverflow": false,
+        "articleWidth": 860,
+        "h1": "Creator partnerships with FLOURISH",
+        "applyHref": "/?role=creator#contact",
+        "hasGenericContactCta": false
+      },
+      "queryRole": {
+        "role": "creator",
+        "creatorVisible": true
+      },
       "baselineConsoleErrorCount": 0,
       "expectedFailureConsoleSignals": [
         "Failed to load resource: the server responded with a status of 400 (Bad Request)",
@@ -617,6 +641,8 @@
         "noHorizontalOverflow": true,
         "reducedMotion": true,
         "privacyReadable": true,
+        "creatorsPage": true,
+        "queryRolePreselect": true,
         "noConsoleErrors": true
       }
     },
@@ -648,19 +674,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
-                  "top": 3785.05,
+                  "top": -1635.34,
                   "width": 352,
                   "height": 220,
                   "right": 371,
-                  "bottom": 4005.05
+                  "bottom": -1415.34
                 },
                 "imageBox": {
                   "left": 19,
-                  "top": 3785.05,
+                  "top": -1635.34,
                   "width": 352,
                   "height": 220,
                   "right": 371,
-                  "bottom": 4005.05
+                  "bottom": -1415.34
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 640,
@@ -680,19 +706,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
-                  "top": 4739.63,
+                  "top": -677.62,
                   "width": 352,
                   "height": 220,
                   "right": 371,
-                  "bottom": 4959.63
+                  "bottom": -457.62
                 },
                 "imageBox": {
                   "left": 19,
-                  "top": 4739.63,
+                  "top": -677.62,
                   "width": 352,
                   "height": 220,
                   "right": 371,
-                  "bottom": 4959.63
+                  "bottom": -457.62
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 642,
@@ -712,19 +738,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
-                  "top": 5740.39,
+                  "top": 346.23,
                   "width": 352,
                   "height": 220,
                   "right": 371,
-                  "bottom": 5960.39
+                  "bottom": 566.23
                 },
                 "imageBox": {
                   "left": 19,
-                  "top": 5740.39,
+                  "top": 346.23,
                   "width": 352,
                   "height": 220,
                   "right": 371,
-                  "bottom": 5960.39
+                  "bottom": 566.23
                 },
                 "naturalWidth": 1536,
                 "naturalHeight": 1024,
@@ -738,31 +764,31 @@
           {
             "block": {
               "left": 18,
-              "top": 3784.05,
+              "top": -1636.34,
               "width": 354,
               "height": 934.58,
-              "bottom": 4718.63
+              "bottom": -701.76
             },
             "media": {
               "left": 19,
-              "top": 3785.05,
+              "top": -1635.34,
               "width": 352,
               "height": 220,
-              "bottom": 4005.05
+              "bottom": -1415.34
             },
             "copy": {
               "left": 19,
-              "top": 4005.05,
+              "top": -1415.34,
               "width": 352,
               "height": 712.58,
-              "bottom": 4717.63
+              "bottom": -702.76
             },
             "frame": {
               "left": 19,
-              "top": 3785.05,
+              "top": -1635.34,
               "width": 352,
               "height": 220,
-              "bottom": 4005.05
+              "bottom": -1415.34
             },
             "equalWidths": true,
             "sameTrack": true,
@@ -773,31 +799,31 @@
           {
             "block": {
               "left": 18,
-              "top": 4738.63,
+              "top": -678.62,
               "width": 354,
-              "height": 980.77,
-              "bottom": 5719.39
+              "height": 1003.86,
+              "bottom": 325.23
             },
             "media": {
               "left": 19,
-              "top": 4739.63,
+              "top": -677.62,
               "width": 352,
               "height": 220,
-              "bottom": 4959.63
+              "bottom": -457.62
             },
             "copy": {
               "left": 19,
-              "top": 4959.63,
+              "top": -457.62,
               "width": 352,
-              "height": 758.77,
-              "bottom": 5718.39
+              "height": 781.86,
+              "bottom": 324.23
             },
             "frame": {
               "left": 19,
-              "top": 4739.63,
+              "top": -677.62,
               "width": 352,
               "height": 220,
-              "bottom": 4959.63
+              "bottom": -457.62
             },
             "equalWidths": true,
             "sameTrack": true,
@@ -808,31 +834,31 @@
           {
             "block": {
               "left": 18,
-              "top": 5739.39,
+              "top": 345.23,
               "width": 354,
-              "height": 865.3,
-              "bottom": 6604.69
+              "height": 888.39,
+              "bottom": 1233.63
             },
             "media": {
               "left": 19,
-              "top": 5740.39,
+              "top": 346.23,
               "width": 352,
               "height": 220,
-              "bottom": 5960.39
+              "bottom": 566.23
             },
             "copy": {
               "left": 19,
-              "top": 5960.39,
+              "top": 566.23,
               "width": 352,
-              "height": 643.3,
-              "bottom": 6603.69
+              "height": 666.39,
+              "bottom": 1232.63
             },
             "frame": {
               "left": 19,
-              "top": 5740.39,
+              "top": 346.23,
               "width": 352,
               "height": 220,
-              "bottom": 5960.39
+              "bottom": 566.23
             },
             "equalWidths": true,
             "sameTrack": true,
@@ -842,7 +868,7 @@
           }
         ],
         "horizontalOverflow": false,
-        "hiddenRevealCount": 6,
+        "hiddenRevealCount": 12,
         "heroCtaFullyContained": true,
         "heroCtaBottomGap": 993
       },
@@ -907,6 +933,17 @@
         "bodyFontSize": 15,
         "hasTurnstileDisclosure": true
       },
+      "creators": {
+        "horizontalOverflow": false,
+        "articleWidth": 354,
+        "h1": "Creator partnerships with FLOURISH",
+        "applyHref": "/?role=creator#contact",
+        "hasGenericContactCta": false
+      },
+      "queryRole": {
+        "role": "creator",
+        "creatorVisible": true
+      },
       "baselineConsoleErrorCount": 0,
       "expectedFailureConsoleSignals": [
         "Failed to load resource: the server responded with a status of 400 (Bad Request)",
@@ -929,6 +966,8 @@
         "noHorizontalOverflow": true,
         "reducedMotion": true,
         "privacyReadable": true,
+        "creatorsPage": true,
+        "queryRolePreselect": true,
         "noConsoleErrors": true,
         "mobileMenu": true
       }
@@ -961,19 +1000,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
-                  "top": 3685.28,
+                  "top": -1779.23,
                   "width": 322,
                   "height": 201.25,
                   "right": 341,
-                  "bottom": 3886.53
+                  "bottom": -1577.98
                 },
                 "imageBox": {
                   "left": 19,
-                  "top": 3685.28,
+                  "top": -1779.23,
                   "width": 322,
                   "height": 201.25,
                   "right": 341,
-                  "bottom": 3886.53
+                  "bottom": -1577.98
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 640,
@@ -993,19 +1032,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
-                  "top": 4690.39,
+                  "top": -772.17,
                   "width": 322,
                   "height": 201.25,
                   "right": 341,
-                  "bottom": 4891.64
+                  "bottom": -570.92
                 },
                 "imageBox": {
                   "left": 19,
-                  "top": 4690.39,
+                  "top": -772.17,
                   "width": 322,
                   "height": 201.25,
                   "right": 341,
-                  "bottom": 4891.64
+                  "bottom": -570.92
                 },
                 "naturalWidth": 1200,
                 "naturalHeight": 642,
@@ -1025,19 +1064,19 @@
                 "objectFit": "cover",
                 "frameBox": {
                   "left": 19,
-                  "top": 5764.78,
+                  "top": 333.72,
                   "width": 322,
                   "height": 201.25,
                   "right": 341,
-                  "bottom": 5966.03
+                  "bottom": 534.97
                 },
                 "imageBox": {
                   "left": 19,
-                  "top": 5764.78,
+                  "top": 333.72,
                   "width": 322,
                   "height": 201.25,
                   "right": 341,
-                  "bottom": 5966.03
+                  "bottom": 534.97
                 },
                 "naturalWidth": 1536,
                 "naturalHeight": 1024,
@@ -1051,31 +1090,31 @@
           {
             "block": {
               "left": 18,
-              "top": 3684.28,
+              "top": -1780.23,
               "width": 324,
               "height": 985.11,
-              "bottom": 4669.39
+              "bottom": -795.12
             },
             "media": {
               "left": 19,
-              "top": 3685.28,
+              "top": -1779.23,
               "width": 322,
               "height": 201.25,
-              "bottom": 3886.53
+              "bottom": -1577.98
             },
             "copy": {
               "left": 19,
-              "top": 3886.53,
+              "top": -1577.98,
               "width": 322,
               "height": 781.86,
-              "bottom": 4668.39
+              "bottom": -796.12
             },
             "frame": {
               "left": 19,
-              "top": 3685.28,
+              "top": -1779.23,
               "width": 322,
               "height": 201.25,
-              "bottom": 3886.53
+              "bottom": -1577.98
             },
             "equalWidths": true,
             "sameTrack": true,
@@ -1086,31 +1125,31 @@
           {
             "block": {
               "left": 18,
-              "top": 4689.39,
+              "top": -773.17,
               "width": 324,
-              "height": 1054.39,
-              "bottom": 5743.78
+              "height": 1085.89,
+              "bottom": 312.72
             },
             "media": {
               "left": 19,
-              "top": 4690.39,
+              "top": -772.17,
               "width": 322,
               "height": 201.25,
-              "bottom": 4891.64
+              "bottom": -570.92
             },
             "copy": {
               "left": 19,
-              "top": 4891.64,
+              "top": -570.92,
               "width": 322,
-              "height": 851.14,
-              "bottom": 5742.78
+              "height": 882.64,
+              "bottom": 311.72
             },
             "frame": {
               "left": 19,
-              "top": 4690.39,
+              "top": -772.17,
               "width": 322,
               "height": 201.25,
-              "bottom": 4891.64
+              "bottom": -570.92
             },
             "equalWidths": true,
             "sameTrack": true,
@@ -1121,31 +1160,31 @@
           {
             "block": {
               "left": 18,
-              "top": 5763.78,
+              "top": 332.72,
               "width": 324,
               "height": 892.73,
-              "bottom": 6656.52
+              "bottom": 1225.45
             },
             "media": {
               "left": 19,
-              "top": 5764.78,
+              "top": 333.72,
               "width": 322,
               "height": 201.25,
-              "bottom": 5966.03
+              "bottom": 534.97
             },
             "copy": {
               "left": 19,
-              "top": 5966.03,
+              "top": 534.97,
               "width": 322,
               "height": 689.48,
-              "bottom": 6655.52
+              "bottom": 1224.45
             },
             "frame": {
               "left": 19,
-              "top": 5764.78,
+              "top": 333.72,
               "width": 322,
               "height": 201.25,
-              "bottom": 5966.03
+              "bottom": 534.97
             },
             "equalWidths": true,
             "sameTrack": true,
@@ -1155,7 +1194,7 @@
           }
         ],
         "horizontalOverflow": false,
-        "hiddenRevealCount": 6,
+        "hiddenRevealCount": 12,
         "heroCtaFullyContained": true,
         "heroCtaBottomGap": 918
       },
@@ -1220,6 +1259,17 @@
         "bodyFontSize": 15,
         "hasTurnstileDisclosure": true
       },
+      "creators": {
+        "horizontalOverflow": false,
+        "articleWidth": 324,
+        "h1": "Creator partnerships with FLOURISH",
+        "applyHref": "/?role=creator#contact",
+        "hasGenericContactCta": false
+      },
+      "queryRole": {
+        "role": "creator",
+        "creatorVisible": true
+      },
       "baselineConsoleErrorCount": 0,
       "expectedFailureConsoleSignals": [
         "Failed to load resource: the server responded with a status of 400 (Bad Request)",
@@ -1242,6 +1292,8 @@
         "noHorizontalOverflow": true,
         "reducedMotion": true,
         "privacyReadable": true,
+        "creatorsPage": true,
+        "queryRolePreselect": true,
         "noConsoleErrors": true,
         "mobileMenu": true
       }

@@ -1601,7 +1601,7 @@ textarea:user-invalid {
 }
 
 #contact,
-[data-contact-form] {
+#contact-heading {
   scroll-margin-top: calc(var(--header-height) + 16px);
 }
 
@@ -1911,9 +1911,9 @@ textarea:user-invalid {
 
 .creators-article h1 {
   margin-bottom: 18px;
-  padding-top: 0.2em;
+  padding-top: 0.22em;
   font-size: clamp(44px, 6vw, 72px);
-  line-height: 1.12;
+  line-height: 1.15;
   overflow: visible;
 }
 
@@ -2289,6 +2289,11 @@ textarea:user-invalid {
   h1 {
     font-size: clamp(50px, 13.4vw, 62px);
     line-height: 0.9;
+  }
+
+  .creators-article h1 {
+    line-height: 1.15;
+    overflow: visible;
   }
 
   .hero-copy {

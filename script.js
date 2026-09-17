@@ -39,9 +39,7 @@ initContactForm();
 function scrollToLocationHash() {
   const id = decodeURIComponent(String(window.location.hash || "").replace(/^#/, ""));
   if (!id) return;
-  const target = id === "contact"
-    ? document.querySelector("[data-contact-form]") || document.getElementById("contact")
-    : document.getElementById(id);
+  const target = document.getElementById(id);
   if (!target) return;
   if (id === "contact") {
     scrollContactTargetIntoView(target);
@@ -90,7 +88,7 @@ document.addEventListener("click", (event) => {
   const normalizePath = (path) => path.replace(/\/index\.html$/, "/").replace(/\/+$/, "") || "/";
   if (normalizePath(url.pathname) !== normalizePath(window.location.pathname)) return;
   if (url.search !== window.location.search) return;
-  const target = document.querySelector("[data-contact-form]") || document.getElementById("contact");
+  const target = document.getElementById("contact");
   if (!target) return;
   event.preventDefault();
   const roleSelect = document.querySelector("[data-role-select]");

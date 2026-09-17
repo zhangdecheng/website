@@ -503,12 +503,12 @@ test("contact client uses Turnstile and same-page JSON submission without mailto
   );
   assert.match(client, /scrollContactTargetIntoView/);
   assert.match(client, /scrollContactIntoView/);
-  assert.match(client, /sameDocument/);
+  assert.match(client, /preventScroll:\s*true/);
 
   assert.match(script, /import \{ initContactForm, scrollContactTargetIntoView \} from "\.\/contact-form\.js"/);
   assert.match(script, /initContactForm\(\)/);
   assert.match(script, /scrollToLocationHash/);
-  assert.match(script, /data-contact-form/);
+  assert.match(script, /getElementById\("contact"\)/);
   assert.match(script, /hashchange/);
   assert.doesNotMatch(script, /buildCreatorMailto|buildProjectMailto|window\.location\s*=/);
   assert.doesNotMatch(
@@ -630,11 +630,11 @@ test("new contact and privacy styles extend the existing visual system accessibl
   assert.match(css, /\.creators-main\s*\{[\s\S]*background:\s*var\(--black\)/);
   assert.match(css, /\.creators-main\s*\{[\s\S]*overflow:\s*visible/);
   assert.match(css, /\.creators-article\s*\{[\s\S]*width:\s*min\(100%, 860px\)/);
-  assert.match(css, /\.creators-article h1\s*\{[\s\S]*line-height:\s*1\.12/);
+  assert.match(css, /\.creators-article h1\s*\{[\s\S]*line-height:\s*1\.15/);
   assert.match(css, /\.creators-article h1\s*\{[\s\S]*overflow:\s*visible/);
   assert.match(css, /html\s*\{[\s\S]*scroll-padding-top:\s*var\(--header-height\)/);
   assert.match(css, /body\s*\{[\s\S]*overflow-x:\s*clip/);
-  assert.match(css, /#contact,\s*\[data-contact-form\]\s*\{[\s\S]*scroll-margin-top:\s*calc\(var\(--header-height\) \+ 16px\)/);
+  assert.match(css, /#contact,\s*#contact-heading\s*\{[\s\S]*scroll-margin-top:\s*calc\(var\(--header-height\) \+ 16px\)/);
   assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*\.project-form \.button\s*\{[\s\S]*width:\s*100%/);
   assert.doesNotMatch(css, /\.creator-form/);
 });

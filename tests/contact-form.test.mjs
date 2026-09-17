@@ -38,7 +38,10 @@ test("scrollContactTargetIntoView jumps below the sticky header with auto behavi
   };
   const win = {
     scrollY: 40,
-    document: { documentElement: root },
+    document: {
+      documentElement: root,
+      querySelector() { return null; },
+    },
     getComputedStyle() {
       return { getPropertyValue() { return "76px"; } };
     },
@@ -53,4 +56,33 @@ test("scrollContactTargetIntoView jumps below the sticky header with auto behavi
     ["scrollTo", { top: 768, behavior: "auto" }],
   ]);
   assert.equal(root.style.scrollBehavior, "");
+});
+
+test("scrollContactTargetIntoView uses the live header height when present", () => {
+  const calls = [];
+  const root = { style: { scrollBehavior: "smooth" } };
+  const target = {
+    scrollIntoView(options) { calls.push(["intoView", options]); },
+    getBoundingClientRect() { return { top: 40 }; },
+  };
+  const win = {
+    scrollY: 2000,
+    document: {
+      documentElement: root,
+      querySelector() {
+        return { getBoundingClientRect() { return { height: 68 }; } };
+      },
+    },
+    getComputedStyle() {
+      return { getPropertyValue() { return "76px"; } };
+    },
+    scrollTo(options) { calls.push(["scrollTo", options]); },
+  };
+
+  scrollContactTargetIntoView(target, win);
+
+  assert.equal(calls[1][0], "scrollTo");
+  assert.equal(calls[1][1].top, 2000 + 40 - 68 - 16);
+  assert.equal(calls[1][1].behavior, "auto");
+  assert.equal(root.style.scrollBehavior, "smooth");
 });

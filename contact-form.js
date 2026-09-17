@@ -26,7 +26,10 @@ export function loadTurnstile(doc = document, win = window) {
 export function scrollContactTargetIntoView(target, win = window) {
   if (!target) return;
   const root = win.document.documentElement;
-  const headerSize = Number.parseFloat(win.getComputedStyle(root).getPropertyValue("--header-height")) || 76;
+  const header = win.document.querySelector("[data-header]");
+  const headerSize = header?.getBoundingClientRect().height
+    || Number.parseFloat(win.getComputedStyle(root).getPropertyValue("--header-height"))
+    || 76;
   const previousBehavior = root.style.scrollBehavior;
   root.style.scrollBehavior = "auto";
   target.scrollIntoView({ behavior: "auto", block: "start" });
@@ -224,7 +227,7 @@ export async function initContactForm({
   });
 
   function scrollContactIntoView() {
-    scrollContactTargetIntoView(form || contactSection, win);
+    scrollContactTargetIntoView(contactSection || form, win);
   }
 
   for (const link of doc.querySelectorAll('[data-select-contact-role="creator"]')) {
@@ -250,7 +253,7 @@ export async function initContactForm({
         const firstEmpty = fieldsForRole("creator")
           .map((name) => form.elements.namedItem(name))
           .find((control) => !control?.value.trim());
-        firstEmpty?.focus();
+        firstEmpty?.focus({ preventScroll: true });
       }, 250);
     });
   }

@@ -847,7 +847,8 @@ test("homepage presents complete Hero media and the approved partner proof seque
   assert.match(hero, /hero-card-landscape/);
   assert.match(hero, /hero-card-portrait/);
   assert.match(css, /\.hero-media\s*{[\s\S]*grid-template-areas:/);
-  assert.match(css, /\.hero-card img\s*{[\s\S]*object-fit:\s*contain/);
+  assert.match(css, /\.hero-card img,\s*\.hero-card-live img\s*{[\s\S]*object-fit:\s*cover/);
+  assert.match(css, /\.hero-card img,\s*\.hero-card-live img\s*{[\s\S]*object-position:\s*center 20%/);
   assert.match(rail, /data-brand-logo-set/);
   assert.deepEqual(
     [...rail.matchAll(/assets\/brand-logos\/([^"\s]+)/g)].map((match) => match[1]),
@@ -867,6 +868,23 @@ test("homepage presents complete Hero media and the approved partner proof seque
   assert.match(html, /<section class="official-partners"/);
   assert.ok(html.indexOf('class="bridge"') < html.indexOf('class="official-partners"'));
   assert.ok(html.indexOf('class="official-partners"') < html.indexOf('class="services"'));
+});
+
+test("short desktop viewports relax hero mins without changing Scheme A crops", async () => {
+  const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+  const hero = directRuleBody(css, ".hero");
+  assert.match(hero, /min-height:\s*clamp\(680px,\s*52vw,\s*820px\)/);
+  assert.match(hero, /overflow:\s*hidden/);
+
+  const shortQuery = "@media (min-width: 821px) and (max-height: 800px)";
+  const shortIndex = css.indexOf(shortQuery);
+  assert.ok(shortIndex !== -1, "short-viewport hero query should exist");
+  assert.ok(shortIndex > css.lastIndexOf("min-height: 760px"), "short-height query must override the 1100px hero min-height");
+  const shortBody = bracedBlock(css, css.indexOf("{", shortIndex));
+  assert.match(shortBody, /\.hero\s*{[\s\S]*min-height:\s*0/);
+  assert.match(shortBody, /\.hero-copy\s*{[\s\S]*padding-top:\s*20px/);
+  assert.match(shortBody, /\.hero-media\s*{[\s\S]*min-height:\s*0/);
+  assert.doesNotMatch(shortBody, /object-fit|object-position|mix-blend-mode:\s*multiply/);
 });
 
 test("official partner badges retain full source bounds and the header logo has breathing room", async () => {

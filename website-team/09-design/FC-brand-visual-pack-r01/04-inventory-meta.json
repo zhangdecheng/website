@@ -1,0 +1,12 @@
+{
+  "date": "2026-09-16",
+  "scope": "local only",
+  "inventory_count": 64,
+  "source_head": "577753f52fe0ffd86293409edc5d9c805061e0e9",
+  "source_sha256": {
+    "index.html": "c96f7bc5f291e292473b4603bc55587710464e5272867d2e69888530ca4a39e1",
+    "privacy.html": "a36c172a358b2325b752e8b87e3f08c548ec035cf0de3f24bcdc0d28c2b404c2",
+    "styles.css": "746e8b3adda56aecacba235bd032f8e5001b84ff4395e77bba4079793598a49d",
+    "docs/ASSET_MANIFEST.md": "bae18e6bbfde0568ad23df4f6ffa4c72e5e474dcba9aee176db7b0dd64464af8"
+  }
+}

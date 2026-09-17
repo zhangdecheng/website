@@ -33,6 +33,12 @@ test("static release build preserves the exact preview HTML", async () => {
   const source = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const built = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
   assert.equal(built, source);
+  for (const file of ["privacy.html", "robots.txt", "sitemap.xml", "creators/index.html", "contact-form.js"]) {
+    assert.equal(
+      await readFile(new URL(`../dist/${file}`, import.meta.url), "utf8"),
+      await readFile(new URL(`../${file}`, import.meta.url), "utf8"),
+    );
+  }
 });
 
 test("systemd unit is loopback-service hardened and reads one protected env file", async () => {
@@ -511,6 +517,9 @@ test("public release check is strict about canonical routing, APIs, headers, ass
     "set -euo pipefail",
     "https://www.flourishculturekol.com/",
     "https://www.flourishculturekol.com/privacy.html",
+    "https://www.flourishculturekol.com/creators/",
+    "https://www.flourishculturekol.com/robots.txt",
+    "https://www.flourishculturekol.com/sitemap.xml",
     "https://www.flourishculturekol.com/api/contact/health",
     "https://www.flourishculturekol.com/api/contact/config",
     "https://www.flourishculturekol.com/review/healthz",
@@ -551,6 +560,9 @@ test("public release check is strict about canonical routing, APIs, headers, ass
     "script.js",
     "contact-form.js",
     "site-core.js",
+    "robots.txt",
+    "sitemap.xml",
+    "creators/index.html",
     "assets/service-creative-localization-camera-speaker.webp",
     "assets/talent-creator-growth-studio.webp",
   ]) {
@@ -717,6 +729,7 @@ async function runStaticRolloutHarness({ checkerBody, expectedCheckerBody = chec
   await mkdir(join(webRoot, "legacy"), { recursive: true, mode: 0o755 });
   await mkdir(join(releaseRoot, "assets"), { recursive: true, mode: 0o755 });
   await mkdir(join(releaseRoot, "assets", "brand-logos"), { recursive: true, mode: 0o755 });
+  await mkdir(join(releaseRoot, "creators"), { recursive: true, mode: 0o755 });
   await mkdir(backupRoot, { recursive: true, mode: 0o700 });
   await mkdir(fakeBin, { recursive: true, mode: 0o755 });
 
@@ -740,6 +753,9 @@ async function runStaticRolloutHarness({ checkerBody, expectedCheckerBody = chec
     "script.js": "console.log('release');\n",
     "contact-form.js": "console.log('contact');\n",
     "site-core.js": "console.log('core');\n",
+    "robots.txt": "User-agent: *\nAllow: /\n",
+    "sitemap.xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset></urlset>\n",
+    "creators/index.html": "<h1>creators fixture</h1>\n",
     "assets/brand-logos/atoms-transparent.png": "atoms logo fixture\n",
     "assets/brand-logos/tripo-transparent-cropped.png": "tripo logo fixture\n",
     "assets/service-creative-localization-camera-speaker.webp": "service image fixture\n",
@@ -781,7 +797,11 @@ if [[ "$destination" == "$TEST_BACKUP_ROOT"/*/ ]]; then
   if [[ "$(basename "$target")" == "tree" ]]; then
     protected_root="$(dirname "$target")"
   fi
-  mode="$(stat -f '%Lp' "$protected_root")"
+  if stat -f '%Lp' "$protected_root" >/dev/null 2>&1; then
+    mode="$(stat -f '%Lp' "$protected_root")"
+  else
+    mode="$(stat -c '%a' "$protected_root")"
+  fi
   if [[ "$mode" != "700" ]]; then
     printf '%s\n' "$mode" > "$TEST_BACKUP_EXPOSURE_MARKER"
   fi
@@ -804,6 +824,9 @@ exit 0
     EXPECTED_SCRIPT_SHA: await fileSha256(join(releaseRoot, "script.js")),
     EXPECTED_CONTACT_FORM_SHA: await fileSha256(join(releaseRoot, "contact-form.js")),
     EXPECTED_SITE_CORE_SHA: await fileSha256(join(releaseRoot, "site-core.js")),
+    EXPECTED_ROBOTS_SHA: await fileSha256(join(releaseRoot, "robots.txt")),
+    EXPECTED_SITEMAP_SHA: await fileSha256(join(releaseRoot, "sitemap.xml")),
+    EXPECTED_CREATORS_SHA: await fileSha256(join(releaseRoot, "creators/index.html")),
     EXPECTED_ATOMS_LOGO_SHA: await fileSha256(join(releaseRoot, "assets/brand-logos/atoms-transparent.png")),
     EXPECTED_TRIPO_LOGO_SHA: await fileSha256(join(releaseRoot, "assets/brand-logos/tripo-transparent-cropped.png")),
     EXPECTED_SERVICE_IMAGE_SHA: await fileSha256(join(releaseRoot, "assets/service-creative-localization-camera-speaker.webp")),

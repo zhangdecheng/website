@@ -180,7 +180,7 @@ assert_contains "$WORK_DIR/index.html" '<link rel="canonical" href="https://www.
 assert_occurrences "$WORK_DIR/index.html" '<span class="connector-word">and</span>' "14" "www homepage connector words"
 assert_header "$WORK_DIR/home.headers" "Content-Type" "text/html" "www homepage"
 assert_page_headers "$WORK_DIR/home.headers" "www homepage"
-assert_sha256 "$WORK_DIR/index.html" "c96f7bc5f291e292473b4603bc55587710464e5272867d2e69888530ca4a39e1" "www homepage"
+assert_sha256 "$WORK_DIR/index.html" "41cdf6d1fdc2f514d348677aa3203dbe2cb496c3040859e14f82c7da07be34ec" "www homepage"
 
 privacy_status="$(fetch GET \
   "https://www.flourishculturekol.com/privacy.html" \
@@ -191,6 +191,45 @@ assert_contains "$WORK_DIR/privacy.html" '<link rel="canonical" href="https://ww
 assert_header "$WORK_DIR/privacy.headers" "Content-Type" "text/html" "Privacy page"
 assert_page_headers "$WORK_DIR/privacy.headers" "Privacy page"
 assert_sha256 "$WORK_DIR/privacy.html" "a36c172a358b2325b752e8b87e3f08c548ec035cf0de3f24bcdc0d28c2b404c2" "Privacy page"
+
+creators_status="$(fetch GET \
+  "https://www.flourishculturekol.com/creators/" \
+  "$WORK_DIR/creators.headers" \
+  "$WORK_DIR/creators.html")"
+assert_status 200 "$creators_status" "Creators page"
+assert_contains "$WORK_DIR/creators.html" '<link rel="canonical" href="https://www.flourishculturekol.com/creators" />' "Creators page"
+assert_contains "$WORK_DIR/creators.html" '<h1>Creator partnerships with FLOURISH</h1>' "Creators page"
+assert_header "$WORK_DIR/creators.headers" "Content-Type" "text/html" "Creators page"
+assert_page_headers "$WORK_DIR/creators.headers" "Creators page"
+assert_sha256 "$WORK_DIR/creators.html" "f13d05c489d902da7866707c6e8a22a4bdcf765651c84402449011bdde049a53" "Creators page"
+
+printf '\n== robots.txt and sitemap.xml ==\n'
+robots_status="$(fetch GET \
+  "https://www.flourishculturekol.com/robots.txt" \
+  "$WORK_DIR/robots.headers" \
+  "$WORK_DIR/robots.txt")"
+assert_status 200 "$robots_status" "robots.txt"
+assert_header "$WORK_DIR/robots.headers" "Content-Type" "text/plain" "robots.txt"
+assert_contains "$WORK_DIR/robots.txt" "Sitemap: https://www.flourishculturekol.com/sitemap.xml" "robots.txt"
+assert_contains "$WORK_DIR/robots.txt" "User-agent: *" "robots.txt"
+if grep -qiE '<html|<!doctype html' "$WORK_DIR/robots.txt"; then
+  fail "robots.txt is HTML instead of a robots file"
+fi
+assert_sha256 "$WORK_DIR/robots.txt" "2e988a2cae0368746dfb504ba79ebc5662abaf1410a82d4a9fa2e109f92a688e" "robots.txt"
+
+sitemap_status="$(fetch GET \
+  "https://www.flourishculturekol.com/sitemap.xml" \
+  "$WORK_DIR/sitemap.headers" \
+  "$WORK_DIR/sitemap.xml")"
+assert_status 200 "$sitemap_status" "sitemap.xml"
+assert_header "$WORK_DIR/sitemap.headers" "Content-Type" "xml" "sitemap.xml"
+assert_contains "$WORK_DIR/sitemap.xml" "<loc>https://www.flourishculturekol.com/</loc>" "sitemap.xml"
+assert_contains "$WORK_DIR/sitemap.xml" "<loc>https://www.flourishculturekol.com/creators</loc>" "sitemap.xml"
+assert_contains "$WORK_DIR/sitemap.xml" "<loc>https://www.flourishculturekol.com/privacy.html</loc>" "sitemap.xml"
+if grep -qiE '<html|<!doctype html' "$WORK_DIR/sitemap.xml"; then
+  fail "sitemap.xml is HTML instead of XML"
+fi
+assert_sha256 "$WORK_DIR/sitemap.xml" "bb0eadfa45fd76630d37bbe6068eb209df5df89cda3acc98d1fc5cfdaf7876db" "sitemap.xml"
 
 printf '\n== Contact API ==\n'
 health_status="$(fetch GET \
@@ -232,7 +271,7 @@ printf '\n== Release files and MIME ==\n'
 styles_status="$(fetch GET "$WWW_ORIGIN/styles.css" "$WORK_DIR/styles.headers" "$WORK_DIR/styles.css")"
 assert_status 200 "$styles_status" "styles.css"
 assert_header "$WORK_DIR/styles.headers" "Content-Type" "text/css" "styles.css"
-assert_sha256 "$WORK_DIR/styles.css" "746e8b3adda56aecacba235bd032f8e5001b84ff4395e77bba4079793598a49d" "styles.css"
+assert_sha256 "$WORK_DIR/styles.css" "f563de2f86121fbebf384ba512fb71cf227a96651d5b7daadc35146006ef6891" "styles.css"
 
 script_status="$(fetch GET "$WWW_ORIGIN/script.js" "$WORK_DIR/script.headers" "$WORK_DIR/script.js")"
 assert_status 200 "$script_status" "script.js"
@@ -242,7 +281,7 @@ assert_sha256 "$WORK_DIR/script.js" "9c754d4227506e956b8536712bda45118de7dc194fc
 contact_form_status="$(fetch GET "$WWW_ORIGIN/contact-form.js" "$WORK_DIR/contact-form.headers" "$WORK_DIR/contact-form.js")"
 assert_status 200 "$contact_form_status" "contact-form.js"
 assert_header "$WORK_DIR/contact-form.headers" "Content-Type" "javascript" "contact-form.js"
-assert_sha256 "$WORK_DIR/contact-form.js" "58c15bb2fae35b23a31bd5039b03aff7d423fb9d0a6f3cd6ab32deed8a57c568" "contact-form.js"
+assert_sha256 "$WORK_DIR/contact-form.js" "52001c78a05015aef867073b5e5127e2d3548436cee478267e679eb4b4380ff8" "contact-form.js"
 
 site_core_status="$(fetch GET "$WWW_ORIGIN/site-core.js" "$WORK_DIR/site-core.headers" "$WORK_DIR/site-core.js")"
 assert_status 200 "$site_core_status" "site-core.js"

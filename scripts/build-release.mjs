@@ -1,5 +1,5 @@
 import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
-import { basename, dirname, join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = join(root, "dist");
@@ -11,6 +11,9 @@ const files = [
   "script.js",
   "contact-form.js",
   "site-core.js",
+  "robots.txt",
+  "sitemap.xml",
+  "creators/index.html",
 ];
 const requiredAssets = new Set([
   "assets/fonts/archivo-variable.woff2",
@@ -27,12 +30,13 @@ for (const entry of await readdir(dist)) {
 }
 
 for (const file of files) {
-  const target = join(dist, basename(file));
+  const target = join(dist, file);
+  await mkdir(dirname(target), { recursive: true });
   await cp(join(root, file), target);
 }
 
 for (const file of files) {
-  const source = await readFile(join(dist, basename(file)), "utf8");
+  const source = await readFile(join(dist, file), "utf8");
   for (const match of source.matchAll(/assets\/[^"'() >]+/g)) {
     requiredAssets.add(match[0]);
   }

@@ -7,7 +7,16 @@ const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
 const screenshotDir = path.join(root, "qa", "screenshots");
 const resultsPath = path.join(root, "qa", "browser-results.json");
-const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const chromeCandidates = [
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "/usr/bin/google-chrome-stable",
+  "/usr/bin/google-chrome",
+  "/usr/local/bin/google-chrome",
+];
+const chromePath = chromeCandidates.find((candidate) => fs.existsSync(candidate));
+if (!chromePath) {
+  throw new Error("Google Chrome is not installed for browser QA");
+}
 const viewports = [
   { name: "desktop-1440x1024", width: 1440, height: 1024 },
   { name: "tablet-1024x1366", width: 1024, height: 1366 },
@@ -23,6 +32,8 @@ function contentType(file) {
     ".html": "text/html; charset=utf-8",
     ".js": "text/javascript; charset=utf-8",
     ".png": "image/png",
+    ".txt": "text/plain; charset=utf-8",
+    ".xml": "application/xml; charset=utf-8",
     ".webp": "image/webp",
     ".woff2": "font/woff2",
   };
@@ -34,19 +45,39 @@ function startStaticServer() {
     const server = http.createServer((request, response) => {
       const pathname = new URL(request.url || "/", "http://localhost").pathname;
       const relative = decodeURIComponent(pathname === "/" ? "index.html" : pathname.slice(1));
-      const target = path.resolve(dist, relative);
-      if (target !== dist && !target.startsWith(`${dist}${path.sep}`)) {
-        response.writeHead(403).end("Forbidden");
-        return;
+      const candidates = [];
+      if (!relative) {
+        candidates.push("index.html");
+      } else if (relative.endsWith("/")) {
+        candidates.push(`${relative}index.html`);
+      } else {
+        candidates.push(relative);
+        candidates.push(`${relative}/index.html`);
       }
-      fs.readFile(target, (error, bytes) => {
-        if (error) {
-          response.writeHead(error.code === "ENOENT" ? 404 : 500).end("Not found");
+      const tryCandidate = (index) => {
+        if (index >= candidates.length) {
+          response.writeHead(404).end("Not found");
           return;
         }
-        response.writeHead(200, { "content-type": contentType(target) });
-        response.end(bytes);
-      });
+        const target = path.resolve(dist, candidates[index]);
+        if (target !== dist && !target.startsWith(`${dist}${path.sep}`)) {
+          response.writeHead(403).end("Forbidden");
+          return;
+        }
+        fs.readFile(target, (error, bytes) => {
+          if (error) {
+            if (error.code === "ENOENT") {
+              tryCandidate(index + 1);
+              return;
+            }
+            response.writeHead(500).end("Not found");
+            return;
+          }
+          response.writeHead(200, { "content-type": contentType(target) });
+          response.end(bytes);
+        });
+      };
+      tryCandidate(0);
     });
     server.once("error", reject);
     server.listen(0, "127.0.0.1", () => {
@@ -471,6 +502,32 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     };
   });
 
+  await page.goto(`${baseUrl}/creators/`, { waitUntil: "networkidle" });
+  const creators = await page.evaluate(() => {
+    const article = document.querySelector(".creators-article");
+    const rect = article?.getBoundingClientRect();
+    const applyHref = document.querySelector('.creators-actions a.button-accent')?.getAttribute("href");
+    return {
+      horizontalOverflow:
+        document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      articleWidth: rect ? Math.round(rect.width) : null,
+      h1: document.querySelector("h1")?.textContent?.trim() || "",
+      applyHref,
+      hasGenericContactCta: [...document.querySelectorAll("a")].some((link) => link.textContent.trim() === "Contact Us"),
+    };
+  });
+
+  await page.goto(`${baseUrl}/?role=creator#contact`, { waitUntil: "networkidle" });
+  await waitForFormReady(page);
+  const queryRole = await page.evaluate(() => {
+    const creator = document.querySelector('[data-role-fields="creator"]');
+    return {
+      role: document.querySelector('[name="role"]')?.value,
+      creatorVisible: Boolean(creator) && !creator.hidden
+        && [...creator.querySelectorAll("input, select, textarea")].every((control) => !control.disabled),
+    };
+  });
+
   const expectedQaFailure = /status of (?:400|502)|400 \(Bad Request\)|502 \(Bad Gateway\)/u;
   const expectedFailureConsoleSignals = consoleErrors.filter((error) => expectedQaFailure.test(error));
   const unexpectedConsoleErrors = consoleErrors.filter((error) => !expectedQaFailure.test(error));
@@ -488,6 +545,8 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     mobileMenu,
     reducedMotion,
     privacy,
+    creators,
+    queryRole,
     baselineConsoleErrorCount,
     expectedFailureConsoleSignals,
     unexpectedConsoleErrors,
@@ -594,7 +653,7 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
   );
   report.checks.noHorizontalOverflow = check(
     results,
-    !defaultState.horizontalOverflow && !privacy.horizontalOverflow,
+    !defaultState.horizontalOverflow && !privacy.horizontalOverflow && !creators.horizontalOverflow,
     `${prefix}: horizontal overflow detected`,
   );
   report.checks.reducedMotion = check(
@@ -612,6 +671,19 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
       && privacy.bodyFontSize >= 15
       && privacy.hasTurnstileDisclosure,
     `${prefix}: Privacy Notice is not readable or complete`,
+  );
+  report.checks.creatorsPage = check(
+    results,
+    creators.articleWidth > 0
+      && creators.h1 === "Creator partnerships with FLOURISH"
+      && creators.applyHref === "/?role=creator#contact"
+      && creators.hasGenericContactCta === false,
+    `${prefix}: Creators page is missing required partnership copy or CTA`,
+  );
+  report.checks.queryRolePreselect = check(
+    results,
+    queryRole.role === "creator" && queryRole.creatorVisible,
+    `${prefix}: ?role=creator did not preselect Creator fields`,
   );
   report.checks.noConsoleErrors = check(
     results,

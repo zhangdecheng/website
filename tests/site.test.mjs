@@ -113,17 +113,20 @@ test("homepage exposes the locked English anchors and canonical metadata", async
   const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
 
   assert.match(html, /<html lang="en">/);
+  assert.match(html, /<title>Creator Partnerships &amp; Brand Collaborations \| FLOURISH CULTURE<\/title>/);
   assert.match(
     html,
-    /<meta\s+name="description"\s+content="FLOURISH CULTURE connects visionary brands and global creators through influencer partnerships, data-driven growth, and culture-first localization\."\s*\/>/,
+    /<meta\s+name="description"\s+content="Partner with FLOURISH as a TikTok, Instagram, or YouTube creator\. Brand matching, operations support, and growth coaching\. Apply as a creator — Europe &amp; North America, Southeast Asia, South America, and beyond\."\s*\/>/,
   );
   assert.match(html, /<link rel="canonical" href="https:\/\/www\.flourishculturekol\.com\/" \/>/);
+  assert.match(html, /<script type="application\/ld\+json">/);
   for (const id of ["services", "talent", "about", "contact"]) {
     assert.match(html, new RegExp(`id="${id}"`));
     const matches = html.match(new RegExp(`id="${id}"`, "g")) ?? [];
     assert.equal(matches.length, 1, `#${id} should appear exactly once`);
   }
   assert.doesNotMatch(html, /20K\+|98%|已记录合作意向/);
+  assert.doesNotMatch(html, /name="robots"|noindex/i);
 });
 
 test("release modules use production-safe JavaScript MIME extensions", async () => {
@@ -154,6 +157,9 @@ test("release build packages every contact page module and rejects incomplete as
     "script.js",
     "contact-form.js",
     "site-core.js",
+    "robots.txt",
+    "sitemap.xml",
+    "creators/index.html",
   ]) {
     assert.match(buildScript, new RegExp(`"${file.replace(".", "\\.")}"`));
   }
@@ -161,7 +167,7 @@ test("release build packages every contact page module and rejects incomplete as
   assert.match(buildScript, /for \(const asset of requiredAssets\)[\s\S]*await stat\(source\)[\s\S]*await cp\(source, target\)/);
   assert.match(
     deployScript,
-    /for required in index\.html privacy\.html styles\.css script\.js contact-form\.js site-core\.js assets; do/,
+    /for required in index\.html privacy\.html styles\.css script\.js contact-form\.js site-core\.js robots\.txt sitemap\.xml creators\/index\.html assets; do/,
   );
 });
 
@@ -289,8 +295,9 @@ test("homepage marks exactly the 14 approved and connectors", async () => {
   ];
 
   assert.equal(html.split(marker).length - 1, approvedContexts.length);
-  assert.equal(html.includes('class="ampersand"'), false);
-  assert.equal(html.includes("&amp;"), false);
+  const bodyHtml = html.replace(/<head>[\s\S]*?<\/head>/, "");
+  assert.equal(bodyHtml.includes('class="ampersand"'), false);
+  assert.equal(bodyHtml.includes("&amp;"), false);
   assert.equal(css.includes(".ampersand"), false);
   assert.equal(css.includes(".connector-word"), false);
   for (const context of approvedContexts) assertIncludesText(html, context);
@@ -401,6 +408,7 @@ test("homepage has one unified accessible Brand and Creator contact form", async
     "Main Audience Demographics",
     "Privacy Notice",
     "Send Inquiry",
+    "Creators: submit a Creator application through this form. Our team reviews your submission by email. If there is a fit, we discuss partnership next steps.",
   ]) {
     assertIncludesText(text, expected);
   }
@@ -485,7 +493,9 @@ test("contact client uses Turnstile and same-page JSON submission without mailto
   assert.match(client, /method:\s*"POST"/);
   assert.match(client, /"content-type":\s*"application\/json"/);
   assert.match(client, /body:\s*JSON\.stringify\(payload\)/);
-  assert.doesNotMatch(client, /window\.location|win\.location/);
+  assert.doesNotMatch(client, /window\.location\s*=|win\.location\s*=|location\.assign|location\.href\s*=/);
+  assert.match(client, /URLSearchParams/);
+  assert.match(client, /contactRoleFromLocation/);
   assert.equal(client.match(/form\.reset\(\)/g)?.length, 1);
   assert.match(
     client,
@@ -543,6 +553,7 @@ test("header and footer use the shared transparent FLOURISH lockup", async () =>
   }
   assert.match(header, /<a class="nav-cta" href="#contact">\s*Contact Us\s*<\/a>/);
   assert.doesNotMatch(header, />Talent<|>About<|>Contact<|Start a Project/);
+  assert.match(footer, /<a href="\/creators">Creator Partnerships<\/a>/);
 });
 
 test("styles enlarge desktop navigation and preserve contact CTA emphasis", async () => {
@@ -610,6 +621,8 @@ test("new contact and privacy styles extend the existing visual system accessibl
   assert.match(css, /\.verification-disclosure\[open\] summary::before/);
   assert.match(css, /\.privacy-main\s*\{[\s\S]*background:\s*var\(--black\)/);
   assert.match(css, /\.privacy-article\s*\{[\s\S]*width:\s*min\(100%, 760px\)/);
+  assert.match(css, /\.creators-main\s*\{[\s\S]*background:\s*var\(--black\)/);
+  assert.match(css, /\.creators-article\s*\{[\s\S]*width:\s*min\(100%, 860px\)/);
   assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*\.project-form \.button\s*\{[\s\S]*width:\s*100%/);
   assert.doesNotMatch(css, /\.creator-form/);
 });
@@ -625,6 +638,12 @@ test("annotated hero removes the old eyebrow and secondary controls", async () =
     /Based in Hong Kong,\s+FLOURISH CULTURE bridges the world's most innovative\s+brands with global audiences through data-driven influencer marketing and\s+viral creative strategies\./,
   );
   assert.doesNotMatch(hero, /class="eyebrow"|Global influencer marketing from Hong Kong|Explore our services|text-link|ri-arrow-down-line/);
+  assertIncludesText(
+    normalized(hero),
+    "Creators: partner with FLOURISH for brand collaborations — brand matching, ops support, and growth coaching. Apply as a creator.",
+  );
+  assert.match(hero, /<a href="\/creators">Explore creator partnerships<\/a>/);
+  assert.match(hero, /<a href="\/\?role=creator#contact">Apply as a creator<\/a>/);
   assert.match(css, /h1\s*{[\s\S]*font-size:\s*clamp\(60px,\s*6vw,\s*96px\)/);
   assert.match(css, /\.hero-intro\s*{[\s\S]*font-size:\s*var\(--type-lead\)/);
   assert.match(css, /\.button\s*{[\s\S]*min-height:\s*52px/);
@@ -939,4 +958,62 @@ test("Service media fills equal desktop columns while partner proof retains a cl
       `Service hover selector must not use the independent scale property: ${selector.trim()}`,
     );
   }
+});
+
+test("creators page is an independent English partnership document", async () => {
+  const html = await readFile(new URL("../creators/index.html", import.meta.url), "utf8");
+  const homepage = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const text = normalized(html);
+
+  assert.notEqual(html, homepage);
+  assert.match(html, /<title>Creator Partnerships \| Brand Deals &amp; Support \| FLOURISH CULTURE<\/title>/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/www\.flourishculturekol\.com\/creators" \/>/);
+  assert.match(html, /<h1>Creator partnerships with FLOURISH<\/h1>/);
+  assert.doesNotMatch(html, /name="robots"|noindex|primaryImageOfPage/i);
+  assert.match(html, /href="\/styles\.css"/);
+  assert.match(html, /src="\/script\.js"/);
+  assert.match(html, /href="\/assets\/flourish-mark\.png"/);
+
+  for (const expected of [
+    "FLOURISH partners with creators on TikTok, Instagram, and YouTube who want brand collaborations — not a how-to-become-an-influencer tutorial.",
+    "We focus on creators with at least 5,000 followers on any one of those platforms, especially across Europe &amp; North America, Southeast Asia, South America, and other regions.",
+    "What you get: brand matching, operations support, and growth coaching. When you are ready, apply as a creator through our existing application flow.",
+    "Direct access to global brand partnerships",
+    "Monetization &amp; operations support",
+    "Data-backed creator growth",
+    "Community &amp; supply-chain access",
+    "as offered on a project basis — not a universal guarantee for every applicant.",
+    "5,000+ on any one platform (TikTok or Instagram or YouTube). Not a combined total across platforms; you do not need 5,000 on every platform.",
+    "This page is not a free “become famous” or growth-hacks tutorial. It is for creators seeking brand collaborations and partnership support.",
+    "Based in Hong Kong, FLOURISH connects East–West brand and creator collaboration opportunities.",
+    "FLOURISH is a TikTok Shop TAP &amp; CAP partner in supported markets. Availability of market-specific programs depends on the project and region.",
+    "Apply as a creator",
+    "Join our creator network",
+  ]) {
+    assertIncludesText(text, expected);
+  }
+
+  assert.match(html, /href="\/\?role=creator#contact">Apply as a creator<\/a>/);
+  assert.match(html, /href="\/\?role=creator#contact">Join our creator network<\/a>/);
+  assert.doesNotMatch(text, /\b(?:incubator|exclusive talent management|zero-base training)\b/i);
+  assert.doesNotMatch(html, /\bContact Us<\/a>/);
+  assert.doesNotMatch(html, /2w\+|20K\+|ROI|monthly deliver/i);
+
+  const jsonLd = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1] ?? "null");
+  assert.equal(jsonLd["@graph"][1].url, "https://www.flourishculturekol.com/creators");
+  assert.equal(jsonLd["@graph"][1].name, "Creator Partnerships | Brand Deals & Support | FLOURISH CULTURE");
+});
+
+test("robots.txt and sitemap.xml are real crawl files for the public site", async () => {
+  const robots = await readFile(new URL("../robots.txt", import.meta.url), "utf8");
+  const sitemap = await readFile(new URL("../sitemap.xml", import.meta.url), "utf8");
+
+  assert.doesNotMatch(robots, /<!doctype html|<html/i);
+  assert.match(robots, /^User-agent: \*\nAllow: \/\nDisallow: \/review\//);
+  assert.match(robots, /Sitemap: https:\/\/www\.flourishculturekol\.com\/sitemap\.xml/);
+  assert.match(sitemap, /<\?xml version="1\.0" encoding="UTF-8"\?>/);
+  assert.match(sitemap, /<loc>https:\/\/www\.flourishculturekol\.com\/<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/www\.flourishculturekol\.com\/creators<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/www\.flourishculturekol\.com\/privacy\.html<\/loc>/);
+  assert.doesNotMatch(sitemap, /<!doctype html|<html/i);
 });

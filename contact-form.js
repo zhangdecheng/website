@@ -211,15 +211,30 @@ export async function initContactForm({
     });
   });
 
+  function scrollContactIntoView(behavior) {
+    const target = form || contactSection;
+    target?.scrollIntoView({
+      behavior,
+      block: "start",
+    });
+  }
+
   for (const link of doc.querySelectorAll('[data-select-contact-role="creator"]')) {
     link.addEventListener("click", (event) => {
       event.preventDefault();
       roleSelect.value = "creator";
       setRole(form, "creator");
-      contactSection?.scrollIntoView({
-        behavior: win.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-      });
+      try {
+        const url = new URL(link.href, win.location.href);
+        if (url.origin === win.location.origin) {
+          win.history?.pushState?.({}, "", `${url.pathname}${url.search}${url.hash || "#contact"}`);
+        }
+      } catch {
+        /* keep the in-page role + scroll even if the href is malformed */
+      }
+      scrollContactIntoView(
+        win.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      );
       win.setTimeout(() => {
         const firstEmpty = fieldsForRole("creator")
           .map((name) => form.elements.namedItem(name))

@@ -501,10 +501,15 @@ test("contact client uses Turnstile and same-page JSON submission without mailto
     client,
     /accepted = response\.status === 201 \|\| response\.status === 202;[\s\S]*if \(accepted\) \{[\s\S]*form\.reset\(\)/,
   );
+  assert.match(client, /scrollContactIntoView/);
+  assert.match(client, /pushState/);
 
   assert.match(script, /import \{ initContactForm \} from "\.\/contact-form\.js"/);
   assert.match(script, /initContactForm\(\)/);
-  assert.doesNotMatch(script, /buildCreatorMailto|buildProjectMailto|window\.location/);
+  assert.match(script, /scrollToLocationHash/);
+  assert.match(script, /data-contact-form/);
+  assert.match(script, /hashchange/);
+  assert.doesNotMatch(script, /buildCreatorMailto|buildProjectMailto|window\.location\s*=/);
   assert.doesNotMatch(
     core,
     /CREATOR_APPLICATION_EMAIL|PROJECT_INQUIRY_EMAIL|buildCreatorMailto|buildProjectMailto|flourishculture@outlook\.com/,
@@ -622,7 +627,12 @@ test("new contact and privacy styles extend the existing visual system accessibl
   assert.match(css, /\.privacy-main\s*\{[\s\S]*background:\s*var\(--black\)/);
   assert.match(css, /\.privacy-article\s*\{[\s\S]*width:\s*min\(100%, 760px\)/);
   assert.match(css, /\.creators-main\s*\{[\s\S]*background:\s*var\(--black\)/);
+  assert.match(css, /\.creators-main\s*\{[\s\S]*overflow:\s*visible/);
   assert.match(css, /\.creators-article\s*\{[\s\S]*width:\s*min\(100%, 860px\)/);
+  assert.match(css, /\.creators-article h1\s*\{[\s\S]*line-height:\s*1\.12/);
+  assert.match(css, /\.creators-article h1\s*\{[\s\S]*overflow:\s*visible/);
+  assert.match(css, /html\s*\{[\s\S]*overflow-x:\s*hidden/);
+  assert.match(css, /#contact,\s*\[data-contact-form\]\s*\{[\s\S]*scroll-margin-top:\s*calc\(var\(--header-height\) \+ 16px\)/);
   assert.match(css, /@media \(max-width:\s*560px\)[\s\S]*\.project-form \.button\s*\{[\s\S]*width:\s*100%/);
   assert.doesNotMatch(css, /\.creator-form/);
 });
@@ -643,7 +653,7 @@ test("annotated hero removes the old eyebrow and secondary controls", async () =
     "Creators: partner with FLOURISH for brand collaborations — brand matching, ops support, and growth coaching. Apply as a creator.",
   );
   assert.match(hero, /<a href="\/creators">Explore creator partnerships<\/a>/);
-  assert.match(hero, /<a href="\/\?role=creator#contact">Apply as a creator<\/a>/);
+  assert.match(hero, /<a href="\/\?role=creator#contact" data-select-contact-role="creator">Apply as a creator<\/a>/);
   assert.match(css, /h1\s*{[\s\S]*font-size:\s*clamp\(60px,\s*6vw,\s*96px\)/);
   assert.match(css, /\.hero-intro\s*{[\s\S]*font-size:\s*var\(--type-lead\)/);
   assert.match(css, /\.button\s*{[\s\S]*min-height:\s*52px/);

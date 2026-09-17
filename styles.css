@@ -53,6 +53,7 @@
 }
 
 html {
+  overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-height);
 }
@@ -1600,6 +1601,11 @@ textarea:user-invalid {
   margin-bottom: 0;
 }
 
+#contact,
+[data-contact-form] {
+  scroll-margin-top: calc(var(--header-height) + 16px);
+}
+
 .contact {
   position: relative;
   padding: clamp(56px, 6.2vw, 86px) 0;
@@ -1893,8 +1899,9 @@ textarea:user-invalid {
 
 .creators-main {
   min-height: 100vh;
-  padding: clamp(120px, 14vw, 180px) var(--gutter) 80px;
+  padding: max(clamp(120px, 14vw, 180px), calc(var(--header-height) + 56px)) var(--gutter) 80px;
   background: var(--black);
+  overflow: visible;
 }
 
 .creators-article {
@@ -1905,7 +1912,10 @@ textarea:user-invalid {
 
 .creators-article h1 {
   margin-bottom: 18px;
+  padding-top: 0.2em;
   font-size: clamp(44px, 6vw, 72px);
+  line-height: 1.12;
+  overflow: visible;
 }
 
 .creators-article h2 {

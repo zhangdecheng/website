@@ -36,6 +36,59 @@ window.addEventListener(
 
 initContactForm();
 
+function scrollToLocationHash({ behavior = "auto" } = {}) {
+  const id = decodeURIComponent(String(window.location.hash || "").replace(/^#/, ""));
+  if (!id) return;
+  const target = id === "contact"
+    ? document.querySelector("[data-contact-form]") || document.getElementById("contact")
+    : document.getElementById(id);
+  if (!target) return;
+  target.scrollIntoView({
+    behavior: reducedMotion ? "auto" : behavior,
+    block: "start",
+  });
+}
+
+function scheduleHashScroll() {
+  if (!window.location.hash) return;
+  const run = () => scrollToLocationHash({ behavior: "auto" });
+  run();
+  requestAnimationFrame(run);
+}
+
+scheduleHashScroll();
+window.addEventListener("load", scheduleHashScroll);
+window.addEventListener("hashchange", () => {
+  scrollToLocationHash({ behavior: reducedMotion ? "auto" : "smooth" });
+});
+
+document.addEventListener("click", (event) => {
+  if (event.defaultPrevented || event.button !== 0) return;
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = event.target.closest("a[href]");
+  if (!link) return;
+  let url;
+  try {
+    url = new URL(link.href, window.location.href);
+  } catch {
+    return;
+  }
+  if (url.origin !== window.location.origin || url.hash !== "#contact") return;
+  const normalizePath = (path) => path.replace(/\/index\.html$/, "/").replace(/\/+$/, "") || "/";
+  if (normalizePath(url.pathname) !== normalizePath(window.location.pathname)) return;
+  const target = document.querySelector("[data-contact-form]") || document.getElementById("contact");
+  if (!target) return;
+  event.preventDefault();
+  const roleSelect = document.querySelector("[data-role-select]");
+  const requestedRole = new URLSearchParams(url.search).get("role");
+  if (roleSelect && (requestedRole === "creator" || requestedRole === "brand")) {
+    roleSelect.value = requestedRole;
+    roleSelect.dispatchEvent(new Event("change"));
+  }
+  history.pushState({}, "", `${url.pathname}${url.search}#contact`);
+  scrollToLocationHash({ behavior: reducedMotion ? "auto" : "smooth" });
+});
+
 function cloneBrandLogoSet() {
   const source = document.querySelector("[data-brand-logo-set]");
   const track = source?.parentElement;

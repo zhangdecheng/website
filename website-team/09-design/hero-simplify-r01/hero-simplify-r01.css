@@ -1,0 +1,168 @@
+/* Hero simplify r01 — exploration only (not production) */
+
+.simplify-demo-banner {
+  position: sticky;
+  top: 0;
+  z-index: 10000;
+  padding: 10px 16px;
+  background: #e65c47;
+  color: #fff;
+  font: 600 12px/1.4 system-ui, sans-serif;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+/* Two equal cards, shared height, no masonry seams */
+.hero-media {
+  display: grid;
+  grid-template-areas: "talent partnership";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 12px;
+  min-height: 0;
+  height: min(52vh, 420px);
+  padding: 28px var(--gutter) 28px 14px;
+  overflow: visible;
+}
+
+.hero-card-diversity {
+  grid-area: talent;
+}
+
+.hero-card-portrait,
+.hero-card-live {
+  grid-area: partnership;
+}
+
+.hero-card,
+.hero-card-landscape,
+.hero-card-portrait,
+.hero-card-live {
+  aspect-ratio: 4 / 5;
+  height: 100%;
+  max-height: none;
+  box-shadow: none;
+  border-radius: 4px;
+  background: transparent;
+}
+
+.hero-card:hover,
+.hero-card-live:hover {
+  transform: none;
+}
+
+/* Kill full-card dark veil — caption bar alone carries type */
+.hero-card::before,
+.hero-card-live::before {
+  display: none;
+  content: none;
+}
+
+.hero-card img,
+.hero-card-live img {
+  object-fit: cover;
+  object-position: center 22%;
+  filter: saturate(1.04) contrast(1.02) brightness(1.03);
+}
+
+.hero-card:hover img,
+.hero-card-live:hover img {
+  transform: none;
+  filter: saturate(1.04) contrast(1.02) brightness(1.03);
+}
+
+/* Single solid caption bar — even height, no soft black smear */
+.hero-card figcaption {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 11px 12px 10px;
+  background: rgba(10, 9, 8, 0.78);
+  background-image: none;
+  backdrop-filter: none;
+  text-shadow: none;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+/* Fit MBA 13" first fold: compact left copy + shorter hero */
+@media (min-width: 821px) {
+  .hero {
+    min-height: 0;
+    height: calc(100svh - 64px);
+    max-height: 760px;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .hero-copy {
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-right: 28px;
+  }
+
+  .hero-copy h1 {
+    margin-bottom: 14px;
+    font-size: clamp(42px, 4.6vw, 58px);
+    line-height: 0.95;
+  }
+
+  .hero-intro {
+    margin-bottom: 16px;
+    font-size: clamp(14px, 1.35vw, 17px);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@media (min-width: 821px) and (max-height: 820px) {
+  .hero {
+    height: calc(100svh - 56px);
+    max-height: none;
+  }
+
+  .hero-media {
+    height: min(58vh, 380px);
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(38px, 4.2vw, 52px);
+  }
+
+  .hero-intro {
+    -webkit-line-clamp: 2;
+  }
+}
+
+@media (max-width: 820px) {
+  .hero-media {
+    grid-template-areas:
+      "talent"
+      "partnership";
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 10px;
+    padding: 24px var(--gutter) 40px;
+  }
+
+  .hero-card,
+  .hero-card-landscape,
+  .hero-card-portrait,
+  .hero-card-live {
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-media {
+    grid-template-areas:
+      "talent"
+      "partnership";
+    grid-template-columns: 1fr;
+  }
+}

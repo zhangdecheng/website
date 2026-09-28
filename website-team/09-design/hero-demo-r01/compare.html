@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FC Hero Demo r01 — Current vs Scheme A</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="scheme-a.css" />
+  <style>
+    body { margin: 0; background: #0a0908; color: #faf9f7; font-family: system-ui, sans-serif; }
+    .demo-bar {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+      padding: 14px 20px; background: #1a1817; border-bottom: 1px solid #3a3733;
+    }
+    .demo-bar strong { margin-right: 8px; }
+    .demo-bar button {
+      min-height: 40px; padding: 0 16px; border: 1px solid #3a3733; border-radius: 3px;
+      background: #252321; color: #faf9f7; cursor: pointer; font-weight: 600;
+    }
+    .demo-bar button.active { background: #e65c47; border-color: #e65c47; color: #fff; }
+    .demo-note { font-size: 13px; color: #9a948d; margin-left: auto; }
+    /* isolate hero for demo */
+    header, .logo-strip, .services, .cta-band, .talent, .contact, footer, .skip-link { display: none !important; }
+    .hero { min-height: 720px; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+  </style>
+</head>
+<body>
+  <div class="demo-bar">
+    <strong>头图右侧对照 Demo r01</strong>
+    <button type="button" id="btn-current" class="active">当前线上</button>
+    <button type="button" id="btn-a">方案 A</button>
+    <span class="demo-note">本地预览 · 非生产发布 · 仅 CSS/裁切演示</span>
+  </div>
+
+  <section class="hero" id="top">
+    <div class="hero-copy">
+      <h1>Scaling Global Impact for Visionary Brands.</h1>
+      <p class="hero-intro">
+        Based in Hong Kong, FLOURISH CULTURE bridges the world's most innovative
+        brands with global audiences through data-driven influencer marketing and
+        viral creative strategies.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-accent" href="#">Let’s Flourish Together</a>
+      </div>
+    </div>
+
+    <figure class="hero-media" aria-label="Three creator marketing story cards">
+      <div class="hero-card hero-card-landscape hero-card-diversity">
+        <picture>
+          <img src="assets/optimized/hero-global-talent.webp" alt="Global Talent Network" width="960" height="502" />
+        </picture>
+        <figcaption>Global Talent Network</figcaption>
+      </div>
+      <div class="hero-card hero-card-landscape hero-card-tech">
+        <picture>
+          <img src="assets/optimized/hero-performance.webp" alt="Data-Driven Growth" width="960" height="512" />
+        </picture>
+        <figcaption>Data-Driven Growth</figcaption>
+      </div>
+      <div class="hero-card hero-card-portrait hero-card-live">
+        <picture>
+          <img src="assets/optimized/hero-brand-partnership.webp" alt="Brand Partnership Hub" width="900" height="1230" />
+        </picture>
+        <figcaption>Brand Partnership Hub</figcaption>
+      </div>
+    </figure>
+  </section>
+
+  <script>
+    const root = document.documentElement;
+    const hero = document.querySelector('.hero');
+    const btnC = document.getElementById('btn-current');
+    const btnA = document.getElementById('btn-a');
+    function setMode(mode) {
+      hero.classList.toggle('scheme-a', mode === 'a');
+      btnC.classList.toggle('active', mode === 'current');
+      btnA.classList.toggle('active', mode === 'a');
+    }
+    btnC.onclick = () => setMode('current');
+    btnA.onclick = () => setMode('a');
+  </script>
+</body>
+</html>

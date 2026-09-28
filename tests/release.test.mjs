@@ -642,8 +642,8 @@ test("final static rollout pins the audited candidate and never rolls Nginx back
     deploymentHash(script, "EXPECTED_CHECK_SCRIPT_SHA"),
     await fileSha256(new URL("../check-https-cloud-assistant.sh", import.meta.url)),
   );
-  assert.equal(deploymentHash(script, "EXPECTED_OLD_HOME_SHA"), "c96f7bc5f291e292473b4603bc55587710464e5272867d2e69888530ca4a39e1");
-  assert.equal(deploymentHash(script, "EXPECTED_OLD_STYLES_SHA"), "b5b88af03dfb3a0b0fb22fe3b4dcbf82c929cb331281ce99d5f82f3b76405ccd");
+  assert.equal(deploymentHash(script, "EXPECTED_OLD_HOME_SHA"), "b28e9dd34add8ab3f56e5f57f502d73f4220a21692268d1bc9303fc08c68c898");
+  assert.equal(deploymentHash(script, "EXPECTED_OLD_STYLES_SHA"), "fb064bb2fdfb84362f3afd286e2d9dc3de0dd0f62f1467349edc2ccb6a232c13");
   assert.equal(
     deploymentHash(script, "EXPECTED_NEW_HOME_SHA"),
     await fileSha256(new URL("../dist/index.html", import.meta.url)),

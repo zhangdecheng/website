@@ -180,7 +180,7 @@ assert_contains "$WORK_DIR/index.html" '<link rel="canonical" href="https://www.
 assert_occurrences "$WORK_DIR/index.html" '<span class="connector-word">and</span>' "14" "www homepage connector words"
 assert_header "$WORK_DIR/home.headers" "Content-Type" "text/html" "www homepage"
 assert_page_headers "$WORK_DIR/home.headers" "www homepage"
-assert_sha256 "$WORK_DIR/index.html" "9e16117749beee11981e1a5de902426e5d48784bb34cf98810612597a9e0e7e3" "www homepage"
+assert_sha256 "$WORK_DIR/index.html" "4a58316db62a4e9605a1e06a588235f3ed772a37d075f422acc33eec68e62227" "www homepage"
 
 privacy_status="$(fetch GET \
   "https://www.flourishculturekol.com/privacy.html" \
@@ -201,7 +201,7 @@ assert_contains "$WORK_DIR/creators.html" '<link rel="canonical" href="https://w
 assert_contains "$WORK_DIR/creators.html" '<h1>Creator partnerships with FLOURISH</h1>' "Creators page"
 assert_header "$WORK_DIR/creators.headers" "Content-Type" "text/html" "Creators page"
 assert_page_headers "$WORK_DIR/creators.headers" "Creators page"
-assert_sha256 "$WORK_DIR/creators.html" "f13d05c489d902da7866707c6e8a22a4bdcf765651c84402449011bdde049a53" "Creators page"
+assert_sha256 "$WORK_DIR/creators.html" "da57b18be51f94758abf6a91f21827e05826944319f37b3faf25ffe16e762315" "Creators page"
 
 printf '\n== robots.txt and sitemap.xml ==\n'
 robots_status="$(fetch GET \
@@ -271,7 +271,7 @@ printf '\n== Release files and MIME ==\n'
 styles_status="$(fetch GET "$WWW_ORIGIN/styles.css" "$WORK_DIR/styles.headers" "$WORK_DIR/styles.css")"
 assert_status 200 "$styles_status" "styles.css"
 assert_header "$WORK_DIR/styles.headers" "Content-Type" "text/css" "styles.css"
-assert_sha256 "$WORK_DIR/styles.css" "bec87d9432d03be952c37537bb09dce7d726e1848bb51e05b235916e2b60a83a" "styles.css"
+assert_sha256 "$WORK_DIR/styles.css" "150615df10eb49fc09c83cf2398dbe106e94d9aef985da697b5a6e932c05d6e9" "styles.css"
 
 script_status="$(fetch GET "$WWW_ORIGIN/script.js" "$WORK_DIR/script.headers" "$WORK_DIR/script.js")"
 assert_status 200 "$script_status" "script.js"

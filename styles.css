@@ -2618,3 +2618,48 @@ textarea:user-invalid {
     display: none;
   }
 }
+.creators-faq-item {
+  margin: 0 0 16px;
+  padding: 22px 24px;
+  background: var(--card-surface);
+  border: 1px solid var(--card-line-dark);
+}
+
+.creators-faq-item summary {
+  display: flex;
+  min-height: 30px;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 0;
+  color: var(--off-white);
+  cursor: pointer;
+  font-size: var(--type-body);
+  font-weight: 600;
+  list-style: none;
+}
+
+.creators-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.creators-faq-item summary::before {
+  flex: 0 0 16px;
+  color: var(--coral);
+  content: "+";
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.creators-faq-item[open] summary::before {
+  content: "−";
+}
+
+.creators-faq-item summary:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 4px;
+}
+
+.creators-faq-item p {
+  margin: 16px 0 0;
+}

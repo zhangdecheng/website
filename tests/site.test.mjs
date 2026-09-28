@@ -1073,3 +1073,82 @@ test("robots.txt and sitemap.xml are real crawl files for the public site", asyn
   assert.match(sitemap, /<loc>https:\/\/www\.flourishculturekol\.com\/privacy\.html<\/loc>/);
   assert.doesNotMatch(sitemap, /<!doctype html|<html/i);
 });
+
+const creatorsFaqCopy = [
+  [
+    "What does FLOURISH CULTURE do for creators?",
+    "FLOURISH CULTURE is a creator partnerships team based in Hong Kong. We work with TikTok, Instagram, and YouTube creators on brand collaborations through brand matching, operations support, and growth coaching. Creators in Europe & North America, Southeast Asia, South America, and other regions can apply."
+  ],
+  [
+    "Is the 5,000-follower requirement combined across platforms?",
+    "No. You need 5,000+ followers on any one platform: TikTok, Instagram, or YouTube. It is not a combined total, and you do not need 5,000 on every platform."
+  ],
+  [
+    "Do you work with creators in Latin America?",
+    "Yes. South America is one of our priority regions, and creators elsewhere in Latin America can apply under other regions. The same 5,000+ follower requirement on any one platform applies."
+  ],
+  [
+    "How do I apply?",
+    "Click Apply as a creator on this page, and the Creator role will be pre-selected in the application form. Submit your application, and our team will review it and follow up by email to discuss fit."
+  ],
+  [
+    "Is FLOURISH a self-serve marketplace?",
+    "No. FLOURISH is not a self-serve marketplace listing. Our team reviews each creator application and supports brand collaborations as a partnership."
+  ]
+];
+
+test("creators FAQ preserves approved copy, order, placement, and native disclosures", async () => {
+  const html = await readFile(new URL("../creators/index.html", import.meta.url), "utf8");
+  const faq = section(html, "creators-faq");
+  assert.equal(html.match(/class="creators-faq"/g)?.length, 1);
+  assert.match(faq, /aria-labelledby="creators-faq-heading"/);
+  assert.match(faq, /<h2 id="creators-faq-heading">Frequently asked questions<\/h2>/);
+  assert.match(html, /<h2>How to apply<\/h2>\s*<ol class="creators-list">[\s\S]*?<\/ol>\s*<section class="creators-faq"/);
+  assert.match(html, /<\/section>\s*<h2>What this page is not<\/h2>/);
+  const items = [...faq.matchAll(/<details class="creators-faq-item">\s*<summary>([^<]*)<\/summary>\s*<p>([^<]*)<\/p>\s*<\/details>/g)];
+  assert.equal(faq.match(/<details\b/g)?.length, 5);
+  assert.deepEqual(items.map(([, question, answer]) => [question, answer]),
+    creatorsFaqCopy.map(([question, answer]) => [question, answer.replaceAll("&", "&amp;")]));
+  assert.doesNotMatch(faq, /exclusive|sponsored posts/i);
+});
+
+test("creators FAQPage matches visible answers and Organization contains only approved fields", async () => {
+  const html = await readFile(new URL("../creators/index.html", import.meta.url), "utf8");
+  const jsonLd = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+  const faqNodes = jsonLd["@graph"].filter((node) => node["@type"] === "FAQPage");
+  assert.equal(faqNodes.length, 1);
+  assert.deepEqual(faqNodes[0], {
+    "@type": "FAQPage",
+    "@id": "https://www.flourishculturekol.com/creators#faq",
+    mainEntity: creatorsFaqCopy.map(([name, text]) => ({
+      "@type": "Question", name, acceptedAnswer: { "@type": "Answer", text },
+    })),
+  });
+  const visiblePairs = [...section(html, "creators-faq").matchAll(/<summary>([^<]*)<\/summary>\s*<p>([^<]*)<\/p>/g)]
+    .map(([, question, answer]) => [question, answer.replaceAll("&amp;", "&")]);
+  assert.deepEqual(faqNodes[0].mainEntity.map((item) => [item.name, item.acceptedAnswer.text]), visiblePairs);
+  assert.deepEqual(jsonLd["@graph"].find((node) => node["@type"] === "Organization"), {
+    "@type": "Organization",
+    "@id": "https://www.flourishculturekol.com/#organization",
+    name: "FLOURISH CULTURE",
+    url: "https://www.flourishculturekol.com/",
+    knowsAbout: ["brand matching", "operations support", "growth coaching"],
+    areaServed: ["Europe", "North America", "Southeast Asia", "South America"],
+  });
+});
+
+test("homepage Organization matches creators services and regions with only approved fields", async () => {
+  const organizations = await Promise.all(["../index.html", "../creators/index.html"].map(async (path) => {
+    const html = await readFile(new URL(path, import.meta.url), "utf8");
+    const jsonLd = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+    const nodes = jsonLd["@graph"].filter((node) => node["@type"] === "Organization");
+    assert.equal(nodes.length, 1);
+    return nodes[0];
+  }));
+  const [homepage, creators] = organizations;
+  assert.deepEqual(homepage.knowsAbout, creators.knowsAbout);
+  assert.deepEqual(homepage.areaServed, creators.areaServed);
+  assert.deepEqual(Object.keys(homepage).sort(), [
+    "@type", "@id", "name", "url", "description", "knowsAbout", "areaServed",
+  ].sort());
+});

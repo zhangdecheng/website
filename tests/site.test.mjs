@@ -1136,3 +1136,19 @@ test("creators FAQPage matches visible answers and Organization contains only ap
     areaServed: ["Europe", "North America", "Southeast Asia", "South America"],
   });
 });
+
+test("homepage Organization matches creators services and regions with only approved fields", async () => {
+  const organizations = await Promise.all(["../index.html", "../creators/index.html"].map(async (path) => {
+    const html = await readFile(new URL(path, import.meta.url), "utf8");
+    const jsonLd = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+    const nodes = jsonLd["@graph"].filter((node) => node["@type"] === "Organization");
+    assert.equal(nodes.length, 1);
+    return nodes[0];
+  }));
+  const [homepage, creators] = organizations;
+  assert.deepEqual(homepage.knowsAbout, creators.knowsAbout);
+  assert.deepEqual(homepage.areaServed, creators.areaServed);
+  assert.deepEqual(Object.keys(homepage).sort(), [
+    "@type", "@id", "name", "url", "description", "knowsAbout", "areaServed",
+  ].sort());
+});

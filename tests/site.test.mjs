@@ -410,7 +410,7 @@ test("homepage has one unified accessible Brand and Creator contact form", async
     "Social Media Handles",
     "Niche",
     "Main Audience Demographics",
-    "Privacy Notice",
+    "Privacy Policy",
     "Send Inquiry",
     "Creators: submit a Creator application through this form. Our team reviews your submission by email. If there is a fit, we discuss partnership next steps.",
   ]) {
@@ -447,35 +447,40 @@ test("homepage has one unified accessible Brand and Creator contact form", async
   assert.ok(mailtoRecipients.every((recipient) => recipient === "business@flourish-culture.com"));
 });
 
-test("Privacy Notice is original, generic and accurately describes the contact flow", async () => {
+test("Privacy Policy matches the approved CRM-001 r01 text and is linked from every public footer", async () => {
   const privacy = await readFile(new URL("../privacy.html", import.meta.url), "utf8");
   const text = normalized(privacy);
 
-  assert.match(privacy, /<title>Privacy Notice \| FLOURISH CULTURE<\/title>/);
-  assert.match(privacy, /<link rel="canonical" href="https:\/\/www\.flourishculturekol\.com\/privacy\.html" \/>/);
-  assertIncludesText(text, "Effective August 18, 2026");
+  assert.match(privacy, /<title>Privacy Policy \| Florish Culture<\/title>/);
+  assert.match(privacy, /<link rel="canonical" href="https:\/\/www\.flourishculturekol\.com\/privacy" \/>/);
+  assertIncludesText(text, "Last updated: October 15, 2026");
   for (const heading of [
-    "Information We Collect",
-    "How We Use Information",
-    "Service Providers and Sharing",
-    "Cloudflare Turnstile",
-    "Retention",
-    "International Processing",
-    "Security",
-    "Your Choices",
-    "Changes to This Notice",
-    "Contact",
+    "1. Information we collect",
+    "2. How we use it",
+    "3. Where it is stored",
+    "4. How long we keep it",
+    "5. Your rights and data deletion",
+    "6. Contact",
   ]) {
     assertIncludesText(text, heading);
   }
-  assertIncludesText(text, "We use Cloudflare Turnstile to distinguish legitimate submissions from automated abuse.");
-  assertIncludesText(text, "business@flourish-culture.com");
-  assertIncludesText(text, "We do not sell information submitted through this form or use it for advertising analytics.");
-  assert.doesNotMatch(
-    text,
-    /\b(?:Google|Meta|Apple|Example Company|Google Analytics|copied boilerplate)\b/i,
-  );
-  assert.doesNotMatch(privacy, /(?:30|60|90|180|365) days/i);
+  for (const sentence of [
+    "We do not sell your personal information or use it for third-party advertising.",
+    "We keep conversation records for 24 months after our last interaction, unless a longer period is required by law. System backups are kept for 7 days.",
+    "We will process the request within 30 days and confirm once it's done.",
+    "Florish Culture Limited",
+    "RM D07, 8/F Kai Tak Factory Building, No. 99 King Fuk Street, San Po Kong, Hong Kong",
+    "business@flourish-culture.com",
+  ]) {
+    assertIncludesText(text, sentence);
+  }
+  assert.doesNotMatch(text, /Flourish Culture Limited/);
+
+  for (const filename of ["index.html", "creators/index.html", "privacy.html"]) {
+    const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
+    const footer = html.slice(html.indexOf('<footer class="site-footer">'));
+    assert.match(footer, /<a href="\/privacy">Privacy Policy<\/a>/, filename);
+  }
 });
 
 test("contact client uses Turnstile and same-page JSON submission without mailto navigation", async () => {
@@ -1070,7 +1075,7 @@ test("robots.txt and sitemap.xml are real crawl files for the public site", asyn
   assert.match(sitemap, /<\?xml version="1\.0" encoding="UTF-8"\?>/);
   assert.match(sitemap, /<loc>https:\/\/www\.flourishculturekol\.com\/<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/www\.flourishculturekol\.com\/creators<\/loc>/);
-  assert.match(sitemap, /<loc>https:\/\/www\.flourishculturekol\.com\/privacy\.html<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/www\.flourishculturekol\.com\/privacy<\/loc>/);
   assert.doesNotMatch(sitemap, /<!doctype html|<html/i);
 });
 

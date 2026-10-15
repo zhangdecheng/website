@@ -1,0 +1,83 @@
+/* ============================================================
+   FLOURISH CULTURE — Hero Scheme A (P0) CSS patch
+   Status: User-approved visual direction (2026-09-17)
+   Scope: CSS-only; keep masonry HTML structure
+   Do NOT publish without Ethan QA + Alex go-ahead
+   Preview: /workspace/website-team/09-design/hero-demo-r02/compare.html → P0
+   ============================================================ */
+
+/* 1) Fill frame — kill letterbox dead zones */
+.hero-card img,
+.hero-card-live img {
+  object-fit: cover;
+  object-position: center 20%;
+  filter: saturate(1.02) contrast(1.03) brightness(0.98);
+}
+
+.hero-card-tech img {
+  filter: saturate(1.02) contrast(1.04) brightness(0.98);
+}
+
+.hero-card-live img {
+  /* Was: brightness(0.65) + sepia — too gloomy */
+  filter: saturate(1.05) contrast(1.05) brightness(1);
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+/* 2) Replace multiply / heavy overlays with bottom-readable gradient */
+.hero-card::before,
+.hero-card-live::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 9, 8, 0) 0%,
+    rgba(10, 9, 8, 0.22) 55%,
+    rgba(10, 9, 8, 0.72) 100%
+  );
+  mix-blend-mode: normal;
+}
+
+/* 3) Tighten card ratios (reduce empty black in frame) */
+.hero-card-landscape {
+  aspect-ratio: 16 / 10;
+}
+
+.hero-card-portrait,
+.hero-card-live {
+  aspect-ratio: 4 / 5;
+  max-height: 100%;
+}
+
+/* 4) Caption backing — full-bleed gradient, stronger type */
+.hero-card figcaption {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px 14px 12px;
+  border-radius: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 9, 8, 0.88) 0%,
+    rgba(10, 9, 8, 0.35) 70%,
+    rgba(10, 9, 8, 0) 100%
+  );
+  backdrop-filter: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+/* Hover: keep lift, don't re-darken */
+.hero-card:hover img {
+  filter: saturate(1.06) contrast(1.05) brightness(1.02);
+}
+
+.hero-card-tech:hover img {
+  filter: saturate(1.05) contrast(1.06) brightness(1.01);
+}
+
+.hero-card-live:hover img {
+  filter: saturate(1.08) contrast(1.06) brightness(1.03);
+}

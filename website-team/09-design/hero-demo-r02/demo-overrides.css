@@ -1,0 +1,561 @@
+/* ============================================================
+   hero-demo-r02 — demo-overrides.css
+   ALL mode overrides. Commented by priority / scheme.
+   Non-production. Modes on #demo-root:
+     mode-current | mode-p0 | mode-p1 | mode-p2
+   ============================================================ */
+
+/* ---- Demo chrome (always on) ---- */
+.demo-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 18px;
+  background: #1a1817;
+  border-bottom: 1px solid #3a3733;
+  color: #faf9f7;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.demo-bar strong {
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.demo-bar button {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid #3a3733;
+  border-radius: 3px;
+  background: #252321;
+  color: #faf9f7;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.demo-bar button.active {
+  background: #e65c47;
+  border-color: #e65c47;
+  color: #fff;
+}
+
+.demo-bar .demo-note {
+  margin-left: auto;
+  font-size: 12px;
+  color: #9a948d;
+}
+
+.seo-notes {
+  margin: 0;
+  padding: 14px 20px;
+  background: #131210;
+  border-bottom: 1px solid #3a3733;
+  color: #c8c2ba;
+  font-size: 12px;
+  line-height: 1.55;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.seo-notes summary {
+  cursor: pointer;
+  color: #faf9f7;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.seo-notes ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.seo-notes code {
+  font-size: 11px;
+  color: #d4a855;
+}
+
+/* Force reveal visible in demo (no scroll JS) */
+#demo-root .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Hide non-demo chrome from live stylesheet if any leaks */
+#demo-root .site-header,
+#demo-root .skip-link {
+  display: none !important;
+}
+
+/* Compact hero top padding without live header */
+#demo-root .hero {
+  padding-top: 24px;
+  min-height: clamp(560px, 48vw, 760px);
+}
+
+/* ============================================================
+   Scheme markup visibility
+   - current / P0 (A): masonry 3-card
+   - P1 (B): two wide stacked cards
+   - P2 (C): immersive single image + 3 glass cards
+   ============================================================ */
+.hero-scheme-masonry,
+.hero-scheme-b,
+.hero-scheme-c {
+  display: none;
+}
+
+.mode-current .hero-scheme-masonry,
+.mode-p0 .hero-scheme-masonry {
+  display: grid;
+}
+
+.mode-p1 .hero-scheme-b {
+  display: grid;
+}
+
+.mode-p2 .hero-scheme-c {
+  display: grid;
+}
+
+/* ============================================================
+   P0 = Scheme A — masonry keep; cover crop; lighten; caption
+   ============================================================ */
+.mode-p0 .hero-scheme-masonry .hero-card img,
+.mode-p0 .hero-scheme-masonry .hero-card-live img {
+  object-fit: cover !important;
+  object-position: center 20% !important;
+  filter: saturate(1.02) contrast(1.03) brightness(0.98) !important;
+}
+
+.mode-p0 .hero-scheme-masonry .hero-card-tech img {
+  filter: saturate(1.02) contrast(1.04) brightness(0.98) !important;
+}
+
+.mode-p0 .hero-scheme-masonry .hero-card-live img {
+  filter: saturate(1.05) contrast(1.05) brightness(1) !important;
+}
+
+.mode-p0 .hero-scheme-masonry .hero-card::before,
+.mode-p0 .hero-scheme-masonry .hero-card-live::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 9, 8, 0) 0%,
+    rgba(10, 9, 8, 0.22) 55%,
+    rgba(10, 9, 8, 0.72) 100%
+  ) !important;
+  mix-blend-mode: normal !important;
+}
+
+.mode-p0 .hero-scheme-masonry .hero-card-landscape {
+  aspect-ratio: 16 / 10 !important;
+}
+
+.mode-p0 .hero-scheme-masonry .hero-card-portrait {
+  aspect-ratio: 4 / 5 !important;
+  max-height: 100%;
+}
+
+.mode-p0 .hero-scheme-masonry .hero-card figcaption {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  padding: 14px 14px 12px !important;
+  border-radius: 0 !important;
+  background: linear-gradient(
+    to top,
+    rgba(10, 9, 8, 0.88) 0%,
+    rgba(10, 9, 8, 0.35) 70%,
+    rgba(10, 9, 8, 0) 100%
+  ) !important;
+  backdrop-filter: none !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+/* ============================================================
+   P1 = Scheme B — two wide stacked cards + floating trust pills
+   ============================================================ */
+.hero-scheme-b {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(14px, 1.8vw, 22px);
+  min-height: clamp(470px, 42vw, 640px);
+  min-width: 0;
+  margin: 0;
+  padding: 96px var(--gutter) 86px 14px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-scheme-b .hero-wide-card {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--ink);
+  box-shadow: var(--organic-shadow);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hero-scheme-b .hero-wide-card:hover {
+  transform: translateY(-3px);
+}
+
+.hero-scheme-b .hero-wide-card picture,
+.hero-scheme-b .hero-wide-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+}
+
+.hero-scheme-b .hero-wide-card img {
+  object-fit: cover;
+  object-position: center 20%;
+  filter: saturate(1.04) contrast(1.04) brightness(0.97);
+}
+
+.hero-scheme-b .hero-wide-card::before {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 9, 8, 0.55) 0%,
+    rgba(10, 9, 8, 0.15) 55%,
+    rgba(10, 9, 8, 0.35) 100%
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.hero-scheme-b .hero-wide-card figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 18px 20px 16px;
+  background: linear-gradient(
+    to top,
+    rgba(10, 9, 8, 0.9) 0%,
+    rgba(10, 9, 8, 0.35) 65%,
+    transparent 100%
+  );
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hero-trust-pills {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.hero-scheme-b .hero-wide-card:first-child .hero-trust-pills {
+  top: 16px;
+  left: 16px;
+  right: 16px;
+}
+
+.hero-scheme-b .hero-wide-card:last-child .hero-trust-pills {
+  top: 16px;
+  right: 16px;
+  justify-content: flex-end;
+}
+
+.hero-trust-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(250, 249, 247, 0.18);
+  background: rgba(26, 24, 23, 0.55);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.hero-trust-pill[data-kind="partner"] {
+  border-color: rgba(230, 92, 71, 0.45);
+  background: rgba(230, 92, 71, 0.22);
+}
+
+.hero-trust-pill[data-kind="cert"] {
+  border-color: rgba(212, 168, 85, 0.4);
+  background: rgba(212, 168, 85, 0.18);
+}
+
+/* ============================================================
+   P2 = Scheme C — immersive single image + 3 glass selling cards
+   ============================================================ */
+.hero-scheme-c {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: 1fr;
+  min-height: clamp(470px, 42vw, 640px);
+  min-width: 0;
+  margin: 0;
+  padding: 96px var(--gutter) 86px 14px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-scheme-c .hero-immersive {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: clamp(420px, 40vw, 600px);
+  margin: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--ink);
+  box-shadow: var(--organic-shadow);
+}
+
+.hero-scheme-c .hero-immersive picture,
+.hero-scheme-c .hero-immersive > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+}
+
+.hero-scheme-c .hero-immersive img {
+  object-fit: cover;
+  object-position: center 25%;
+  filter: saturate(1.06) contrast(1.05) brightness(0.92);
+}
+
+.hero-scheme-c .hero-immersive::before {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 9, 8, 0.55) 0%,
+    rgba(10, 9, 8, 0.15) 45%,
+    rgba(10, 9, 8, 0.62) 100%
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.hero-scheme-c .hero-immersive > figcaption {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  z-index: 2;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 3px;
+  background: rgba(10, 9, 8, 0.72);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.hero-glass-cards {
+  position: absolute;
+  z-index: 3;
+  right: clamp(24px, 3vw, 48px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 12px;
+  width: min(280px, 42%);
+}
+
+.hero-glass-card {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(250, 249, 247, 0.16);
+  background: rgba(26, 24, 23, 0.48);
+  color: var(--white);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+  transition: transform 0.35s ease, background 0.35s ease;
+}
+
+.hero-glass-card:hover {
+  transform: translateY(-2px);
+  background: rgba(26, 24, 23, 0.62);
+}
+
+.hero-glass-card strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.hero-glass-card span {
+  display: block;
+  color: var(--off-white);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* Visually-hidden but present for SEO when scheme-C glass cards
+   use strong/span; real figcaptions remain on immersive figure. */
+
+/* ============================================================
+   Secondary light extras (optional polish; not primary schemes)
+   ============================================================ */
+
+/* Slightly larger TAP/CAP badges when not in current mode */
+.mode-p0 .official-partner-badges img,
+.mode-p1 .official-partner-badges img,
+.mode-p2 .official-partner-badges img {
+  width: min(48%, 200px);
+}
+
+/* Logo strip frosted plate for readability on dark bg */
+.mode-p0 .brand-logo-viewport,
+.mode-p1 .brand-logo-viewport,
+.mode-p2 .brand-logo-viewport {
+  padding: 18px 8px;
+  border-radius: 12px;
+  background: rgba(250, 249, 247, 0.06);
+  border: 1px solid rgba(250, 249, 247, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.mode-p0 .brand-logo-set img,
+.mode-p1 .brand-logo-set img,
+.mode-p2 .brand-logo-set img {
+  opacity: 0.9;
+  filter: grayscale(0.15) saturate(0.95) contrast(1.04);
+}
+
+/* Service numbers: fuller coral (less muted) */
+.mode-p0 .service-number,
+.mode-p1 .service-number,
+.mode-p2 .service-number {
+  opacity: 1;
+  color: var(--coral);
+  text-shadow: 0 0 24px rgba(230, 92, 71, 0.25);
+}
+
+/* Contact: smoother dark → paper transition */
+.mode-p0 .contact,
+.mode-p1 .contact,
+.mode-p2 .contact {
+  background:
+    linear-gradient(180deg, var(--black) 0%, transparent 28%),
+    radial-gradient(ellipse at 80% 20%, rgba(230, 92, 71, 0.08) 0%, transparent 55%),
+    var(--paper);
+}
+
+.mode-p0 .demo-contact-bridge,
+.mode-p1 .demo-contact-bridge,
+.mode-p2 .demo-contact-bridge {
+  height: 48px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: linear-gradient(180deg, var(--black) 0%, var(--paper) 100%);
+}
+
+.mode-current .demo-contact-bridge {
+  display: none;
+}
+
+/* ============================================================
+   prefers-reduced-motion — dampen hover transforms in all modes
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  #demo-root .hero-card:hover,
+  #demo-root .hero-card-live:hover,
+  #demo-root .hero-wide-card:hover,
+  #demo-root .hero-glass-card:hover,
+  #demo-root .service-block:hover,
+  #demo-root .button:hover {
+    transform: none !important;
+  }
+
+  #demo-root .hero-card:hover img,
+  #demo-root .hero-wide-card:hover img,
+  #demo-root .contact:hover .contact-copy img {
+    transform: none !important;
+  }
+}
+
+/* Demo services / partners / contact simplified spacing */
+.demo-snippet .service-block {
+  grid-template-columns: 1fr;
+}
+
+.demo-snippet .service-media {
+  display: none;
+}
+
+.demo-snippet .service-detail {
+  display: none;
+}
+
+.demo-snippet .official-partners-layout {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.demo-snippet .contact-layout {
+  grid-template-columns: 1fr;
+}
+
+.demo-snippet .project-form {
+  display: none;
+}
+
+.demo-snippet .contact-copy picture,
+.demo-snippet .contact-copy img {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .hero-glass-cards {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 56px;
+    top: auto;
+    transform: none;
+    width: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-scheme-b,
+  .hero-scheme-c,
+  .hero-scheme-masonry {
+    padding-left: var(--gutter);
+  }
+}

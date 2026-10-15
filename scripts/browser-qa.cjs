@@ -393,7 +393,7 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
   await page.screenshot({ path: screenshotPath, fullPage: true });
   const baselineConsoleErrorCount = consoleErrors.length;
 
-  await page.locator('[data-select-contact-role="creator"]').click();
+  await page.locator('a.button[data-select-contact-role="creator"]').click();
   await page.waitForFunction(() => {
     const rect = document.querySelector("#contact")?.getBoundingClientRect();
     return Boolean(rect && rect.top < window.innerHeight && rect.bottom > 0);
@@ -479,7 +479,7 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.reload({ waitUntil: "networkidle" });
   await waitForFormReady(page);
-  await page.locator('[data-select-contact-role="creator"]').click();
+  await page.locator('a.button[data-select-contact-role="creator"]').click();
   await page.waitForTimeout(50);
   const reducedMotion = await page.evaluate(() => ({
     mediaMatches: matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -498,7 +498,7 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
         document.documentElement.scrollWidth > document.documentElement.clientWidth,
       articleWidth: rect ? Math.round(rect.width) : null,
       bodyFontSize: article ? Number.parseFloat(getComputedStyle(article.querySelector("p")).fontSize) : null,
-      hasTurnstileDisclosure: document.body.textContent.includes("Cloudflare Turnstile"),
+      hasLegalEntity: document.body.textContent.includes("Florish Culture Limited"),
     };
   });
 
@@ -669,8 +669,8 @@ async function exerciseViewport({ browser, baseUrl, viewport, results }) {
     privacy.articleWidth > 0
       && privacy.articleWidth <= 760
       && privacy.bodyFontSize >= 15
-      && privacy.hasTurnstileDisclosure,
-    `${prefix}: Privacy Notice is not readable or complete`,
+      && privacy.hasLegalEntity,
+    `${prefix}: Privacy Policy is not readable or complete`,
   );
   report.checks.creatorsPage = check(
     results,

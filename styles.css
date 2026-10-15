@@ -1850,6 +1850,17 @@ textarea:user-invalid {
   line-height: 1.75;
 }
 
+.privacy-article ul {
+  margin: 0 0 16px;
+  padding-left: 1.25em;
+}
+
+.privacy-article li {
+  color: var(--muted);
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.75;
+}
+
 .privacy-article a {
   color: var(--coral);
 }

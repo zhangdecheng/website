@@ -1,0 +1,45 @@
+--- /workspace/legal-001/nginx-current.conf	2026-10-28 14:02:51.540649722 +0800
++++ /workspace/legal-001/nginx-candidate.conf	2026-10-28 14:02:51.556649659 +0800
+@@ -134,6 +134,42 @@
+         add_header X-Frame-Options "DENY" always;
+     }
+ 
++    location = /terms.html {
++        try_files $uri =404;
++        add_header Content-Security-Policy "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data:; style-src 'self'; font-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'" always;
++        add_header X-Content-Type-Options "nosniff" always;
++        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
++        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
++        add_header X-Frame-Options "DENY" always;
++    }
++
++    location = /terms {
++        try_files /terms.html =404;
++        add_header Content-Security-Policy "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data:; style-src 'self'; font-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'" always;
++        add_header X-Content-Type-Options "nosniff" always;
++        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
++        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
++        add_header X-Frame-Options "DENY" always;
++    }
++
++    location = /data-deletion.html {
++        try_files $uri =404;
++        add_header Content-Security-Policy "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data:; style-src 'self'; font-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'" always;
++        add_header X-Content-Type-Options "nosniff" always;
++        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
++        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
++        add_header X-Frame-Options "DENY" always;
++    }
++
++    location = /data-deletion {
++        try_files /data-deletion.html =404;
++        add_header Content-Security-Policy "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data:; style-src 'self'; font-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'" always;
++        add_header X-Content-Type-Options "nosniff" always;
++        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
++        add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
++        add_header X-Frame-Options "DENY" always;
++    }
++
+     location = /creators {
+         return 301 /creators/;
+     }

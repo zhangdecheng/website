@@ -12,18 +12,20 @@ readonly ARCHIVE="$1"
 readonly CHECK_SCRIPT="$2"
 readonly BACKUP_ROOT="/var/backups/flourishculturekol.com"
 readonly STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
-readonly BACKUP="${BACKUP_ROOT}/${STAMP}-v1.2.0-static-and-word-c96f7bc5"
+readonly BACKUP="${BACKUP_ROOT}/${STAMP}-v1.2.0-static-legal-001"
 readonly BACKUP_TREE="${BACKUP}/tree"
 readonly BACKUP_MANIFEST="${BACKUP}.SHA256SUMS"
 readonly NGINX_CONFIG="/etc/nginx/conf.d/00-flourishculturekol.com.conf"
-readonly EXPECTED_ARCHIVE_SHA="90e7705885193b7369af10f6d394143f347bfbf0bd817a1488593ece16d34933"
-readonly EXPECTED_CHECK_SCRIPT_SHA="ea0d281ff2c87dcc21974a74ccbe24169ffb4808fd9096eab7d62ed2e5cc44d8"
-readonly EXPECTED_OLD_HOME_SHA="4a58316db62a4e9605a1e06a588235f3ed772a37d075f422acc33eec68e62227"
-readonly EXPECTED_OLD_STYLES_SHA="150615df10eb49fc09c83cf2398dbe106e94d9aef985da697b5a6e932c05d6e9"
-readonly EXPECTED_NGINX_SHA="b4d2be401681425b9da40e9d0d00f28e730df79b107971bbe3d309cd30ad602b"
-readonly EXPECTED_NEW_HOME_SHA="9858d19d5027c639b2a65c0869fc7f530a7b8db821f8206418a96d3ee5ff8035"
-readonly EXPECTED_PRIVACY_SHA="358756c8197ef71ae98bf1b8427ffed56e13d44c96ba0078c666a8a81b699fe5"
-readonly EXPECTED_STYLES_SHA="416d75d4b7589691c7b0f406f41711cab17915f8fd86e1adec60610122ccf445"
+readonly EXPECTED_ARCHIVE_SHA="6cf81e5d0ecdd2d627f3e64a4a83dc8d8c5f48d9b47137dbf1bc8512a69206ed"
+readonly EXPECTED_CHECK_SCRIPT_SHA="970667d3114143c0b518b5891bb6cc352c198e507889dc73f71f62a2e90fda50"
+readonly EXPECTED_OLD_HOME_SHA="9858d19d5027c639b2a65c0869fc7f530a7b8db821f8206418a96d3ee5ff8035"
+readonly EXPECTED_OLD_STYLES_SHA="416d75d4b7589691c7b0f406f41711cab17915f8fd86e1adec60610122ccf445"
+readonly EXPECTED_NGINX_SHA="abc360c74bea67dd0ffcdd7d72713c36cb5509a278b84578949496b0ae7d3a0e"
+readonly EXPECTED_NEW_HOME_SHA="9e7f7b10d4afc4abd131b0d573a4c5e0aa76cdf08ab92d9aa7012ec6ad18236d"
+readonly EXPECTED_PRIVACY_SHA="dc4753d310fd74a973bae84f565bff136866dfcef989512691ef6fb2db4b85d1"
+readonly EXPECTED_TERMS_SHA="3711ba4c9f04b928663292e70360eab3279a1f70776bb147433ec625d5fd7f0b"
+readonly EXPECTED_DATA_DELETION_SHA="8f699151ccf7bc3916b07b7824d4d1fc7d0610d2616f2ccad48590472926f3e0"
+readonly EXPECTED_STYLES_SHA="c0bf93984e3af00ff20cb91b7fd36393b89fbda56ff3d0ddf7784d4ddc926f63"
 readonly EXPECTED_SCRIPT_SHA="613146fa4f87c0eec9d9cb8e2581eb1cda4d946f6e76b85c20739404ae02381b"
 readonly EXPECTED_CONTACT_FORM_SHA="e2b1b507560f0567ae52a64a53334e7d5829aae8a7d080a7b30071394cdd2b8d"
 readonly EXPECTED_SITE_CORE_SHA="b8fe43f1ed63cdd3a643db6bf9d11ca282601fb7c94d1d113f5f76a8c2f6d24e"
@@ -36,6 +38,8 @@ readonly EXPECTED_ATOMS_LOGO_SHA="a24e629aa00be325844022f03043b4659bf9624fce617a
 readonly EXPECTED_TRIPO_LOGO_SHA="5ddece931f2369199b0251dc2bc4a2a288654ece32806c7c939c3a0221508912"
 
 WORK_DIR="$(mktemp -d /var/tmp/flourish-static-deploy.XXXXXX)"
+RELEASE_FILE_LIST="$WORK_DIR/release-files.list"
+RELEASE_DIR_LIST="$WORK_DIR/release-dirs.list"
 ROLLBACK_NEEDED=0
 
 sha256_file() {
@@ -64,6 +68,8 @@ verify_release_files() {
   local root="$1"
   assert_sha "$root/index.html" "$EXPECTED_NEW_HOME_SHA" "Homepage"
   assert_sha "$root/privacy.html" "$EXPECTED_PRIVACY_SHA" "Privacy page"
+  assert_sha "$root/terms.html" "$EXPECTED_TERMS_SHA" "Terms page"
+  assert_sha "$root/data-deletion.html" "$EXPECTED_DATA_DELETION_SHA" "Data Deletion page"
   assert_sha "$root/styles.css" "$EXPECTED_STYLES_SHA" "styles.css"
   assert_sha "$root/script.js" "$EXPECTED_SCRIPT_SHA" "script.js"
   assert_sha "$root/contact-form.js" "$EXPECTED_CONTACT_FORM_SHA" "contact-form.js"
@@ -96,7 +102,29 @@ rollback_release() {
   local status=0
 
   printf 'ROLLBACK: restoring the exact pre-static web snapshot\n' >&2
-  rsync -a --delete "$BACKUP_TREE/" "$WEB_ROOT/" || status=1
+  # Restore the snapshot over the web root without deleting unknown paths, then
+  # remove only the files and empty directories this release added.
+  rsync -a "$BACKUP_TREE/" "$WEB_ROOT/" || status=1
+  if [[ -f "$RELEASE_FILE_LIST" ]]; then
+    while IFS= read -r -d '' relative; do
+      relative="${relative#./}"
+      if [[ ! -e "$BACKUP_TREE/$relative" && -f "$WEB_ROOT/$relative" && ! -L "$WEB_ROOT/$relative" ]]; then
+        rm -f -- "$WEB_ROOT/$relative" || status=1
+      fi
+    done <"$RELEASE_FILE_LIST"
+  else
+    status=1
+  fi
+  if [[ -f "$RELEASE_DIR_LIST" ]]; then
+    while IFS= read -r -d '' relative; do
+      relative="${relative#./}"
+      if [[ ! -e "$BACKUP_TREE/$relative" && -d "$WEB_ROOT/$relative" && ! -L "$WEB_ROOT/$relative" ]]; then
+        rmdir -- "$WEB_ROOT/$relative" 2>/dev/null || true
+      fi
+    done <"$RELEASE_DIR_LIST"
+  else
+    status=1
+  fi
   find "$WEB_ROOT" -xdev -type d -exec chmod 0755 {} + || status=1
   find "$WEB_ROOT" -xdev -type f -exec chmod 0644 {} + || status=1
   [[ "$(sha256_file "$WEB_ROOT/index.html")" == "$EXPECTED_OLD_HOME_SHA" ]] || status=1
@@ -161,10 +189,18 @@ unzip -Z1 "$ARCHIVE" | awk '
 '
 unzip -q "$ARCHIVE" -d "$WORK_DIR/release"
 [[ -z "$(find "$WORK_DIR/release" -type l -print -quit)" ]] || fail "static release contains a symlink"
-for required in index.html privacy.html styles.css script.js contact-form.js site-core.js robots.txt sitemap.xml creators/index.html assets; do
+for required in index.html privacy.html terms.html data-deletion.html styles.css script.js contact-form.js site-core.js robots.txt sitemap.xml creators/index.html assets; do
   [[ -e "$WORK_DIR/release/$required" ]] || fail "static release is missing: $required"
 done
 verify_release_files "$WORK_DIR/release"
+(
+  cd "$WORK_DIR/release"
+  find . -type f -print0
+) >"$RELEASE_FILE_LIST"
+(
+  cd "$WORK_DIR/release"
+  find . -mindepth 1 -depth -type d -print0
+) >"$RELEASE_DIR_LIST"
 
 install -d -o root -g root -m 0700 "$BACKUP" "$BACKUP_TREE"
 rsync -a "$WEB_ROOT/" "$BACKUP_TREE/"
@@ -190,6 +226,6 @@ verify_runtime_invariants
 PATH="/opt/node-v24.17.0-linux-x64/bin:$PATH" bash "$CHECK_SCRIPT"
 
 ROLLBACK_NEEDED=0
-printf 'SUCCESS: static v1.2.0 and-word candidate c96f7bc5 deployed and all production checks passed\n'
+printf 'SUCCESS: static v1.2.0 LEGAL-001 candidate deployed and all production checks passed\n'
 printf 'BACKUP: %s\n' "$BACKUP"
 printf 'BACKUP_MANIFEST: %s\n' "$BACKUP_MANIFEST"

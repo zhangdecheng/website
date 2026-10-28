@@ -157,6 +157,8 @@ test("release build packages every contact page module and rejects incomplete as
   for (const file of [
     "index.html",
     "privacy.html",
+    "terms.html",
+    "data-deletion.html",
     "styles.css",
     "script.js",
     "contact-form.js",
@@ -171,7 +173,7 @@ test("release build packages every contact page module and rejects incomplete as
   assert.match(buildScript, /for \(const asset of requiredAssets\)[\s\S]*await stat\(source\)[\s\S]*await cp\(source, target\)/);
   assert.match(
     deployScript,
-    /for required in index\.html privacy\.html styles\.css script\.js contact-form\.js site-core\.js robots\.txt sitemap\.xml creators\/index\.html assets; do/,
+    /for required in index\.html privacy\.html terms\.html data-deletion\.html styles\.css script\.js contact-form\.js site-core\.js robots\.txt sitemap\.xml creators\/index\.html assets; do/,
   );
 });
 
@@ -1156,4 +1158,30 @@ test("homepage Organization matches creators services and regions with only appr
   assert.deepEqual(Object.keys(homepage).sort(), [
     "@type", "@id", "name", "url", "description", "knowsAbout", "areaServed",
   ].sort());
+});
+
+test("LEGAL-001 terms and data-deletion pages ship verbatim with footer legal links and no inline styles", async () => {
+  for (const [filename, canonical, title] of [
+    ["terms.html", "https://www.flourishculturekol.com/terms", "Terms &amp; Conditions | Flourish Culture"],
+    ["data-deletion.html", "https://www.flourishculturekol.com/data-deletion", "Data Deletion | Flourish Culture"],
+  ]) {
+    const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
+    assert.ok(html.includes(`<title>${title}</title>`), filename);
+    assert.ok(html.includes(`<link rel="canonical" href="${canonical}" />`), filename);
+    assert.ok(html.includes("FLORISH CULTURE LIMITED") && html.includes("橡塔文化有限公司"), filename);
+    assert.doesNotMatch(html, /<style[\s>]|\sstyle="/u, filename);
+    assert.doesNotMatch(html, /TODO|TBD|lorem|\{\{/iu, filename);
+  }
+  for (const filename of ["index.html", "privacy.html", "terms.html", "data-deletion.html"]) {
+    const html = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
+    const footer = html.slice(html.indexOf('<footer class="site-footer">'));
+    const legal = footer.match(/<nav class="footer-legal" aria-label="Legal">([\s\S]*?)<\/nav>/u)?.[1] ?? "";
+    assert.match(legal, /<a href="\/privacy">Privacy Policy<\/a>/u, filename);
+    assert.match(legal, /<a href="\/terms">Terms (?:&amp;|and) Conditions<\/a>/u, filename);
+    assert.match(legal, /<a href="\/data-deletion">Data Deletion<\/a>/u, filename);
+  }
+  const css = await readFile(new URL("../styles.css", import.meta.url), "utf8");
+  assert.match(css, /\.footer-legal\s*\{[\s\S]*?display:\s*flex;[\s\S]*?flex-wrap:\s*wrap;[\s\S]*?gap:\s*16px;/u);
+  assert.match(css, /\.legal-lang-switch\s*\{/u);
+  assert.match(css, /\.legal-divider\s*\{/u);
 });

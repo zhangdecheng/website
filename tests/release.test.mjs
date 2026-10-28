@@ -517,6 +517,10 @@ test("public release check is strict about canonical routing, APIs, headers, ass
     "set -euo pipefail",
     "https://www.flourishculturekol.com/",
     "https://www.flourishculturekol.com/privacy.html",
+    "https://www.flourishculturekol.com/terms",
+    "https://www.flourishculturekol.com/terms.html",
+    "https://www.flourishculturekol.com/data-deletion",
+    "https://www.flourishculturekol.com/data-deletion.html",
     "https://www.flourishculturekol.com/creators/",
     "https://www.flourishculturekol.com/robots.txt",
     "https://www.flourishculturekol.com/sitemap.xml",
@@ -642,8 +646,8 @@ test("final static rollout pins the audited candidate and never rolls Nginx back
     deploymentHash(script, "EXPECTED_CHECK_SCRIPT_SHA"),
     await fileSha256(new URL("../check-https-cloud-assistant.sh", import.meta.url)),
   );
-  assert.equal(deploymentHash(script, "EXPECTED_OLD_HOME_SHA"), "4a58316db62a4e9605a1e06a588235f3ed772a37d075f422acc33eec68e62227");
-  assert.equal(deploymentHash(script, "EXPECTED_OLD_STYLES_SHA"), "150615df10eb49fc09c83cf2398dbe106e94d9aef985da697b5a6e932c05d6e9");
+  assert.equal(deploymentHash(script, "EXPECTED_OLD_HOME_SHA"), "9858d19d5027c639b2a65c0869fc7f530a7b8db821f8206418a96d3ee5ff8035");
+  assert.equal(deploymentHash(script, "EXPECTED_OLD_STYLES_SHA"), "416d75d4b7589691c7b0f406f41711cab17915f8fd86e1adec60610122ccf445");
   assert.equal(
     deploymentHash(script, "EXPECTED_NEW_HOME_SHA"),
     await fileSha256(new URL("../dist/index.html", import.meta.url)),
@@ -653,7 +657,9 @@ test("final static rollout pins the audited candidate and never rolls Nginx back
     await fileSha256(new URL("../dist/styles.css", import.meta.url)),
   );
   assert.match(script, /BACKUP_TREE="\$\{BACKUP\}\/tree"/u);
-  assert.match(script, /rsync -a --delete "\$BACKUP_TREE\/" "\$WEB_ROOT\/"/u);
+  assert.match(script, /rsync -a "\$BACKUP_TREE\/" "\$WEB_ROOT\/"/u);
+  assert.doesNotMatch(script, /rsync[^\n]*--delete/u);
+  assert.match(script, /RELEASE_FILE_LIST/u);
   assert.match(script, /rsync -a "\$WEB_ROOT\/" "\$BACKUP_TREE\/"[\s\S]*chmod 0700 "\$BACKUP"/u);
   assert.doesNotMatch(script, /NGINX_ROLLBACK|static-rollback|restoring the predeploy Nginx/u);
 });
@@ -749,6 +755,8 @@ async function runStaticRolloutHarness({ checkerBody, expectedCheckerBody = chec
   const releaseFiles = {
     "index.html": "brand-new homepage bytes\n",
     "privacy.html": "privacy\n",
+    "terms.html": "terms\n",
+    "data-deletion.html": "data deletion\n",
     "styles.css": "brand-new styles bytes\n",
     "script.js": "console.log('release');\n",
     "contact-form.js": "console.log('contact');\n",
@@ -820,6 +828,8 @@ exit 0
     EXPECTED_NGINX_SHA: await fileSha256(nginxConfig),
     EXPECTED_NEW_HOME_SHA: await fileSha256(join(releaseRoot, "index.html")),
     EXPECTED_PRIVACY_SHA: await fileSha256(join(releaseRoot, "privacy.html")),
+    EXPECTED_TERMS_SHA: await fileSha256(join(releaseRoot, "terms.html")),
+    EXPECTED_DATA_DELETION_SHA: await fileSha256(join(releaseRoot, "data-deletion.html")),
     EXPECTED_STYLES_SHA: await fileSha256(join(releaseRoot, "styles.css")),
     EXPECTED_SCRIPT_SHA: await fileSha256(join(releaseRoot, "script.js")),
     EXPECTED_CONTACT_FORM_SHA: await fileSha256(join(releaseRoot, "contact-form.js")),
@@ -888,7 +898,7 @@ test("static rollout fault injection restores the complete tree without relaxing
     checkerBody: `#!/usr/bin/env bash
 set -eu
 rm -f "$TEST_WEB_ROOT/legacy/retain.txt"
-printf 'intruder\n' > "$TEST_WEB_ROOT/intruder.txt"
+printf 'tampered\n' > "$TEST_WEB_ROOT/index.html"
 exit 23
 `,
   });

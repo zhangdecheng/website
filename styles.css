@@ -2007,6 +2007,35 @@ textarea:user-invalid {
   font-size: 10px;
 }
 
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-legal a {
+  color: inherit;
+}
+
+.footer-legal a:hover,
+.footer-legal a:focus-visible {
+  color: var(--white);
+}
+
+.legal-lang-switch {
+  margin-bottom: 28px;
+}
+
+.legal-lang-switch a {
+  margin-right: 18px;
+}
+
+.legal-divider {
+  margin: 64px 0 0;
+  border: 0;
+  border-top: 1px solid var(--line-dark, #333);
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(22px);

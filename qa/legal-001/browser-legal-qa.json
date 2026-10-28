@@ -1,0 +1,217 @@
+{
+  "home-desktop": {
+    "status": 200,
+    "title": "Creator Partnerships & Brand Collaborations | FLOURISH CULTURE",
+    "h1": "Scaling Global Impact for Visionary Brands.",
+    "links": [
+      {
+        "t": "Privacy Policy",
+        "h": "/privacy",
+        "vis": true
+      },
+      {
+        "t": "Terms and Conditions",
+        "h": "/terms",
+        "vis": true
+      },
+      {
+        "t": "Data Deletion",
+        "h": "/data-deletion",
+        "vis": true
+      }
+    ],
+    "legalDisplay": "flex",
+    "langMB": null,
+    "overflowX": false,
+    "errors": [
+      "Executing inline script violates the following Content Security Policy directive 'script-src 'self' https://challenges.cloudflare.com'. Either the 'unsafe-inline' keyword, a hash ('sha256-P/Y/WqMkZxS9YKO7KfZLLPJbuGlPgcNzbgQqxPazr9M='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked."
+    ]
+  },
+  "privacy-desktop": {
+    "status": 200,
+    "title": "Privacy Policy | Florish Culture",
+    "h1": "Privacy Policy",
+    "links": [
+      {
+        "t": "Privacy Policy",
+        "h": "/privacy",
+        "vis": true
+      },
+      {
+        "t": "Terms & Conditions",
+        "h": "/terms",
+        "vis": true
+      },
+      {
+        "t": "Data Deletion",
+        "h": "/data-deletion",
+        "vis": true
+      }
+    ],
+    "legalDisplay": "flex",
+    "langMB": null,
+    "overflowX": false,
+    "errors": []
+  },
+  "terms-desktop": {
+    "status": 200,
+    "title": "Terms & Conditions | Flourish Culture",
+    "h1": "Terms & Conditions",
+    "links": [
+      {
+        "t": "Privacy Policy",
+        "h": "/privacy",
+        "vis": true
+      },
+      {
+        "t": "Terms & Conditions",
+        "h": "/terms",
+        "vis": true
+      },
+      {
+        "t": "Data Deletion",
+        "h": "/data-deletion",
+        "vis": true
+      }
+    ],
+    "legalDisplay": "flex",
+    "langMB": "28px",
+    "overflowX": false,
+    "errors": []
+  },
+  "data-deletion-desktop": {
+    "status": 200,
+    "title": "Data Deletion | Flourish Culture",
+    "h1": "Data Deletion Instructions",
+    "links": [
+      {
+        "t": "Privacy Policy",
+        "h": "/privacy",
+        "vis": true
+      },
+      {
+        "t": "Terms & Conditions",
+        "h": "/terms",
+        "vis": true
+      },
+      {
+        "t": "Data Deletion",
+        "h": "/data-deletion",
+        "vis": true
+      }
+    ],
+    "legalDisplay": "flex",
+    "langMB": "28px",
+    "overflowX": false,
+    "errors": []
+  },
+  "home-mobile": {
+    "status": 200,
+    "title": "Creator Partnerships & Brand Collaborations | FLOURISH CULTURE",
+    "h1": "Scaling Global Impact for Visionary Brands.",
+    "links": [
+      {
+        "t": "Privacy Policy",
+        "h": "/privacy",
+        "vis": true
+      },
+      {
+        "t": "Terms and Conditions",
+        "h": "/terms",
+        "vis": true
+      },
+      {
+        "t": "Data Deletion",
+        "h": "/data-deletion",
+        "vis": true
+      }
+    ],
+    "legalDisplay": "flex",
+    "langMB": null,
+    "overflowX": false,
+    "errors": [
+      "Executing inline script violates the following Content Security Policy directive 'script-src 'self' https://challenges.cloudflare.com'. Either the 'unsafe-inline' keyword, a hash ('sha256-P/Y/WqMkZxS9YKO7KfZLLPJbuGlPgcNzbgQqxPazr9M='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked."
+    ]
+  },
+  "privacy-mobile": {
+    "status": 200,
+    "title": "Privacy Policy | Florish Culture",
+    "h1": "Privacy Policy",
+    "links": [
+      {
+        "t": "Privacy Policy",
+        "h": "/privacy",
+        "vis": true
+      },
+      {
+        "t": "Terms & Conditions",
+        "h": "/terms",
+        "vis": true
+      },
+      {
+        "t": "Data Deletion",
+        "h": "/data-deletion",
+        "vis": true
+      }
+    ],
+    "legalDisplay": "flex",
+    "langMB": null,
+    "overflowX": false,
+    "errors": []
+  },
+  "terms-mobile": {
+    "status": 200,
+    "title": "Terms & Conditions | Flourish Culture",
+    "h1": "Terms & Conditions",
+    "links": [
+      {
+        "t": "Privacy Policy",
+        "h": "/privacy",
+        "vis": true
+      },
+      {
+        "t": "Terms & Conditions",
+        "h": "/terms",
+        "vis": true
+      },
+      {
+        "t": "Data Deletion",
+        "h": "/data-deletion",
+        "vis": true
+      }
+    ],
+    "legalDisplay": "flex",
+    "langMB": "28px",
+    "overflowX": false,
+    "errors": []
+  },
+  "data-deletion-mobile": {
+    "status": 200,
+    "title": "Data Deletion | Flourish Culture",
+    "h1": "Data Deletion Instructions",
+    "links": [
+      {
+        "t": "Privacy Policy",
+        "h": "/privacy",
+        "vis": true
+      },
+      {
+        "t": "Terms & Conditions",
+        "h": "/terms",
+        "vis": true
+      },
+      {
+        "t": "Data Deletion",
+        "h": "/data-deletion",
+        "vis": true
+      }
+    ],
+    "legalDisplay": "flex",
+    "langMB": "28px",
+    "overflowX": false,
+    "errors": []
+  },
+  "click/terms": "/terms | Terms & Conditions | Flourish Culture",
+  "click/data-deletion": "/data-deletion | Data Deletion | Flourish Culture",
+  "click/privacy": "/privacy | Privacy Policy | Florish Culture"
+}

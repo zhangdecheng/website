@@ -7,6 +7,8 @@ const release = join(root, "release");
 const files = [
   "index.html",
   "privacy.html",
+  "terms.html",
+  "data-deletion.html",
   "styles.css",
   "script.js",
   "contact-form.js",

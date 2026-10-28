@@ -180,7 +180,7 @@ assert_contains "$WORK_DIR/index.html" '<link rel="canonical" href="https://www.
 assert_occurrences "$WORK_DIR/index.html" '<span class="connector-word">and</span>' "14" "www homepage connector words"
 assert_header "$WORK_DIR/home.headers" "Content-Type" "text/html" "www homepage"
 assert_page_headers "$WORK_DIR/home.headers" "www homepage"
-assert_sha256 "$WORK_DIR/index.html" "9858d19d5027c639b2a65c0869fc7f530a7b8db821f8206418a96d3ee5ff8035" "www homepage"
+assert_sha256 "$WORK_DIR/index.html" "9e7f7b10d4afc4abd131b0d573a4c5e0aa76cdf08ab92d9aa7012ec6ad18236d" "www homepage"
 
 privacy_status="$(fetch GET \
   "https://www.flourishculturekol.com/privacy.html" \
@@ -190,7 +190,7 @@ assert_status 200 "$privacy_status" "Privacy page"
 assert_contains "$WORK_DIR/privacy.html" '<link rel="canonical" href="https://www.flourishculturekol.com/privacy" />' "Privacy page"
 assert_header "$WORK_DIR/privacy.headers" "Content-Type" "text/html" "Privacy page"
 assert_page_headers "$WORK_DIR/privacy.headers" "Privacy page"
-assert_sha256 "$WORK_DIR/privacy.html" "358756c8197ef71ae98bf1b8427ffed56e13d44c96ba0078c666a8a81b699fe5" "Privacy page"
+assert_sha256 "$WORK_DIR/privacy.html" "dc4753d310fd74a973bae84f565bff136866dfcef989512691ef6fb2db4b85d1" "Privacy page"
 
 privacy_clean_status="$(fetch GET \
   "https://www.flourishculturekol.com/privacy" \
@@ -199,7 +199,47 @@ privacy_clean_status="$(fetch GET \
 assert_status 200 "$privacy_clean_status" "Privacy clean URL"
 assert_header "$WORK_DIR/privacy-clean.headers" "Content-Type" "text/html" "Privacy clean URL"
 assert_page_headers "$WORK_DIR/privacy-clean.headers" "Privacy clean URL"
-assert_sha256 "$WORK_DIR/privacy-clean.html" "358756c8197ef71ae98bf1b8427ffed56e13d44c96ba0078c666a8a81b699fe5" "Privacy clean URL"
+assert_sha256 "$WORK_DIR/privacy-clean.html" "dc4753d310fd74a973bae84f565bff136866dfcef989512691ef6fb2db4b85d1" "Privacy clean URL"
+
+terms_status="$(fetch GET \
+  "https://www.flourishculturekol.com/terms.html" \
+  "$WORK_DIR/terms.headers" \
+  "$WORK_DIR/terms.html")"
+assert_status 200 "$terms_status" "Terms page"
+assert_contains "$WORK_DIR/terms.html" '<link rel="canonical" href="https://www.flourishculturekol.com/terms" />' "Terms page"
+assert_header "$WORK_DIR/terms.headers" "Content-Type" "text/html" "Terms page"
+assert_page_headers "$WORK_DIR/terms.headers" "Terms page"
+assert_sha256 "$WORK_DIR/terms.html" "3711ba4c9f04b928663292e70360eab3279a1f70776bb147433ec625d5fd7f0b" "Terms page"
+
+terms_clean_status="$(fetch GET \
+  "https://www.flourishculturekol.com/terms" \
+  "$WORK_DIR/terms-clean.headers" \
+  "$WORK_DIR/terms-clean.html")"
+assert_status 200 "$terms_clean_status" "Terms clean URL"
+assert_contains "$WORK_DIR/terms-clean.html" '<link rel="canonical" href="https://www.flourishculturekol.com/terms" />' "Terms clean URL"
+assert_header "$WORK_DIR/terms-clean.headers" "Content-Type" "text/html" "Terms clean URL"
+assert_page_headers "$WORK_DIR/terms-clean.headers" "Terms clean URL"
+assert_sha256 "$WORK_DIR/terms-clean.html" "3711ba4c9f04b928663292e70360eab3279a1f70776bb147433ec625d5fd7f0b" "Terms clean URL"
+
+data_deletion_status="$(fetch GET \
+  "https://www.flourishculturekol.com/data-deletion.html" \
+  "$WORK_DIR/data-deletion.headers" \
+  "$WORK_DIR/data-deletion.html")"
+assert_status 200 "$data_deletion_status" "Data Deletion page"
+assert_contains "$WORK_DIR/data-deletion.html" '<link rel="canonical" href="https://www.flourishculturekol.com/data-deletion" />' "Data Deletion page"
+assert_header "$WORK_DIR/data-deletion.headers" "Content-Type" "text/html" "Data Deletion page"
+assert_page_headers "$WORK_DIR/data-deletion.headers" "Data Deletion page"
+assert_sha256 "$WORK_DIR/data-deletion.html" "8f699151ccf7bc3916b07b7824d4d1fc7d0610d2616f2ccad48590472926f3e0" "Data Deletion page"
+
+data_deletion_clean_status="$(fetch GET \
+  "https://www.flourishculturekol.com/data-deletion" \
+  "$WORK_DIR/data-deletion-clean.headers" \
+  "$WORK_DIR/data-deletion-clean.html")"
+assert_status 200 "$data_deletion_clean_status" "Data Deletion clean URL"
+assert_contains "$WORK_DIR/data-deletion-clean.html" '<link rel="canonical" href="https://www.flourishculturekol.com/data-deletion" />' "Data Deletion clean URL"
+assert_header "$WORK_DIR/data-deletion-clean.headers" "Content-Type" "text/html" "Data Deletion clean URL"
+assert_page_headers "$WORK_DIR/data-deletion-clean.headers" "Data Deletion clean URL"
+assert_sha256 "$WORK_DIR/data-deletion-clean.html" "8f699151ccf7bc3916b07b7824d4d1fc7d0610d2616f2ccad48590472926f3e0" "Data Deletion clean URL"
 
 creators_status="$(fetch GET \
   "https://www.flourishculturekol.com/creators/" \
@@ -280,7 +320,7 @@ printf '\n== Release files and MIME ==\n'
 styles_status="$(fetch GET "$WWW_ORIGIN/styles.css" "$WORK_DIR/styles.headers" "$WORK_DIR/styles.css")"
 assert_status 200 "$styles_status" "styles.css"
 assert_header "$WORK_DIR/styles.headers" "Content-Type" "text/css" "styles.css"
-assert_sha256 "$WORK_DIR/styles.css" "416d75d4b7589691c7b0f406f41711cab17915f8fd86e1adec60610122ccf445" "styles.css"
+assert_sha256 "$WORK_DIR/styles.css" "c0bf93984e3af00ff20cb91b7fd36393b89fbda56ff3d0ddf7784d4ddc926f63" "styles.css"
 
 script_status="$(fetch GET "$WWW_ORIGIN/script.js" "$WORK_DIR/script.headers" "$WORK_DIR/script.js")"
 assert_status 200 "$script_status" "script.js"
